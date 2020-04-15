@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="col-md-12 portlets ui-sortable">
+        <!-- Your awesome content goes here -->
+        <div class="widget">
+            <form action="/upload.php" class="dropzone" id="dropzone">
+                <input type="hidden" name="dirname" value="courses"/>
+
+                <div class="fallback">
+                    <input name="file" type="file" multiple data-bfi-disabled/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    coursesDropzone = enableDropzone();
+</script>

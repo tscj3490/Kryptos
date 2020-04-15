@@ -1,0 +1,50 @@
+{include file='modals/modal.tpl' title='Rejestr zmian- co to jest?' content='Zgodnie z zaleceniami RODO, dla każdego ze zbiorów prowadzony jest rejestr zmian, umożliwiający prześledzenie całej historii edycji zbioru. Na uwagę zasługuje forma prezentacji raportu, w którym konkretnie widzimy jak było przed zmianą, a jak jest po.'}
+<div class="table-operations-header">
+    {if $auth->isGranted('node/course-categories/update')}
+    <a class="btn btn-success" href="{$baseUrl}/update" data-title="Dodaj rekord" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+    {/if}
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+        <tr>
+            <th data-filter-type="string">Zbiór</th>
+            <th data-filter-type="string">Pole</th>
+            <th data-filter-type="date-range">Data operacji</th>
+            <th data-filter-type="string">Użytkownik</th>
+            <th>Przed zmianą</th>
+            <th>Po zmianie</th>
+            <th>Typ zmiany</th>
+            <th>Operacje</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach $paginator as $d}
+        <tr>
+            <td>{$d.zbior.nazwa}</td>
+            <td>{$d.field}</td>
+            <td>{smart_date value=$d.date}</td>
+            <td>{$d.user.login} ({$d.osoba.imie} {$d.osoba.nazwisko})</td>
+            <td>{$d.old_value}</td>
+            <td>{$d.new_value}</td>
+            <td>
+                {if $d.old_value == ''}
+                    DODANIE
+                {elseif $d.new_value == ''}
+                    USUNIĘCIE
+                {else}
+                    MODYFIKACJA
+                {/if}
+            </td>
+            <td class="operations">
+                {if $auth->isGranted('node/zbiory-changelog/update', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-pencil" href="/zbiory-changelog/update/id/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                {/if}
+                {if $auth->isGranted('node/zbiory-changelog/del', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="/zbiory-changelog/del/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>

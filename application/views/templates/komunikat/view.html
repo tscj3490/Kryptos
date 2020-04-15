@@ -1,0 +1,24 @@
+<div>
+    <form name="f_profile" id="f_profile" action="/komunikat/przeczytane/id/{$komunikat.id}" method="post" class="form-horizontal" role="form" >
+
+
+        <div class="form-group">
+            <label class="col-sm-2 ">Temat:</label>
+            <div class="col-sm-4">
+                {$komunikat.temat}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 ">Treść:</label>
+            <div class="col-sm-4">
+                {$komunikat.tresc}
+            </div>
+        </div>
+        <div>
+            <input type="submit" value="Przeczytane" class="btn btn-info" />
+
+        </div>
+
+    </form>
+</div>
+

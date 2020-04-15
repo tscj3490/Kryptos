@@ -1,0 +1,81 @@
+{$message}
+
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#status" data-toggle="tab">Statusy</a></li>
+    <li><a href="#typy" data-toggle="tab">Typy</a></li>
+    <li><a href="#rola" data-toggle="tab">Rola</a></li>
+</ul>
+<div class="tab-content">
+    <div class="tab-pane active form-horizontal" id="status" style="padding:15px 5px">
+        <div class="body-action">
+            <a class="btn btn-info" href="/config/addstatus">Dodaj status</a>
+        </div>
+        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example" >
+            <thead>
+                <tr>
+                    <td>Status</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                {foreach $statuses as $status}
+                <tr>
+                    <td>{$status.name} <span style="color: {$status.color};font-size: large">⚑</span></td>
+                    <td>
+                        <a class="glyphicon glyphicon-camera" href="/config/addstatus/id/{$status.id}"></a>
+                        <a class="glyphicon glyphicon-trash" onclick="if (confirm('Usunąć?')) window.location.href = '/config/removestatus/id/{$status.id}'" href="javascript:;"></a>
+                    </td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane" id="typy" style="padding:15px 5px">
+        <div class="body-action">
+            <a class="btn btn-info" href="/config/addtyp">Dodaj typ</a>
+        </div>
+        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example" >
+            <thead>
+                <tr>
+                    <td>Status</td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                {foreach $typy as $typ}
+                <tr>
+                    <td>{$typ.name}</td>
+
+
+                    <td>
+                        <a class="glyphicon glyphicon-camera"  href="/config/addtyp/id/{$typ.id}"></a>
+                        <a class="glyphicon glyphicon-trash" onclick="if (confirm('Usunąć?'))
+                                    window.location.href = '/config/removetyp/id/{$typ.id}'" href="javascript:;"></a>
+                    </td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane" id="rola" style="padding:15px 5px">
+        <form name="rola" id="rola" action="/config/saverolestatus" method="post" class="form-horizontal" role="form" >
+            <div class="body-action">
+                <input type="submit" value="Zapisz prawa" class="btn btn-info" />
+            </div>
+
+            <div class="form-group row">
+                <label for="data" class="col-sm-2">Role do obsługi:</label>
+                <div class="col-md-8 checkout-list">
+                    {foreach $roles as $r}
+
+                        <label class="col-sm-12" style="width: ">
+                            <input type="checkbox" {if $r.rolatak}checked{/if}  name="role[]" value="{$r.id}">{$r.nazwa} ({$r.opis})
+                        </label>
+
+                    {/foreach}
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

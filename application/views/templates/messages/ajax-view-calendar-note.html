@@ -1,0 +1,29 @@
+<div class="row">
+    <div class="col-sm-12">
+        <table>
+            <tbody>
+            <tr>
+                <td>{'Tytuł'|translate}:</td>
+                <td>{$data.title}</td>
+            </tr>
+            <tr>
+                <td>{'Data od'|translate}:</td>
+                <td>{$data.date_start}</td>
+            </tr>
+            <tr>
+                <td>{'Data do'|translate}:</td>
+                <td>{$data.date_end}</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    {'Treść'|translate}:<br>
+                    {$data.message.content nofilter}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        {if $data.message.attachments}
+            {include file="_reuse/_element-attachments-list.html" attachments=$data.message.attachments}
+        {/if}
+    </div>
+</div>

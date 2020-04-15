@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="col-lg-6">
+        <form name="f_data" id="f_data" method="POST" action="/registry-entries/save" enctype="multipart/form-data">
+            <fieldset>
+                <input type="hidden" name="addAnother" id="addAnother" value="0"/>
+                {if $data.id}<input type="hidden" name="id" value="{$data.id}"/>{/if}
+                <input type="hidden" name="registry_id" value="{$data.registry.id}"/>
+
+                {foreach $data.registry.entities as $registryEntity}
+                     {Application_Service_Entities::render($registryEntity, $data) nofilter}
+                {/foreach}
+               
+
+                {if $data.id && !empty($data.registry.documents_templates)}
+                    {element tag="bs.checkbox-line" attributes=[
+                        'type' => 'checkbox',
+                        'labelClass' => 'col-sm-8 col-sm-offset-4',
+                        'name' => 'update_documents',
+                        'label' => 'Zaktualizuj dokumenty'
+                    ]}
+                {/if}
+
+                <div>
+                    <a href="/registry-entries/index/registry_id/{$data.registry_id}" class="btn btn-default">Powrót</a>
+                    <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+                    <input type="button" value="Zapisz i dodaj następny" class="btn btn-info" onclick="$('#addAnother').val('1');$('#formSubmit').click()">
+                </div>
+            </fieldset>
+            <div class="hiddenElement">
+                <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+</script>

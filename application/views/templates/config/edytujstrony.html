@@ -1,0 +1,10 @@
+{$message}
+<form  action="/config/stronasave" method="POST" class="form-horizontal" role="form">
+    <div class="">
+        <textarea id="editor" name="editor" class="ckeditor-default">{$edytor}</textarea>
+    </div>
+    <div class="">
+      <input type="submit" value="Zapisz"  class="btn btn-info"  >
+      <input type="hidden" name="id" id="id" value="{$id}" />      
+    </div>
+</form>

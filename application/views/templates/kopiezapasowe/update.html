@@ -1,0 +1,65 @@
+<div>
+    <form method="POST" action="/kopiezapasowe/save" class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-2">Nazwa:</label>
+            <div class="col-sm-4"><input type="text" name="nazwa" id="nazwa" value="{$data['nazwa_kopii']}" class="form-control"></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 ">Data:</label>
+            <div class="col-sm-4"><input type="text" class="form-control datepicker-input" id="data" name="data" value="{$data.data|date_format: 'Y-m-d'}" placeholder="YYYY-mm-dd"/></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 ">Godzina:</label>
+            <div class="col-sm-4"><input type="text" class="form-control" id="godzina" name="godzina" placeholder="HH:mm" value="{$data.godzina|date_format: 'H:i'}"/></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 ">Wykonawca:</label>
+            <div class="col-sm-4"><select class="form-control" id="wykonawca" name="wykonawca">
+                    {foreach $osoby as $osoba}
+                        <option value="{$osoba.osoba_id}" {if $osoba.rola_name == "ASI"}selected{/if}>{$osoba.nazwisko} {$osoba.imie} {if $osoba.rola_name} ({$osoba.rola_name}) {/if}</option>
+                    {/foreach}
+                </select></div>
+        </div>
+
+        <div class="form-group row">
+            <label for="source_company_id" class="col-sm-2">Zakres:</label>
+            <div class="col-sm-4">
+                <input type="hidden" name="zbiory" id="zbiory" value="{$data.zbiory}"/>
+                <div class="input-group">
+                    <button class="btn btn-default choose-from-dial"
+                            data-dial-url="/zbiory/addmini?useProcess=true"
+                            data-dialog-class="multiple"
+                            data-dial-process-fn="processAddSourceCompany"
+                            type="button"
+                    >Dodaj</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 ">Zakres:</label>
+            <div class="col-md-12 checkout-list">
+                {foreach $zbiory as $id => $zbior}
+                    <label>
+                        <input type="checkbox" name="zbior[{$zbior['id']}]" id="zbior[{$zbior['id']}]" value="{$zbior['id']}"
+                        {if (in_array($zbior['id'], explode(',', $data.zbiory)))}checked{/if}
+                        />
+                    </label>
+                    {$zbior['nazwa']}
+                {/foreach}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 ">Lokalizacja:</label>
+            <div class="col-sm-4"><select class="form-control" name="lokalizacja" id="lokalizacja">
+                    {foreach $pomieszczenia as $d}
+                        <option value="{$d.id}" {if $data.lokalizacja == $d.id}selected{/if}>{$d.nazwa_budynku} :: {$d.nazwa}</option>
+                    {/foreach}
+                </select></div>
+        </div>
+        <div class="">
+            <input type="submit" value="Zapisz" class="btn btn-info"/>
+        </div>
+        <input type="hidden" name="id" id="id" value="{$data.kz_id}"/>
+    </form>
+</div>

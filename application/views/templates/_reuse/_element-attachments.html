@@ -1,0 +1,49 @@
+{assign var="randomId" value=100000|rand:999999}
+<input type="hidden" name="uploadedFiles" value="">
+<div class="form-group hidden" id="section-attachments-add-{$randomId}">
+    <label class="col-sm-2">Załączniki:</label>
+    <div class="col-sm-12 portlets ui-sortable">
+        <!-- Your awesome content goes here -->
+        <div class="widget messages-dropzone">
+            <div id="attachments-dropzone-{$randomId}" class="dropzone">
+                <div class="dz-default dz-message"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
+        <button type="button" class="btn btn-default show-section"
+                data-target="#section-attachments-add-{$randomId}"
+                data-auto-hide=".form-group >>"
+        >Dodaj załączniki</button>
+    </div>
+</div>
+{literal}
+<script>
+    (function() {
+        var dropzoneId = '#attachments-dropzone-{/literal}{$randomId}{literal}';
+        documentDropzone = enableDropzoneWidget(dropzoneId, {
+            url: '/upload.php',
+            params: {
+                dirname: 'default'
+            }
+        });
+
+        var form = $(dropzoneId).closest('form');
+        form.on('submit', function() {
+            var uploadedFiles = documentDropzone.getAcceptedFiles(),
+                    filesData = [];
+
+            $.each(uploadedFiles, function() {
+                filesData.push({
+                    name: this.name,
+                    uploadedUri: this.xhr.response
+                });
+            });
+
+            form.find('input[name=uploadedFiles]').val(JSON.stringify(filesData));
+        });
+    })();
+</script>
+{/literal}

@@ -1,0 +1,52 @@
+    {foreach $paginator as $d}
+        <div class="page-break-inside-avoid">
+            <table class="inspections-metadata" style="text-align:left">
+                <tr>
+                    <td colspan="8"><b>{$transferTypes[$d.type].name}</b></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="width: 25%">Data zgłoszenia:</td>
+                    <td colspan="2" style="width: 25%">{smart_date value=$d.created_at}</td>
+                    <td colspan="4">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="width: 25%">Data transferu:</td>
+                    <td colspan="2" style="width: 25%">{smart_date value=$d.transfer_date}</td>
+                    <td colspan="2" style="width: 25%">Data do:</td>
+                    <td colspan="2" style="width: 25%">{smart_date value=$d.transfer_deadline_date}</td>
+                </tr>
+                <tr>
+                    <td colspan="4">Źródło: podmiot: {$d.source_company_name}</td>
+                    <td colspan="4">Źródło: osoba: {$d.source_employee_name}</td>
+                </tr>
+                <tr>
+                    <td colspan="8">
+                        Zbiory:<br>
+                        {foreach $d.zbiory as $zbior}
+                            {if $zbior@iteration > 1},{/if}
+                            {$zbior.nazwa}
+                        {/foreach}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="8">
+                        Podstawa prawna:<br>
+                        {$d.transfer_legal_basics.name}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="8">
+                        Cel:<br>
+                        {$d.transfer_purpose}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="8">
+                        Komentarz:<br>
+                        {$d.transfer_comment}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <br>
+    {/foreach}

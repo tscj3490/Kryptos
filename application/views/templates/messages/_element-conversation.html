@@ -1,0 +1,31 @@
+<div class="nestable dd" data-collapse="expandFirst">
+    <ol class="dd-list">
+        {foreach $messages as $message}
+            <li class="dd-item">
+                <div class="dd-handle dd-nodrag">
+                    {$message.author.nazwisko|upper}
+                    {$message.author.imie|upper}
+                    {smart_date value=$message.created_at class="timeago"}
+                    {if $message.attachments|count}
+                        <i class="icon-attach-3 pull-right"></i>
+                    {/if}
+                </div>
+                <ol class="dd-list">
+                    <li class="message-list-entry">
+                        <blockquote class="mail-reply">{$message.content nofilter}</blockquote>
+                        {if $message.attachments|count}
+                            <div class="attachments">
+                                {foreach from=$message.attachments item=attachment}
+                                    <a class="btn btn-default btn-xs" data-toggle="tooltip" title="" href="/files/download/t/{$attachment.token}">
+                                        <i class="icon-attach-3"></i>
+                                        {$attachment.name}
+                                    </a>
+                                {/foreach}
+                            </div>
+                        {/if}
+                    </li>
+                </ol>
+            </li>
+        {/foreach}
+    </ol>
+</div>

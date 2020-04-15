@@ -1,0 +1,27 @@
+	<h1>Załącznik nr 1  –  Wykaz osób, które zapoznały się z "Polityka Bezpieczeństwa” oraz „Instrukcja Zarządzania Systemem Informatycznym” służącym do przetwarzania danych oraz „Instrukcja postępowania w przypadku naruszenia ochrony danych osobowych".</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>Lp.</th>
+				<th>Imię</th>
+				<th>Nazwisko</th>
+				<th>DZIAŁ</th>
+				<th>Stanowisko</th>
+				<th>Data</th>
+				<th>Nr oświadczenia</th>
+			</tr>	
+		</thead>
+		<tbody>
+			{foreach $data as $r}
+				<tr>
+					<td>{$r@iteration}</td>
+					<td>{$r.imie}</td>
+					<td>{$r.nazwisko}</td>
+					<td>{$r.dzial}</td>
+					<td>{$r.stanowisko}</td>
+					<td>{$smarty.now|date_format:"%d.%m.%Y"}</td>
+					<td>{$r.number}</td>
+				</tr>
+			{/foreach}
+		</tbody>
+	</table>

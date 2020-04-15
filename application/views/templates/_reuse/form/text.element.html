@@ -1,0 +1,43 @@
+{if empty($attributes.id)}
+    {assign var="id" value=$attributes.name|set_id}
+{else}
+    {assign var="id" value=$attributes.id}
+{/if}
+
+<div class="form-group row">
+    <label for="{$id}" class="col-sm-4">{$params.attributes.label}</label>
+    <div class="col-sm-8">
+        {if $attributes.multiple}
+            {foreach $params.attributes.value as $valueId => $value}
+                <div class="input-group multiple-row" data-source-input=".row-value">
+                    <textarea
+                           id="{$id}"
+                           name="{$attributes.name}[{$valueId}]"
+                           class="row-value form-control {$attributes.class}"
+                    >{$value}</textarea>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-danger row-remove">Usuń</button>
+                        <button type="button" disabled class="btn btn-default new-row-indicator">Nowy</button>
+                    </span>
+                </div>
+            {/foreach}
+            <div class="input-group multiple-row" data-source-input=".row-value">
+                <textarea
+                       id="{$id}"
+                       name="{$attributes.name}[new-1]"
+                       class="row-value form-control {$attributes.class}"
+                ></textarea>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-danger row-remove">Usuń</button>
+                    <button type="button" disabled class="btn btn-default new-row-indicator">Nowy</button>
+                </span>
+            </div>
+        {else}
+        <textarea
+               id="{$id}"
+               name="{$attributes.name}"
+               class="row-value form-control {$attributes.class}"
+        >{$attributes.value}</textarea>
+        {/if}
+    </div>
+</div>

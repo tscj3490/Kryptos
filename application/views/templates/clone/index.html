@@ -1,0 +1,36 @@
+{$message}
+<form method="post">
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <td>Pole</td>
+            <td>Wartość</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Nazwa domeny</td>
+            <td><input type="text" name="params[domain]" value="{$siteParams.domain}" class="form-control validate[required]" style="text-transform: none"/></td>
+        </tr>
+        <tr>
+            <td>Docelowy folder</td>
+            <td><input type="text" name="params[folder]" value="{$siteParams.folder}" class="form-control validate[required]" style="text-transform: none"/></td>
+        </tr>
+        <tr>
+            <td>Baza danych: użytkownik</td>
+            <td><input type="text" name="params[db_user]" value="{$siteParams.db_user}" class="form-control validate[required]" style="text-transform: none"/></td>
+        </tr>
+        <tr>
+            <td>Baza danych: hasło</td>
+            <td><input type="text" name="params[db_pass]" value="{$siteParams.db_pass}" class="form-control validate[required]" style="text-transform: none"/></td>
+        </tr>
+        <tr>
+            <td>Baza danych: nazwa bazy</td>
+            <td><input type="text" name="params[db_dbname]" value="{$siteParams.db_dbname}" class="form-control validate[required]" style="text-transform: none"/></td>
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        <input type="submit" value="Klonuj" class="btn btn-info">
+    </div>
+</form>

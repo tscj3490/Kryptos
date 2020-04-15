@@ -1,0 +1,23 @@
+<table>
+    {foreach from=$zbiory item=zbior}
+        <tr data-id="{$zbior.id}">
+            <td>
+                <input type="text" name="nazwa" value="{$zbior.nazwa}"/>
+            </td>
+            <td>
+                <select class="form-control" name="forma">
+                    <option {if $zbior.formaGromadzeniaDanych == 'papierowa'}selected{/if} value="papierowa">papierowa</option>
+                    <option {if $zbior.formaGromadzeniaDanych == 'elektroniczna'}selected{/if} value="elektroniczna">elektroniczna</option>
+                    <option {if $zbior.formaGromadzeniaDanych == 'papierowa i elektroniczna'}selected{/if} value="papierowa i elektroniczna">papierowa i elektroniczna</option>
+                </select>
+            </td>
+            <td>
+
+            </td>
+            <td>
+                <input type="text" name="{$zbior.nazwa}"/>
+            </td>
+        </tr>
+    {/foreach}
+</table>
+

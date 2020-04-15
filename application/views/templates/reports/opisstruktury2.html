@@ -1,0 +1,43 @@
+<style>
+    .zbiory-raport th,
+    .zbiory-raport {
+        text-align:left;
+    }
+    .zbiory-raport th {
+        background-color: #c2c2c2;
+    }
+</style>
+<h1>Raport zawartości zbioru danych osobowych</h1>
+
+{foreach $zbiory as $z}
+    {if $z.pola}
+        <table class="zbiory-raport">
+            <tr>
+                <th colspan="3">A. PODSTAWOWE INFORMACJE O ZBIORZE</th>
+            </tr>
+            <tr>
+                <td colspan="3" align="left">1. Nazwa zbioru:<br>{$z.nazwa}</td>
+            </tr>
+            <tr>
+                <td width="30%">4. Forma prowadzenia<br>{$z.formaGromadzeniaDanych|upper}</td>
+                <td width="30%">5. Poziom zabezpieczeń<br>{$z.poziomBezpieczenstwa|upper}</td>
+            </tr>
+            <tr>
+                <td colspan="3">6. Zbiór zawiera:<br>{$z.elementy}</td>
+            </tr>
+            <tr>
+                <td colspan="1">7. Sposób zbierania danych do zbioru:<br>{$z.collectingDescription|upper}</td>
+                <td colspan="3">8. Cel:<br>{$z.cel|upper}</td>
+            </tr>
+            <tr>
+                <th colspan="3">B. SZCZEGÓŁOWA ZAWARTOŚĆ</th>
+            </tr>
+            <tr>
+                <td colspan="3">9. Podstawa prawna:<br>{$z.legal_basis nofilter}</td>
+            </tr>
+            <tr>
+                <td colspan="3">10. Pola:<br>{$z.onlyFields nofilter}</td>
+            </tr>
+        </table>
+    {/if}
+{/foreach}

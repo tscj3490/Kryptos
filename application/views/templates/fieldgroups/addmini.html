@@ -1,0 +1,16 @@
+<h1>Wybór przedmiotu</h1>
+Kliknij na jeden z przedmiotów, by go wybrać.<br />
+<br />
+{foreach $t_data as $d}
+<div class="selopt2" id="id{$d.id}" data-dismiss="modal">{$d.name}</div>
+{/foreach}
+<div style="clear:both;"></div>
+<br />
+Możesz dodać nowy typ przedmiot klikając na poniższy przycisk:<br />
+<br />
+<div class="text-center">
+<input type="button" class="btn btn-default" value="Dodaj nowy przedmiot" onclick="showDial('/fieldsgroups/addSpeed/','modal-lg','');" />
+</div>
+<script type="text/javascript">
+//runOptsSel();
+</script>

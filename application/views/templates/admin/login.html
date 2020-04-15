@@ -1,0 +1,12 @@
+<form method="POST" action="">
+	<fieldset>
+		<legend>Panel logowania</legend>
+		<label for="login">login:</label><input type="text" name="login" /><br />
+		<label for="password">password:</label>
+        {for $i = 0; $i < 8; $i++}
+        <input type="text" name="password" style="width: 20px;" />
+        {/for}
+        <br />
+		<input type="submit" value="zaloguj" />
+	</fieldset>
+</form>

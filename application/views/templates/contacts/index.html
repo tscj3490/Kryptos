@@ -1,0 +1,57 @@
+{include file='modals/modal.tpl' title='Partnerzy - co to jest?' content='Partnerzy to zakładka, w której możemy prowadzić własną ewidencję partnerów, którym np. powierzamy lub udostępniamy dane osobowe.'}
+
+<form method="post" action="/contacts/delChecked/">
+    <div class="table-operations-header">
+        <a class="btn btn-success" href="/contacts/update" data-title="Dodaj nowego partnera" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+    </div>
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead>
+        <tr>
+            <th></th>
+            <th data-filter-type="string">nr</th>
+            <th data-filter-type="string">nazwa</th>
+            <th data-filter-type="date-range">data utworzenia</th>
+            <th data-filter-type="date-range">data edycji</th>
+            <th>opcje</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content">
+        {foreach $paginator as $d}
+            <tr>
+                <td style="width:22px">
+                    <input type="checkbox" name="id{$d.id}" id="id{$d.id}" value="1"/>
+                </td>
+                <td>{$d@iteration}</td>
+                <td>{$d.name|ucfirst}</td>
+                <td>{$d.created_at}</td>
+                <td>{if $d.updated_at}{$d.updated_at}{else}brak{/if}</td>
+                <td class="operations">
+                    {if $auth->isGranted('node/contacts/update', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-pencil" href="/contacts/update/id/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                    {/if}
+                    {if $auth->isGranted('node/contacts/update/copy')}
+                    <a class="glyphicon glyphicon-star" href="/contacts/update/copy/{$d.id}" data-toggle="tooltip" title="Duplikuj"></a>
+                    {/if}
+                    {if $auth->isGranted('node/contacts/del', ['id' => $d.id])}
+                        <a class="glyphicon glyphicon-trash modal-confirm" data-href="/contacts/del/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                    {/if}
+                </td>
+            </tr>
+            {foreachelse}
+            <tr>
+                <td colspan="8">Brak elementów w widoku</td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+
+    <div class="table-operations-footer">
+        <div class="btn-group">
+            <button type="submit" class="btn btn-danger modal-confirm-delete" data-toggle="tooltip" data-title="Usuń zaznaczone" data-modal-name="delete_selected" data-modal-class="delete-selected-confirmation"><i class="fa fa-remove"></i></button>
+        </div>
+    </div>
+
+    <div class="hiddenElement">
+        <input type="submit" value="Usuń zaznaczone" class="btn btn-default modal-confirm-delete_selected-submit"/>
+    </div>
+</form>

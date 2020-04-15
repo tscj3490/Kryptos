@@ -1,0 +1,55 @@
+{if $simpleLogin}
+<style>
+.passwordInput {
+    height: 36px;
+    width: 100%;
+    padding: 5px 5px 5px 30px;
+    box-sizing: border-box;
+}
+</style>
+{/if}
+<div class="login-widget">
+    <div class="logo">
+        <img src="/assets/images/kryptos.jpg">
+    </div>
+    <div class="infoText">
+        <h1>ZOSTAŁEŚ WYLOGOWANY</h1>
+    </div>
+    <div class="section">
+        {if $message}
+            <div class="errorMessage">
+                <span>{$message}</span>
+            </div>
+        {/if}
+        <div class="loginBox">
+            <form method="post" action="/index/login" id="loginForm">
+                <input type="text" style="display:none">
+                <input type="password" style="display:none">
+                <input type="hidden" name="login" value="{$login}">
+                {if $simpleLogin}
+                <div class="form-group login">
+                    <i class="fa fa-lock overlay"></i>
+                    <input type="password" name="password" class="passwordInput" placeholder="hasło">
+                </div>
+                {else}
+                <div class="form-group password">{*
+                    *}{math equation="floor(418/x-5)" x=$length assign=width}{*
+                    *}{for $i = 0, $empty = 0; $i < $length; $i++}{$j = $i+1}{*
+                        *}<div style="width:{$width}px">
+                    <input type="password" name="password[{$i}]" class="password" maxlength="1" {if $gwiazdki[$i]} value="0" disabled{else}data-key="{$empty++}"{/if} maxlength="1">
+                    <span>{$j}</span>
+                    </div>{*
+                    *}{/for}{*
+                *}</div>
+                {/if}
+                <div class="form-group submit">
+                    <a href="/" class="btn btn-back">Anuluj</a>
+                    <input type="submit" name="submit" class="btn btn-submit" value="Zaloguj">
+                </div>
+            </form>
+        </div>
+        <div class="errorMessage warning">Z powodu braku aktywności zostałeś wylogowany.<br>Podaj hasło aby się zalogować.</div>
+    </div>
+</div>
+
+{include file="index/_login-script.html"}

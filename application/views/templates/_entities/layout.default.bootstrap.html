@@ -1,0 +1,11 @@
+<div class="form-group row">
+    <label for="{$element.id}" class="col-sm-4">{$element.label}:</label>
+    <div class="col-sm-8">
+        {include file=$template}
+    </div>
+</div>
+{if $element.enableJs}
+    <script type="text/javascript">
+        {if $element.storage}var storage_{$element.storage} = objectsStorage.init({$element.options|json_encode nofilter});{/if}
+    </script>
+{/if}

@@ -1,0 +1,39 @@
+<div>
+    <h2>Lista haseł</h2>
+    <table class="table table-small">
+        <thead>
+        <tr>
+            <th>Nazwa aplikacji</th>
+            <th>Login</th>
+            <th>Hasło</th>
+            <th>Komentarz</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $userPermissions as $userPermission}
+            <tr>
+                <td>{$userPermission.permission.name}</td>
+                <td>{$userPermission.login}</td>
+                <td>{$userPermission.password}</td>
+                <td>{$userPermission.comment}</td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+</div>
+
+<hr>
+{if $storageTask.signature_required}
+    {include file="tasks-my/_element-signature-form.html"}
+{else}
+    <form name="f_accept" id="f_accept" action="{$baseUrl}/confirm" method="post" class="form-horizontal" role="form">
+        <div>
+            <input type="submit" value="{'AKCEPTUJ'|translate}" class="btn btn-success"/>
+        </div>
+        <input type="hidden" name="id" id="id" value="{$storageTask.id}"/>
+    </form>
+
+    <script>
+        backendUtilities.addVatidationEngine("f_accept");
+    </script>
+{/if}

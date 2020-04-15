@@ -1,0 +1,65 @@
+{$message}
+<div class="body-action">
+    <a class="btn btn-info" href="/audits/update">Dodaj audyt</a>
+    <a class="btn btn-info" href="/audits/report">Raport</a>
+    {if $userIsKodoOrAbi}
+    <a class="btn btn-info" href="/audits/methods">Lista metod</a>
+    {/if}
+</div>
+<div style="height:10px"></div>
+<hr class="nomargin"/>
+<div style="height:10px"></div>
+<form method="post" action="/audits/delChecked/">
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead class="ui-widget-header">
+        <tr>
+            <th></th>
+            <th>Nr</th>
+            <th>Tytuł</th>
+            <th>Data od</th>
+            <th>Data do</th>
+            <th>Metoda</th>
+            <th>Identyfikator raportu</th>
+            <th>Ilość zbiorów</th>
+            <th>Operacje</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content">
+        {foreach $paginator as $d}
+        <tr>
+            <td style="width:22px">
+                <input type="checkbox" name="id[]" id="id{$d.id}" value="{$d.id}"/>
+            </td>
+            <td>{$d@iteration}</td>
+            <td>{$d.title}</td>
+            <td>{smart_date value=$d.date_from}</td>
+            <td>{smart_date value=$d.date_to}</td>
+            <td>{$auditMethods[$d.method_id]}</td>
+            <td>{$d.identifier}</td>
+            <td>{$d.zbiory_count_done} / {$d.zbiory_count}</td>
+            <td>
+                {if $auth->isGranted('node/audits/zbiory', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-briefcase" href="/audits/zbiory/auditId/{$d.id}" data-toggle="tooltip" title="Wybierz zbiory"></a>
+                {/if}
+                {if $auth->isGranted('node/audits/audit', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-list-alt" href="/audits/audit/auditId/{$d.id}" data-toggle="tooltip" title="Przejdź do audytu"></a>
+                {/if}
+                {if $auth->isGranted('node/audits/update', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-pencil" href="/audits/update/id/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                {/if}
+                {if $auth->isGranted('node/audits/update/copy')}
+                <a class="glyphicon glyphicon-star" href="/audits/update/copy/{$d.id}" data-toggle="tooltip" title="Duplikuj"></a>
+                {/if}
+                {if $auth->isGranted('node/audits/del', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="/audits/del/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+
+    </table>
+    {if $userIsKodoOrAbi}
+    <input type="submit" value="Usuń zaznaczone" class="btn btn-default" onclick="return confirm('Usunąć?')"/>
+    {/if}
+</form>

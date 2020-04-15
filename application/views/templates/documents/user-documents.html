@@ -1,0 +1,65 @@
+<form method="GET" action="/documents/all" class="hidden">
+    <div class="row">
+        <div class="col-sm-3">
+            <select name="active" class="form-control">
+                <option value="all">WSZYSTKIE DOKUMENTY</option>
+                <option value="0" {if $p_active === '0'}selected="selected"{/if}>ARCHIWUM</option>
+                <option value="1" {if $p_active === '1'}selected="selected"{/if}>AKTYWNE</option>
+                <option value="2" {if $p_active === '2'}selected="selected"{/if}>AKTYWNE - drobne zmiany</option>
+                <option value="3" {if $p_active === '3'}selected="selected"{/if}>NIE AKTYWNE</option>
+            </select>
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn" value="Filtruj"/>
+        </div>
+    </div>
+</form>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="string">id</th>
+        <th data-filter-type="string">numer</th>
+        <th data-filter-type="date-range" class="text-center">utworzony</th>
+        <th data-filter-type="date-range" class="text-center">zarchiwizowany</th>
+        <th data-filter-type="string">typ</th>
+        <th data-filter-type="select-items">aktywne</th>
+        <th>podgląd</th>
+    </tr>
+
+    </thead>
+    <tbody class="ui-widget-content">
+    {foreach $paginator as $d}
+        <tr>
+            <td>{$d@iteration}</td>
+            <td class="text-center">{$d.numbertxt}</td>
+            <td class="text-center">{$d.created_at}</td>
+            <td class="text-center">{$d.archived_at}</td>
+            <td class="text-center">{if $d.template_type == 0}INNE{/if}{if $d.template_type == 1}OŚWIADCZENIE{/if}{if $d.template_type == 2}UPOWAŻNIENIE DO POMIESZCZEŃ{/if}{if $d.template_type == 3}UPOWAŻNIENIE DO ZBIORÓW{/if}</td>
+            <td class="text-center">
+                {if $d.active == '0'}<i class="fa fa-circle" style="color:#c7bb00;" data-toggle="tooltip" title="ARCHIWUM"><span class="select-item hiddenElement">ARCHIWUM</span></i>
+                {elseif $d.active == '1'}<i class="fa fa-circle" style="color:#00cc00;" data-toggle="tooltip" title="AKTUALNY"><span class="select-item hiddenElement">AKTUALNY</span></i>
+                {elseif $d.active == '2'}<i class="fa fa-circle" style="color:#006d36;" data-toggle="tooltip" title="AKTUALNY - drobne zmiany"><span class="select-item hiddenElement">AKTUALNY - drobne zmiany</span></i>
+                {elseif $d.active == '3'}<i class="fa fa-circle" style="color:#cc0000;" data-toggle="tooltip" title="NIEAKTUALNY"><span class="select-item hiddenElement">NIEAKTUALNY</span></i>
+                {/if}
+            </td>
+            <td class="operations">
+                {capture name="tagClass"}confirmed-{if $document.confirmed === '1'}true{else}false{/if} choose-from-dial{/capture}
+
+                {element tag='a' route='documents/get-choice' routeParams=['id' => $d.id] attributes=[
+                    'route-attribute' => 'data-dial-url',
+                    'class' => $smarty.capture.tagClass,
+                    'title' => 'Podgląd',
+                    'extra' => ['tooltip'],
+                    'data' => [
+                        'ajax' => '1',
+                        'dial-class' => 'modal-lg modal-max'
+                    ],
+                    'innerHtml' => '<i class="fa fa-eye"></i>'
+                ]}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>
+

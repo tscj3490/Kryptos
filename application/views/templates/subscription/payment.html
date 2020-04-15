@@ -1,0 +1,365 @@
+<div class="widget animated fadeInDown" id="container1" name="container1">
+    <form name="f_data" id="f_data" method="POST" action="{$baseUrl}/save" class="wizardContainer form-horizontal">
+        <div class="wizardElement">
+            <section class="step" data-step-title="{"Podaj dane właściciela systemu"|translate}">
+            <div class="form-group">
+                <div class="col-sm-6"><strong>Wybierz kraj</strong><br />
+                <select id="country-select" data-role="country-selector" value="POL" class="form-control"></select>
+<br>
+                <div id="country-select-2">
+                </div>
+                <div id="country-select-input-1">
+                </div>
+                <div class="form-group row">
+                    <div id="pobierz-dane" class="col-sm-8">
+                    <button id="searchByNiporRegon" class="btn btn-blue-1"><i class="fa fa-search" id="searchIcon"></i> Wyszukaj w GUS</button>
+                    </div>
+                    </div>
+                    <br>
+                    <div class="form-group row">
+                        <div id="nazwa-podmiotu" class="col-sm-12">
+                            <input name="nazwapodmiotu" id="nazwapodmiotu"  type='text' class="form-control typeaheadElement" placeholder="Nazwa podmiotu" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <input name="imie" id="imie"  type='text' class="form-control typeaheadElement" placeholder="Imię" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <input name="nazwisko" id="nazwisko"  type='text' class="form-control typeaheadElement" placeholder="Nazwisko" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <input name="email" id="email"  type='text' class="form-control typeaheadElement" placeholder="E-mail do powiadomień">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <input name="telefon" id="telefon"  type='text' class="form-control typeaheadElement" placeholder="Telefon kontaktowy">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="col-sm-12">
+                    <strong>Adres Siedziby właściciela systemu:</strong><br />
+                    </div>
+                    <div class="form-group row">
+                    <div class="col-sm-6">
+                    <input name="miejscowosc" id="miejscowosc"  type='text' class="form-control typeaheadElement" placeholder="Miejscowość">
+                    </div>
+                    <div class="col-sm-6">
+                        <input name="kodpocztowy" id="kodpocztowy"  type='text' class="form-control typeaheadElement" placeholder="Kod pocztowy" data-mask="99-999">
+                    </div>
+                    </div>
+                    <div class="form-group row">
+                    <div class="col-sm-12">
+                        <input name="ulica" id="ulica"  type='text' class="form-control typeaheadElement" placeholder="Ulica">
+                    </div>
+                    </div>
+                    <div class="form-group row">
+                    <div class="col-sm-6">
+                        <input name="nrdomu" id="nrdomu"  type='text' class="form-control typeaheadElement" placeholder="Numer domu">
+                    </div>
+                    <div class="col-sm-6">
+                        <input name="nrlokalu" id="nrlokalu"  type='text' class="form-control typeaheadElement" placeholder="Numer lokalu">
+                    </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <input name="numernip" id="numernip"  type='text' class="form-control typeaheadElement" placeholder="Numer NIP">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <input name="numerregon" id="numerregon"  type='text' class="form-control typeaheadElement" placeholder="REGON">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <input name="numerkrs" id="numerkrs"  type='text' class="form-control typeaheadElement" placeholder="KRS">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </section>
+            <section class="step" data-step-title="{"Zgody"|translate}">
+            <div class="form-group row">
+                <div class="col-sm-12">
+                    <input name="zgodaregulamin" id="zgodaregulamin" class="ios-switch ios-switch-success ios-switch-sm" type="checkbox" required>Akceptuję <a href="#">Regulamin usługi Kryptos24</a> oraz <a href="#">Politykę Prywatności</a><br>
+                    <input name="zgodanewslatter" id="zgodanewslatter" class="ios-switch ios-switch-success ios-switch-sm" type="checkbox">Wyrażam zgodę na przetwarzanie moich danych osobowych przez Agencję Bezpieczeństwa Danych Osobowych z siedzibą w Nowym Sączu, przy ul. Rynek 13, w celu korzystania z usługi „Newsletter”. Zapoznałem/zapoznałam się z pouczeniem dotyczącym prawa dostępu do treści moich danych i możliwości ich poprawiania. Jestem świadom/świadoma, iż moja zgoda może być odwołana w każdym czasie, co skutkować będzie usunięciem mojego adresu e-mail z listy dystrybucyjnej usługi „Newsletter Kryptos24”.<br>
+                    <input name="zgodawcelachmarketingowych" id="zgodawcelachmarketingowych" class="ios-switch ios-switch-success ios-switch-sm" type="checkbox">Wyrażam zgodę na przetwarzanie swoich danych osobowych w celach marketingowych przez Agencję Bezpieczeństwa Danych Osobowych Sp. z o.o. zgodnie z ustawą z dnia 29 sierpnia 1997 r. o ochronie danych osobowych (tekst jednolity: Dz. U. 2016 r. poz. 922 z późn. zm.) oraz na otrzymywanie od Agencji Bezpieczeństwa Danych Osobowych Sp. z o.o. informacji handlowych drogą elektroniczną zgodnie z ustawą z dnia 18.07.2002 r. (Dz.U. nr 144, poz.1204 z późn. zm.)
+                    o świadczeniu usług drogą elektroniczną.<br>
+                </div>
+            </div>
+            </section>
+            <section class="step" data-step-title="{"Dane podstawowe"|translate}">
+            <div class="form-group row">
+                <div class="col-sm-12 alert alert-info">
+                    Aktywacja przebiegła pomyślnie. Zacznijmy od wprowadzenia podstawowych danych organizacji, w której pomogę Ci zarządzać bezpieczeństwem informacji.
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-6"><strong>Wybierz kraj</strong><br />
+                    <select id="country-select-c" data-role="country-selector" value="POL" class="form-control"></select>
+                    <br>
+                    <div id="country-select-2-c">
+                    </div>
+                    <div id="country-select-input-1-c">
+                    </div>
+                    <div class="form-group row">
+                        <div id="pobierz-dane-c" class="col-sm-8">
+                            <button id="searchByNiporRegon-c" class="btn btn-blue-1"><i class="fa fa-search" id="searchIcon"></i> Wyszukaj w GUS</button>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-11">
+                            <input name="nazwaado" id="nazwaado"  type='text' class="form-control typeaheadElement" placeholder="Nazwa ADO">
+                        </div>
+                        <div class="col-sm-1">
+                            <a href="#" data-toggle="popover" title="Podpowiedź" data-content="ADO - Administrator Danych Osobowych" data-trigger="focus" ><i class="fa fa-question"></i></a>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div id="pobierz-dane-c" class="col-sm-4">
+                            <button id="poprawdane" class="btn btn-orange-1"><i class="fa fa-unlock" id="searchIcon"></i> Popraw dane</button>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-11">
+                            <span class="text-blue-1"><strong>Czy wyznaczono ABI?</strong></span>
+                        </div>
+                        <div class="col-sm-1">
+                            <a href="#" data-toggle="popover" title="Podpowiedź" data-content="ABI - Administrator Bezpieczeństwa Informacji" data-trigger="focus" ><i class="fa fa-question"></i></a>
+                        </div>
+                        <form>
+                        <div class="col-sm-12">
+                            <div class="radio">
+                                <label><input type="radio" class="form-control" name="wyznaczabi" id="wyznaczabitak" checked>Tak<br></label>
+                            </div>
+                            <div class="radio">
+                                <label><input type="radio" class="form-control" name="wyznaczabi" id="wyznaczabinie">Nie</label>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12" id="imieinazwiskabi" name="imieinazwiskoabi">
+                        <input name="daneabi" id="daneabi"  type="text" class="form-control typeaheadElement" placeholder="Imię i nazwisko ABI">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="col-sm-12">
+                        <strong>Adres Siedziby:</strong><br />
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <input name="miejscowosc-c" id="miejscowosc-c"  type='text' class="form-control typeaheadElement" placeholder="Miejscowość">
+                        </div>
+                        <div class="col-sm-6">
+                            <input name="kodpocztowy-c" id="kodpocztowy-c"  type='text' class="form-control typeaheadElement" placeholder="Kod pocztowy" data-mask="99-999">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <input name="ulica-c" id="ulica-c"  type='text' class="form-control typeaheadElement" placeholder="Ulica">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <input name="nrdomu-c" id="nrdomu-c"  type='text' class="form-control typeaheadElement" placeholder="Numer domu">
+                        </div>
+                        <div class="col-sm-6">
+                            <input name="nrlokalu-c" id="nrlokalu-c"  type='text' class="form-control typeaheadElement" placeholder="Numer lokalu">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <input name="adreswww-c" id="adreswww-c"  type='text' class="form-control typeaheadElement" placeholder="Adres strony www">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </section>
+            <section class="step" data-step-title="Modale">
+    
+           
+            </section>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover();
+        $('input[type="radio"]').on('ifChanged', function (e) {
+                if($('#wyznaczabitak').is(":checked")) {
+                    $('#imieinazwiskabi').css('display', '');
+                    console.log('Zaznaczono checkbox');
+                }
+                else {
+                    $('#imieinazwiskabi').css('display', 'none');
+                    console.log('Zaznaczono checkbox #2');
+                }
+            });
+        $('#poprawdane').click( function() {
+            $('#poprawdane').notify(
+                {
+                    image: '<i class="fa fa-warning"></i>',
+                    title: 'Uwaga!',
+                    text: 'Nowe dane różnią się od danych pobranych z rejestrów państwowych.'
+                },
+                {
+                    style: 'metro',
+                    className: 'cool',
+                    clickTohide: true,
+                    autoHide: false,
+                    position: 'right middle',
+                    arrowSize: 10,
+                    gap: 3}
+            )
+        });
+        var val1 = $('#country-select-c').val();
+        if (val1 == 'POL') {
+            $('#searchByNiporRegon-c').css("display", "");
+            $('#country-select-2-c').html("<strong>Wprowadź NIP/REGON</strong><select id='cselect-c' class='form-control typeaheadElement'><option value='nip'>NIP</option><option value='regon'>REGON</option></select>");
+            console.log('polska');
+            var nipreg1 = $('#cselect-c').val();
+            if (nipreg1 == 'nip') {
+                $('#country-select-input-1-c').html("<input type='text' id='cselect-input-c' class='form-control typeaheadElement' placeholder='Wpisz numer NIP'>");
+                console.log('Załadowano NIP! #1');
+            }
+            $('#cselect-c').change( function() {
+                    var nipreg1 = $('#cselect-c').val();
+                    if (nipreg1 == 'nip') {
+                        $('#country-select-input-1-c').html("<input type='text' id='cselect-input-c' class='form-control typeaheadElement' placeholder='Wpisz numer NIP'>");
+                        console.log('Załadowano NIP! #1');
+                    }
+                    else if (nipreg1 == 'regon') {
+                        $('#country-select-input-1-c').html("<input type='text' id='cselect-input-c' class='form-control typeaheadElement' placeholder='Wpisz numer REGON'>");
+                        console.log('Załadowano REGON');
+                    }
+                }
+            )
+        }
+        $('#country-select-c').change( function () {
+                var val = $(this).val();
+                if (val == 'POL') {
+                    $('#searchByNiporRegon-c').css("display", "");
+                    $('#country-select-2-c').html("<strong>Wprowadź NIP/REGON</strong><select id='cselect-c' class='form-control typeaheadElement'><option value='nip'>NIP</option><option value='regon'>REGON</option></select>");
+                    var valselect = $('#cselect-c').val();
+                    if (valselect == 'nip') {
+                        $('#country-select-input-1-c').html("<input type='text' id='cselect-input-c' class='form-control typeaheadElement' placeholder='Wpisz numer NIP'>");
+                    }
+                    else if (valselect == 'regon') {
+                        $('#country-select-input-1-c').html("<input type='text' id='cselect-input-c' class='form-control typeaheadElement' placeholder='Wpisz numer REGON'>");
+                    }
+                    else if (valselect == 'vat') {
+                        $('#country-select-input-1-c').html("<input type='text' id='cselect-input-c' class='form-control typeaheadElement' placeholder='Wpisz numer VAT'>");
+                    }
+                    console.log('polska #2');
+                    $('#cselect-c').change(function () {
+                        var nipreg = $('#cselect-c').val();
+                        if (nipreg == 'nip') {
+                            $('#country-select-input-1-c').html("<input type='text' id='cselect-input-c' class='form-control typeaheadElement' placeholder='Wpisz numer NIP'>");
+                            console.log('Załadowano NIP! #2')
+                        }
+                        else if (nipreg == 'regon') {
+                            $('#country-select-input-1-c').html("<input type='text' id='cselect-input-c' class='form-control typeaheadElement' placeholder='Wpisz numer REGON'>");
+                            console.log('Załadowano REGON! #2')
+                        }
+                    })}
+                else if (val !== 'POL') {
+                    $('#country-select-2-c').html("<strong>Wprowadź numer VAT</strong><select id='cselect-c' class='form-control typeaheadElement'><option value='vat'>Numer VAT</option></select>");
+                    $('#country-select-input-1-c').html("<input type='text' id='cselect-input-c' class='form-control typeaheadElement' placeholder='Podaj numer VAT'>");
+                    $('#searchByNiporRegon-c').css('display', 'none');
+                    console.log('angielska');
+                }
+            }
+        );
+        var val1 = $('#country-select').val();
+            if (val1 == 'POL') {
+                $('#searchByNiporRegon').css("display", "");
+                $('#country-select-2').html("<strong>Wprowadź NIP/REGON</strong><select id='cselect' class='form-control typeaheadElement'><option value='nip'>NIP</option><option value='regon'>REGON</option></select>");
+                console.log('polska');
+                var nipreg1 = $('#cselect').val();
+                if (nipreg1 == 'nip') {
+                    $('#country-select-input-1').html("<input type='text' id='cselect-input' class='form-control typeaheadElement' placeholder='Wpisz numer NIP'>");
+                    console.log('Załadowano NIP! #1');
+                }
+                $('#cselect').change( function() {
+                        var nipreg1 = $('#cselect').val();
+                        if (nipreg1 == 'nip') {
+                            $('#country-select-input-1').html("<input type='text' id='cselect-input' class='form-control typeaheadElement' placeholder='Wpisz numer NIP'>");
+                            console.log('Załadowano NIP! #1');
+                        }
+                        else if (nipreg1 == 'regon') {
+                            $('#country-select-input-1').html("<input type='text' id='cselect-input' class='form-control typeaheadElement' placeholder='Wpisz numer REGON'>");
+                            console.log('Załadowano REGON')
+                        }
+                    }
+                )
+            }
+
+            $('#country-select').change( function () {
+                    var val = $(this).val();
+                    if (val == 'POL') {
+                        $('#searchByNiporRegon').attr("style", "")
+                        $('#country-select-2').html("<strong>Wprowadź NIP/REGON</strong><select id='cselect' class='form-control typeaheadElement'><option value='nip'>NIP</option><option value='regon'>REGON</option></select>");
+                        var valselect = $('#cselect').val();
+                        if (valselect == 'nip') {
+                            $('#country-select-input-1').html("<input type='text' id='cselect-input' class='form-control typeaheadElement' placeholder='Wpisz numer NIP'>");
+                        }
+                        else if (valselect == 'regon') {
+                            $('#country-select-input-1').html("<input type='text' id='cselect-input' class='form-control typeaheadElement' placeholder='Wpisz numer REGON'>");
+                        }
+                        else if (valselect == 'vat') {
+                            $('#country-select-input-1').html("<input type='text' id='cselect-input' class='form-control typeaheadElement' placeholder='Wpisz numer VAT'>");
+                        }
+                        console.log('polska #2');
+                        $('#cselect').change(function () {
+                            var nipreg = $('#cselect').val();
+                            if (nipreg == 'nip') {
+                                $('#country-select-input-1').html("<input type='text' id='cselect-input' class='form-control typeaheadElement' placeholder='Wpisz numer NIP'>");
+                                console.log('Załadowano NIP! #2')
+                            }
+                            else if (nipreg == 'regon') {
+                                $('#country-select-input-1').html("<input type='text' id='cselect-input' class='form-control typeaheadElement' placeholder='Wpisz numer REGON'>");
+                                console.log('Załadowano REGON! #2')
+                            }
+                        })}
+                    else if (val !== 'POL') {
+                        $('#country-select-2').html("<strong>Wprowadź numer VAT</strong><select id='cselect' class='form-control typeaheadElement'><option value='vat'>Numer VAT</option></select>");
+                        $('#country-select-input-1').html("<input type='text' id='cselect-input' class='form-control typeaheadElement' placeholder='Podaj numer VAT'>");
+                        $('#searchByNiporRegon').attr("style", "display: none;")
+                        console.log('angielska');
+                    }
+                }
+            )
+    }
+    );
+    </script>
+<link href="/assets/plugins/country-selector/css/jquery-countryselector.css" rel="stylesheet">
+<script src="/assets/plugins/country-selector/js/jquery.countrySelector.js"></script>
+<p>Trwa przekierowanie na stronę płatności....</p>
+<form action="{$data.url_direct}" method="post" class="form">
+    <input type="hidden" name="p24_session_id" value="{$sessionId}" />
+    <input type="hidden" name="p24_merchant_id" value="{$data.merchant_id}" />
+    <input type="hidden" name="p24_pos_id" value="{$data.merchant_id}" />
+    <input type="hidden" name="p24_amount" value="{$subscription.price}" />
+    <input type="hidden" name="p24_currency" value="{$subscription.currency}" />
+    <input type="hidden" name="p24_description" value="{$subscription.description}" />
+    <input type="hidden" name="p24_country" value="PL" />
+    <input type="hidden" name="p24_email" value="{$email}" />
+    <input type="hidden" name="p24_language" value="pl" />
+    <input type="hidden" name="p24_url_return" value="{$returnUrl}" />
+    <input type="hidden" name="p24_url_status" value="{$statusUrl}" />
+    <input type="hidden" name="p24_api_version" value="3.2" />
+    <input type="hidden" name="p24_sign" value="{$sign}" />
+    <input name="submit_send" value="wyślij" type="submit" style="display:none" />
+</form>
+<script>
+    //$('form').submit();
+</script>

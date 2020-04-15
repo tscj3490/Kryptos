@@ -1,0 +1,64 @@
+{$message}
+<form  action="/dokumentyzszablonu/szablonnowysave" method="POST" class="form-horizontal" role="form" enctype="multipart/form-data">
+    <h4>Definicja szablonu</h2>    
+        <div class="form-group row">
+            Tagi do użycia: {$tagi}
+        </div>
+        <div class="">
+            Przykład użycia: 	&#123;$nazwa&#125; &#123;$nazwa|strtoupper&#125; &#123;$nazwa|strtolower&#125; &#123;$nazwa|ucfirst&#125;
+        </div>
+        <br/>
+        <div class="form-group row">
+            <label  class="col-sm-2 ">Nazwa:</label>
+            <div class="col-md-4">            
+                <input type="text" required name="nazwa" value="{$szablon.nazwa}" />            
+            </div></div>
+         <div class="form-group row">
+            <label  class="col-sm-2 ">Type:{if !$szablon.id}(defaults to Nazwa if blank){/if}</label>
+            <div class="col-md-4">            
+                <input {if $szablon.id} disabled {/if} type="text" name="type" value="{$szablon.type}" />            
+            </div></div>
+        <div class="form-group row"> 
+            <label  class="col-sm-2 ">Aktywny:</label>
+            <div class="col-md-4">           
+                <input class="form-control" type="checkbox" name="aktywny" value="1" {if $szablon.aktywny}checked{/if} />            
+            </div>
+        </div>
+        <div class="form-group row">
+            <label  class="col-sm-2 ">Numbering Rule:</label>
+            <div class="col-md-4">            
+                <input type="text" placeholder="[LP][RRRR][MM][BLABLA]" required name="numbering_rule" value="{$szablon.numbering_rule}" />            
+            </div></div>
+{$edytor}
+        <div class="">
+            <textarea id="editor" name="tresc">{$szablon.tresc}</textarea>
+        </div>
+        <div class="">
+            <input type="submit" value="Zapisz"  class="btn btn-info"  >
+            <input type="hidden" value="{$szablon.id}" name="id" >
+
+        </div>
+<div>Legenda for Numbering Rule:
+<br />
+<ul>
+	<li>[LP] - liczba porządkowa</li>
+	<li>[RRRR] - rok</li>
+	<li>[MM] - miesiąć</li>
+	<li>[DD] - dzień</li>
+        <li>[BLA BLA] - Any Text</li>
+</ul></div>
+</form>
+
+<script src="/assets/plugins/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var roxyFileman = '/assets/plugins/roxyFileman/fileman/index.html';
+        CKEDITOR.replace('editor', {
+            filebrowserBrowseUrl: roxyFileman,
+            fullPage: true,
+            entities_additional: '',
+            filebrowserImageBrowseUrl: roxyFileman + '?type=image',
+            removeDialogTabs: 'link:upload;image:upload'
+        });
+    });
+</script> 

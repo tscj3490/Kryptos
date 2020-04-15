@@ -1,0 +1,27 @@
+<div class="page-medium">
+    <form name="f_profile" id="f_profile" action="/komunikacja/send/id/{$osoba.id}" method="post" class="form-horizontal" role="form" >
+        <div class="form-group">
+            <label class="col-sm-4">Temat:</label>
+            <div class="col-sm-8">
+                {$komunikat.temat}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4">Treść:</label>
+            <div class="col-sm-8">
+                {$komunikat.tresc nofilter}
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4">Dodane:</label>
+            <div class="col-sm-8">
+                {$komunikat.insert}
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_profile");
+</script>

@@ -1,0 +1,32 @@
+<h1 id="fieldsHeader"></h1>
+<br />
+<input type="text" name="searcher" id="searcher" class="form-control" placeholder="Wpisz szukaną frazę" onkeyup="runOptsSearch();" />
+<hr />
+<div id="optsSearch">
+<div class="optsnodata">Brak wyników spełniających podane kryteria wyszukiwania</div>
+<div id="fieldsList"></div>
+</div>
+<script type="text/javascript">
+$('#fieldsHeader').html(t_opts.t_data['{$person}']['groupssettings']['{$group}']['name']);
+$.each(t_opts.t_data['{$person}']['groupssettings']['{$group}']['opts'], function(i3,v3) {
+   $('#fieldsList').append('<div class="selopt2bl">'+v3+'</div>');
+   $('#fieldsList .selopt2bl:last').click(function(){
+      var ide = $(this).html();
+      if ( t_opts.t_data['{$person}']['groupssettings']['{$group}']['selects'][ide] == 1 ) {
+         t_opts.t_data['{$person}']['groupssettings']['{$group}']['selects'][ide] = 0;
+      } else {
+         t_opts.t_data['{$person}']['groupssettings']['{$group}']['selects'][ide] = 1;
+      }
+      setOptsView(actualPersonTab,actualItemsTab);
+      setElSel();
+   });
+   setElSel();
+});
+function setElSel() {
+   $('.selopt2bl').each(function(){
+      var ide = $(this).html();
+      if ( t_opts.t_data['{$person}']['groupssettings']['{$group}']['selects'][ide] == 1 ) { $(this).addClass('active'); }
+      else { $(this).removeClass('active'); }
+   });
+}
+</script>

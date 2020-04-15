@@ -1,0 +1,14 @@
+<h1>{$dialogTitle}</h1>
+
+<div class="row">
+    <div class="col-sm-12">
+        <form name="form_tickets_ajax_create" id="form_tickets_ajax_create" action="{$baseUrl}/save" method="post" class="form-horizontal ajax-form" role="form" data-process-fn="formProcessDialModal">
+            {if $cloneId}<input type="hidden" name="clone" value="{$cloneId}"/>{/if}
+            {include file="registry/_form-update.html"}
+        </form>
+    </div>
+</div>
+
+<div class="footer-actions">
+    <a class="btn btn-success pull-right dialog-form-submit">Zapisz</a>
+</div>

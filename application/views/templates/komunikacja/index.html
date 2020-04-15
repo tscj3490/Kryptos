@@ -1,0 +1,120 @@
+<div class="widget transparent box-messages">
+    {include file='komunikacja/_top.html'}
+    <div class="row">
+        <div class="col-md-3">
+            {include file='komunikacja/_menu.html'}
+            {include file='modals/modal.tpl' title='Konta bankowe wraz z uprawnieniami' content='Umożliwiam Ci prowadzenie rejestru kont bankowych wraz z osobami upoważnionymi do ich prowadzenia. Przypisz tutaj konta bankowe, którymi zarządzasz oraz osoby do nich uprawnione.'}
+
+        </div>
+
+        <div class="col-md-9">
+            <div class="mail-list">
+                <div class="clearfix"></div>
+                <form method="post">
+                    <!-- Toolbar message -->
+                    <div class="data-table-toolbar">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <div class="btn-toolbar" role="toolbar">
+                                    <div class="btn-group">
+                                        <div class="rows-check-cont">
+                                            <input type="hidden" name="select-all-hidden">
+                                            <div class="icheckbox_square-aero js-checkbox select-all-checkbox" data-target-id="select-all-hidden" data-target=".table-message">
+                                                <ins class="iCheck-helper"></ins>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="btn-group">
+                                        <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="fa fa-tag"></i> <span class="caret"></span></a>
+                                    </div>
+                                    <div class="btn-group">
+                                        {if $section != 'trash'}<a data-toggle="tooltip" title="Usuń zaznaczone" class="btn btn-primary"><i class="fa fa-trash-o"></i></a>{/if}
+                                    </div>
+                                    <div class="btn-group">
+                                        <a data-toggle="tooltip" title="Refresh" class="btn btn-primary" onclick="document.location.reload()"><i class="fa fa-undo"></i></a>
+                                    </div>
+                                    {*<div class="btn-group">
+                                        <a data-toggle="tooltip" title="Move to folder" class="btn btn-primary"><i class="fa fa-folder"></i> <span class="caret"></span></a>
+                                    </div>*}
+                                    <div class="btn-group">
+                                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Więcej <span class="caret"></span></button>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li><a href="/komunikacja/all-change-status/status/read">Oznacz wszystkie jako <b>przeczytane</b></a></li>
+                                            <li><a href="/komunikacja/all-change-status/status/unread">Oznacz wszystkie jako <b>nieprzeczytane</b></a></li>
+                                            {*<li><a href="#fakelink">Move all to Archive</a></li>*}
+                                            <li class="divider"></li>
+                                            {if $section != 'trash'}
+                                                <li><a href="/komunikacja/all-change-status/status/trash">Przenieś wszystkie do <b>kosza</b></a></li>
+                                            {else}
+                                                <li><a href="/komunikacja/all-change-status/status/untrash">Przenieś wszystkie do <b>odebranych</b></a></li>
+                                            {/if}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 hidden-xs">
+                                <div class="pull-right">
+                                    <span class="paging-status"> strona {$pages->current} z {$pages->pageCount}</span>
+                                    <div class="btn-group">
+                                        {if $pages->previous}<a href="/komunikacja/index/page/{$pages->previous}" class="btn btn-default"><i class="fa fa-chevron-left"></i></a>{/if}
+                                        {if $pages->next}<a href="/komunikacja/index/page/{$pages->next}" class="btn btn-default"><i class="fa fa-chevron-right"></i></a>{/if}
+                                    </div>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-cog"></i>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a href="#fakelink">Action</a></li>
+                                            <li><a href="#fakelink">Another action</a></li>
+                                            <li><a href="#fakelink">Something else here</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="#fakelink">Separated link</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div><!-- End div .col-sm-3 -->
+                        </div><!-- End div .row -->
+                    </div><!-- End div .data-table-toolbar -->
+                    <!-- End toolbar message -->
+
+
+                    <!-- Message table -->
+                    <div class="table-responsive">
+                        <table class="table table-hover table-message">
+                            <tbody>
+                            {foreach $odebrane as $od}
+                                <tr class="{if $od.read_status==0}unread{/if}">
+                                    <td style="width: 20px">
+                                        <input type="hidden" name="ids[{$od.id}]" value="0">
+                                        <div class="icheckbox_square-aero js-checkbox" data-target-id="ids[{$od.id}]">
+                                            <ins class="iCheck-helper"></ins>
+                                        </div>
+                                    </td>
+                                    <td style="width: 20px;"><a href="javascript:;"><i class="icon-star-1 warning"></i></a></td>
+                                    <td><a href="/komunikacja/view/id/{$od.id}">{$od.nazwisko} {$od.imie}</a></td>
+                                    <td><a href="/komunikacja/view/id/{$od.id}">{$od.temat}</a></td>
+                                    <td><i class="icon-attach-3" data-toggle="tooltip" title="Business Contract.pdf - 2,238KB"></i></td>
+                                    <td><span class="timeago" title="{$od.created_at}">{$od.created_at|substr:0:10}</span></td>
+                                </tr>
+                            {/foreach}
+                            </tbody>
+                        </table>
+                    </div><!-- End div .table-responsive -->
+                    <!-- End message table -->
+
+                    <!-- Footer message toolbar -->
+                    <div class="data-table-toolbar-footer">
+                        <div class="pull-right">
+                            <span class="paging-status"> strona {$pages->current} z {$pages->pageCount}</span>
+                            <div class="btn-group">
+                                {if $pages->previous}<a href="/komunikacja/index/page/{$pages->previous}" class="btn btn-default"><i class="fa fa-chevron-left"></i></a>{/if}
+                                {if $pages->next}<a href="/komunikacja/index/page/{$pages->next}" class="btn btn-default"><i class="fa fa-chevron-right"></i></a>{/if}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Footer message toolbar -->
+                </form>
+            </div>
+        </div><!-- End div .col-md-10 -->
+    </div><!-- End div .row -->
+</div><!-- End div .box-info -->

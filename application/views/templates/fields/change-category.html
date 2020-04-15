@@ -1,0 +1,19 @@
+<h3 class="text-center" style="margin-top:0px;margin-bottom:10px;">Zmień kategorię</h3>
+<form method="post" action="/fields/change-category-save/" class="ajax-form" role="form" data-process-fn="formProcessLocationReload">
+    <div class="form-group row">
+        <label for="fieldscategory_id" class="col-sm-4">Kategoria:</label>
+        <div class="col-sm-8">
+            <select name="fieldscategory_id" id="fieldscategory_id" class="form-control">
+            {foreach $fieldscategories as $fieldscategory}
+                <option value="{$fieldscategory.id}">{$fieldscategory.name}</option>
+            {/foreach}
+            </select>
+        </div>
+    </div>
+    <input type="hidden" name="rowSelect" value="{$smarty.post.rowSelect|implode:","}"/>
+    <input type="submit" value="Zmień kategorię" class="btn btn-default pull-right"/>
+</form>
+<div style="clear:both;"></div>
+<script type="text/javascript">
+    $('#dateupdate').bootstrapDP(defaultBootstrapDPSettings);
+</script>

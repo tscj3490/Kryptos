@@ -1,0 +1,38 @@
+    {include file='modals/modal.tpl' title='Komunikaty - co to jest?' content='Chcesz wysłać użtkownikom komunikat w ważnej sprawie? Chcesz sprawdzić kto się z nim zapoznał? Tutaj możesz to zrobić! Utwórz komunikat, wybierz adresatów i wyślij. Zobacz jak szybko z Kryptos24 możesz wysłać komunikat np. o tym, że 10 czerwca 2017 odbędą się ćwiczenia ewakuacyjne. Wchodzimy w zakładkę Komunikacja, dalej Komunikaty. Klikamy na Dodaj i wpisujemy treść ogłoszenia, które wyświetli się użytkownikowi po zalogowaniu. Tak jak komunikaty w banku o przerwie technicznej. Przed wysłaniem możemy podglądnąć komunikat, a następnie wysłać do wszystkich lub wybranych użytkowników. Tyle, prawda, że proste? Sprawdźmy jeszcze czy komunikat skutecznie doszedł do adresata. W tym celu zalogujemy się na konto użytkownika. Jest! Po odczytaniu komunikatu, wysyłający może zobaczyć, kto i kiedy otworzył wiadomość, a kto jeszcze nie. Proste, ale bardzo przydatne. Pamiętajmy, że aplikacja pozwala na wysyłanie powiadomień via e-mail, sms oraz w ramach komunikatów wyświetlanych przez przeglądarkę. Zobacz jak szybko z Kryptos24 możesz wysłać komunikat np. o tym, że 10 czerwca 2017 odbędą się ćwiczenia ewakuacyjne. Wchodzimy w zakładkę Komunikacja, dalej Komunikaty. Klikamy na Dodaj i wpisujemy treść ogłoszenia, które wyświetli się użytkownikowi po zalogowaniu. Tak jak komunikaty w banku o przerwie technicznej. Przed wysłaniem możemy podglądnąć komunikat, a następnie wysłać do wszystkich lub wybranych użytkowników. Tyle, prawda, że proste? Po odczytaniu komunikatu, wysyłający może zobaczyć, kto i kiedy otworzył wiadomość, a kto jeszcze nie. Proste, ale bardzo przydatne. Pamiętajmy, że aplikacja pozwala na wysyłanie powiadomień via e-mail, sms oraz w ramach komunikatów wyświetlanych przez przeglądarkę.'}
+<div class="table-operations-header">
+    <a class="btn btn-success" href="/kominfoadm/send" data-title="Dodaj nową wiadomość" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="select">Czas</th>
+        <th data-filter-type="string">Temat</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $komunikaty as $k}
+        <tr>
+            <td>{$k.insert}</td>
+            <td>{$k.temat}</td>
+
+            <td class="operations">
+                {if $auth->isGranted('node/inspections/update-inspection', ['id' => $k.id])}
+                <a class="glyphicon glyphicon-camera" href="/kominfoadm/view/id/{$k.id}"  data-toggle="tooltip" title="Podgląd"></a>
+                {/if}
+                {if $auth->isGranted('node/kominfoadm/adresaci', ['id' => $k.id])}
+                <a class="glyphicon glyphicon-user" href="/kominfoadm/adresaci/id/{$k.id}" data-toggle="tooltip" title="Adresaci"></a>
+                {/if}
+                {if $auth->isGranted('node/kominfoadm/del', ['id' => $k.id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="/kominfoadm/del/id/{$k.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+                {if $auth->isGranted('node/kominfoadm/forall', ['id' => $k.id])}
+                <a class="glyphicon glyphicon-share modal-confirm" data-href="/kominfoadm/forall/id/{$k.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="Do wszystkich"></a>
+                {/if}
+
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

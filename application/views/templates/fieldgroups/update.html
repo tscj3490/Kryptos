@@ -1,0 +1,82 @@
+{$message}
+<form name="f_data" id="f_data" method="POST" action="/fieldgroups/save" id="dataform-add">
+    <fieldset>
+        <div class="form-group row">
+            <label for="name" class="col-sm-2">Nazwa:</label>
+            <div class="col-sm-4"><input type="text" name="name" id="name"  class="form-control validate[required]" value="{$data['name']}"></div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-sm-2">Dostępne pola:</label>
+            <div class="col-sm-3"><input type="text" name="fields" class="form-control" id="fields"></div>
+            <div class="col-sm-1"><input type="button" id="addopts" value="Dodaj" class="btn" /></div>
+        </div>
+        <br />
+        Możesz dodać kilka pól na raz rozdzielając je średnikami.<br />
+        <br />
+        <div class="row">
+            <div class="col-xs-12" id="opts"></div>
+        </div>
+        <br />
+        <div class="">
+            <a href="/fieldgroups/"><input type="button" value="Powrót"  class="btn"  ></a>
+            <input type="submit" value="Zapisz"  class="btn btn-info"  >
+            <input type="hidden" name="id" id="id" value="{$data.id}" />
+            <input type="hidden" name="options" id="options" value="{$data.options}" />
+        </div>
+    </fieldset>
+</form>
+<script type="text/javascript">
+var t_opts = {if $data.options <> ''}jQuery.parseJSON('{$data.options nofilter}');{else}new Array();{/if};
+$('#addopts').click(function(){ addOpts(); });
+$('#fields').keypress(function(e) { if(e.which == 13) { addOpts(); return false; }});
+function addOpts(){
+   var val = $('#fields').val();
+   val = val.toUpperCase();
+   if ( val != '' ) {
+      var t_val = val.split(';');
+      $.each(t_val, function( index, value ) {
+         if ( value != '' ) {
+            value = strip_tags(value,'');
+            value = value.trim();
+            var a = t_opts.indexOf(value);
+            if ( a == -1 ) { t_opts.push(value); }
+         }
+      });
+      t_opts.sort();
+      setVis();
+      $('#fields').val('');
+   }
+}
+function deleteOpt(opt){
+var val = $(opt).parent().children('span').html();
+t_opts.splice( $.inArray(val,t_opts) ,1 );
+setVis();
+} 
+function setVis(){
+   $('#opts').html('');
+   if ( t_opts.length > 0 ) {
+      $.each(t_opts, function( index, value ) {
+        $('#opts').append('<div class="selopt"><span>'+value+'</span> <i title="Usuń" class="glyphicon glyphicon-trash" onclick="deleteOpt(this);"></i></div>');
+      });
+   } else {
+      $('#opts').append('Brak pól do wyświetlenia');
+   }
+   $('#options').val(JSON.stringify(t_opts));
+}
+function strip_tags(input, allowed) {
+  allowed = (((allowed || '') + '')
+    .toLowerCase()
+    .match(/<[a-z][a-z0-9]*>/g) || [])
+    .join('');
+  var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
+    commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+  return input.replace(commentsAndPhpTags, '')
+    .replace(tags, function($0, $1) {
+      return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+    });
+}
+setVis();
+</script>
+<script type="text/javascript">
+	backendUtilities.addVatidationEngine("f_data");
+</script>

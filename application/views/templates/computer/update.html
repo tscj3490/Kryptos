@@ -1,0 +1,43 @@
+<div>
+    <form name="f_profile" id="f_profile" action="/computer/save" method="post" class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 ">Identyfikator:</label>
+            <div class="col-sm-4"><input type="text" id="identity" name="identity" placeholder="Identyfikator komputera/nośnika" value="{$data.identity}" class="form-control validate[required]"/></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 ">Typ:</label>
+            <div class="col-sm-4">
+                <select id="typ" name="typ" class="form-control validate[required]">
+                    <option value="">wybierz</option>
+                    {foreach $typy as $key => $typ}
+                        <option value="{$key}" {if $key == $data.typ}selected{/if}>{$typ}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 ">Osoba odpowiedzialna:</label>
+            <div class="col-sm-4"><select id="persons" name="persons" class="form-control validate[required]">
+                    {foreach $osoby as $osoba}
+                        <option value="{$osoba.id}" {if $osoba.id == $data.person}selected{/if}>{$osoba.nazwisko} {$osoba.imie}</option>
+                    {/foreach}
+                </select></div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 ">Lokalizacja:</label>
+            <div class="col-sm-4"><select id="location" name="location" class="form-control validate[required]">
+                    {foreach $pomieszczenia as $item}
+                        <option value="{$item.id}" {if $data.location == $item.id}selected{/if}>{$item.nazwa_budynku} {$item.nazwa} {if $item.nr}(nr {$item.nr}){/if}</option>
+                    {/foreach}
+                </select></div>
+        </div>
+        <div>
+            <input type="submit" value="Zapisz" class="btn btn-info"/>
+        </div>
+        <input type="hidden" name="id" id="id" value="{$data.id}"/>
+    </form>
+</div>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_profile");
+</script>

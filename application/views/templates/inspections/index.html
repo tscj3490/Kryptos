@@ -1,0 +1,46 @@
+{include file='modals/modal.tpl' title='Przeglądy - co to jest?' content='Przeglądy – moduł ten służy do tworzenia sprawozdań rocznych do GIODO oraz do tworzenia sprawdzeń planowych. Możesz go również użyć do wykonania raportu z dowolnego przeglądu np. oględzin pomieszczeń. System pomaga w tworzeniu sprawozdań do GIODO i sprawdzeń doraźnych/planowych, oferując użytkownikowi gotowe wzory dokumentów używanych podczas tworzenia takich dokumentów. Wzory dokumentów używanych w systemie są wzorami z których na co dzień korzystają liczni ABI (CZYT. ABI) w Polsce i są w pełni kompletne oraz zgodne z wymaganiami jakie stawia się do takich dokumentów. ABI (CZYT. ABI)/ADO zostanie przysłowiowo poprowadzony „za rękę” krok po kroku tak aby utworzyć poprawne i w pełni zgodne z obowiązującym prawem sprawozdania czy sprawdzenia. W module dostępne są różnego rodzaju dokumenty używane przy generowaniu sprawdzeń czy sprawozdań, jak różnego rodzaju notatki lub pisma czy ankiety. Można również dodawać czynności, jakie podejmowaliśmy tworząc sprawdzenia/sprawozdania czy dodawać incydenty jakie wystąpiły podczas sprawdzeń. Po skompletowaniu danych do całego sprawozdania, możemy edytować sprawozdanie przy użyciu wzoru zamieszczonego w systemie lub utworzyć nowe. Przykładowo, dodano nowe sprawdzenie doraźne pomieszczenia, wybieramy opcję dodaj nową inspekcję, uzupełniamy dane odnośnie nowej inspekcji, po czym dodajemy listę czynności, które podjęliśmy, wykonując daną inspekcję np. sprawdzenie zabezpieczeń w pomieszczeniu. Jest możliwość również dodania incydentów, jeśli takie zostały zauważone podczas sprawdzenia. Po dodaniu wszystkich czynności oraz ew. incydentów, użytkownik może wygenerować sprawozdanie, dołączając listę czynności, zauważone incydenty oraz inne notatki i spostrzeżenia. Po uzupełnieniu wszystkich danych możemy sprawozdanie wygenerować i wydrukować.'}
+<div class="table-operations-header">
+    {if $auth->isGranted('node/inspections/add-inspection')}
+    <a class="btn btn-success" href="/inspections/add-inspection" data-title="Dodaj nową inspekcję" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+    {/if}
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead class="ui-widget-header">
+    <tr>
+        <th data-filter-type="string" class="min-width">id</th>
+        <th data-filter-type="string">Tytuł</th>
+        <th data-filter-type="date-range" class="text-center">Data</th>
+        <th data-filter-type="string">Autor</th>
+        <th class="text-center">operacje</th>
+    </tr>
+    </thead>
+    <tbody class="ui-widget-content">
+    {foreach $paginator as $d}
+        <tr>
+            <td>{$d.id}</td>
+            <td>{$d.title}</td>
+            <td class="text-center">{smart_date value=$d.date}</td>
+            <td>{$d.author.nazwisko|upper} {$d.author.imie|upper}</td>
+            <td class="operations">
+                {if $auth->isGranted('node/inspections/report', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-print" href="/inspections/report/id/{$d.id}" data-toggle="tooltip" title="Edytuj sprawozdanie"></a>
+                {/if}
+                {if $auth->isGranted('node/inspections/report-download', ['id' => $d.id])}
+
+                <a class="glyphicon glyphicon-download" href="/inspections/report-download/id/{$d.id}" data-toggle="tooltip" title="Pobierz sprawozdanie"></a>
+                {/if}
+                {if $auth->isGranted('node/inspections/update-inspection-metadata', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-pencil" href="/inspections/update-inspection-metadata/id/{$d.id}" data-toggle="tooltip" title="Edytuj dane podstawowe"></a>
+                {/if}
+                {if $auth->isGranted('node/inspections/update-inspection', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-list" href="/inspections/update-inspection/id/{$d.id}" data-toggle="tooltip" title="Edytuj listę czynności"></a>
+                {/if}
+                {if $auth->isGranted('node/inspections/remove-inspection', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="/inspections/remove-inspection/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

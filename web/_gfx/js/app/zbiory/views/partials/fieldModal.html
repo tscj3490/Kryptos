@@ -1,0 +1,47 @@
+<div class="modal fade" id="fieldModal_<%pModal%>_<%tModal%>" ng-controller="FieldIndex">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Pola</h4>
+                <br/>
+            </div>
+            <div class="modal-body" style=" min-height: 300px; max-height: 600px; overflow-y: auto;">
+                <div class="form-horizontal col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="container-fluid checkbox-inline col-md-12">
+                                <div class="checkbox" >
+                                    <label class="col-md-6"  ng-repeat="field in fields">
+                                        <input type="checkbox" ng-model="form.field[pModalKey][tModalKey][field.nazwa]" value="<% field.nazwa %>" ng-true-value="<%field.id%>"><% field.nazwa %>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-12 form-inline">
+                            <div class="form-group">
+                                <label class="sr-only">Nazwa</label>
+                                <input class="form-control" placeholder="Podaj nazwe" type="text" ng-model="newField">
+                                <div class="form-group">
+                                    <select ngRequired ng-model="newFieldTypeId" convert-to-number  class="form-control">
+                                        <option ng-repeat="item in types" value="<%item.id%>"><%item.nazwa%></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-default" style="margin-left: 10px;" ng-click="addNewField()"><i class="glyphicon glyphicon-plus"></i></button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" ng-click="clearField(pModalKey, tModalKey)">Wyczyść</button>
+            </div>
+        </div>
+    </div>
+</div>

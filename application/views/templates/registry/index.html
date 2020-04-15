@@ -1,0 +1,70 @@
+{include file='modals/modal.tpl' title='Rejestry - co to jest?' content='Już znasz moje możliwości całkiem dobrze, jednak opracowano mnie po to by Ci służyć i realnie ułatwiać pracę. Czy potrzebujesz wsparcia w prowadzeniu różnych rejestrów i ewidencji? Powiem Ci jak dostosować zeszyty, listy, spisy oraz ewidencje, tak by były one zgodne obowiązującym prawem oraz zmianami jakie zaczną obowiązywać od roku 2018. Czy wiesz, że na liście kontrolnej inspektorów GIODO znajduje się weryfikacja prowadzonych rejestrów pod kątem ewidencjowania zmian? Czy zgodnie z zaleceniami GIODO prowadzisz dla każdego piku Excel, indywidualny arkusz z wpisywaniem kto kiedy go modyfikował i w jakim celu?  Poznaj mój kolejny moduł o nazwie Rejestry. On jest odpowiedzią na wszystkie zadane przed chwilą pytania. Pozwala na stworzenie dowolnej dodatkowej ewidencji np. rejestr delegacji, rejestr wydawanych zaświadczeń, ewidencja pamięci USB, a nawet rejestr dostępu do monitoringu. To Ty decydujesz jakie pola ma zawierać, jakiego typu oraz określasz uprawnienia, czyli kto może tylko i wyłącznie podglądać wpisy, a kto je może edytować. Tylko Kryptos24 posiada zarządzanie uprawnieniami na najniższym poziomie. Oznacza to, że masz możliwość ustalenia, że użytkownicy wprowadzający rekordy widzą tylko te swoje, a np. przełożony ma dostęp do rejestru całościowego. Dodatkowo rejestry zintegrowane są z pozostałymi modułami aplikacji, więc istnieje możliwość np. szybkiego wyboru pracowników, pomieszczeń, a nawet elementów zbiorów. Kreator rejestrów został opracowany tak by wesprzeć administratorów danych. Niejednokrotnie potrzebujemy zinformatyzować pewną ewidencję. Przydałby się nam program, ale tak naprawdę zależy nam tylko na jednym elemencie. Z Kryptos24 oszczędzasz i nie zaśmiecasz komputera setką aplikacji. Masz możliwość zastąpić większość programów do ewidencjonowania, aplikacją Kryptos24. Zobacz sam!'}
+<div class="table-operations-header">
+    {element tag='a' route='registry/ajax-update' routeParams=[] attributes=[
+        'dialog' => [
+            'process' => 'locationReload',
+            'new-dialog' => true
+        ],
+        'icon' => 'plus',
+        'class' => 'btn btn-success',
+        'tooltip' => 'Dodaj rejestru',
+        'innerHtml' => 'Dodaj'
+    ]}
+    
+    {element tag='a' route='registry/flowcharttool' attributes=[
+        'class' => 'btn btn-success',
+        'icon' => 'plus',
+        'tooltip' => 'Flow Chart Tool',
+        'innerHtml' => 'Flow Chart Tool'
+    ]}
+
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="string">Nazwa</th>
+        <th data-filter-type="string">Autor</th>
+        <th>Operacje</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $paginator as $d}
+        {if $auth->isGranted('node/registry-entries/index', ['registry_id' => $d.id])}
+        <tr>
+            <td>{$d.title}</td>
+            <td>{$d.author.display_name}</td>
+            <td class="operations">
+				{if $auth->isGranted('node/registry-entries/manage-fields', ['registry_id' => $d.id])}
+					<a class="choose-from-dial" href="/registry/manage-fields/registry_id/{$d.id}" data-toggle="tooltip" title="Zarządzaj Polami"><i class="fa fa-eye"></i></a>
+				{/if}
+                {if $auth->isGranted('node/registry-entries/update', ['registry_id' => $d.id])}
+                    <a href="/registry-entries/update/registry_id/{$d.id}" data-toggle="tooltip" title="Dodaj wpis"><i class="fa fa-plus"></i></a>
+                {/if}
+                {if $auth->isGranted('node/registry-entries/index', ['registry_id' => $d.id])}
+                    <a class="glyphicon glyphicon-list" href="/registry-entries/index/registry_id/{$d.id}" data-toggle="tooltip" title="Lista wpisów"></a>
+                {/if}
+                {if $auth->isGranted('node/registry/update', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-pencil" href="/registry/update/id/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                {/if}
+                {if $auth->isGranted('node/registry/documents', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-print" href="/registry/documents/id/{$d.id}" data-toggle="tooltip" title="Dokumenty"></a>
+                {/if}
+
+                {element tag='a' route='registry/ajax-update' routeParams=['clone' => $d.id] attributes=[
+                    'dialog' => [
+                        'process' => 'locationReload',
+                        'new-dialog' => true
+                    ],
+                    'icon' => 'star',
+                    'tooltip' => 'Duplikuj rejestr'
+                ]}
+                {if $auth->isGranted('node/registry/remove', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-trash modal-confirm" data-href="/registry/remove/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+        {/if}
+    {/foreach}
+    </tbody>
+</table>

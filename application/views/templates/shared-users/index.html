@@ -1,0 +1,29 @@
+{*<div class="table-operations-header">
+    {if $auth->isGranted('node/shared-users/update')}
+    <a class="btn btn-success" href="{$baseUrl}/update" data-title="Dodaj konto" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+    {/if}
+</div>
+{include file='modals/modal.tpl' title='Powiązane konta - co to jest?' content='W systemie Kryptos24 istnieje możliwość zarządzania kilkoma jednostkami. Jest to szczególnie przydatne rozwiązanie dla ABI'ch pełniących taką funkcję w wielu jednostkach.'}
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="string">Nazwa</th>
+        <th>Operacje</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $paginator as $d}
+        <tr>
+            <td><span class="{$d.icon}"></span> {$d.name}</td>
+            <td class="operations">
+                {if $auth->isGranted('node/shared-users/update', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-pencil" href="/shared-users/update/id/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                {/if}
+                {if $auth->isGranted('node/shared-users/remove', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-trash modal-confirm" data-href="/shared-users/del/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>*}

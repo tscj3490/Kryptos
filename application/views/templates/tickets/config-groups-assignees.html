@@ -1,0 +1,72 @@
+<form name="rola" id="rola" action="/tickets/save-config-groups-assignees" method="post" class="form-horizontal" role="form" >
+    <input type="hidden" name="ticket_type_id" value="{$ticketType.id}"/>
+    {foreach $groups as $group}
+        <div class="form-group row group-row" data-id="{$group.id}">
+            <div class="col-sm-12">
+                <div class="row">
+                    <h4 class="col-sm-12">{$group.name}</h4>
+                </div>
+                <table class="table table-stripped">
+                    {foreach $ticketType.roles as $role}
+                        {if $role.aspect !== '1'}
+                        <tr class="role-row" data-id="{$role.id}">
+                            <td style="width:200px">{$role.name}</td>
+                            <td class="min-width">
+                                <button class="btn btn-xs btn-default choose-from-dial" data-dial-url="/osoby/addmini/?useProcess=1" data-dial-ready-fn="filterOsobyPopup" data-dial-process-fn="configAddOsoba" type="button">+</button>
+                            </td>
+                            <td>
+                                <div class="ticket_group_osoby_list">
+                                    {foreach $groupsAssignees as $groupAssignee}
+                                        {if $groupAssignee.group_id == $group.id && $groupAssignee.role_id == $role.id}
+                                            <div class="seloptmin">
+                                                <span>{$groupAssignee.osoba.display_name}</span>
+                                                <i title="Usuń" class="glyphicon glyphicon-trash remove-element" data-closest-target=".seloptmin"></i>
+                                                <input type="hidden" name="group[{$group.id}][{$role.id}][]" value="{$groupAssignee.assignee_id}">
+                                            </div>
+                                        {/if}
+                                    {/foreach}
+                                </div>
+                            </td>
+                        </tr>
+                        {/if}
+                    {/foreach}
+                </table>
+            </div>
+        </div>
+    {/foreach}
+
+    <div class="body-action">
+        <input type="submit" value="Zapisz" class="btn btn-info" />
+    </div>
+</form>
+
+<script>
+    function filterOsobyPopup() {
+        this.closest('.role-row').find('.ticket_group_osoby_list').find('input').each(function() {
+            $('#optsSearch').find('#id'+this.value).addClass('active');
+        });
+        this.closest('.group-row').find('.role-row').not(this.closest('.role-row')).find('.ticket_group_osoby_list').find('input').each(function() {
+            //$('#optsSearch').find('#id'+this.value).addClass('locked');
+        });
+    }
+    function configAddOsoba(id, object, status) {
+        var isBlocked = this.closest('.group-row').find('.role-row').not(this.closest('.role-row')).find('.ticket_group_osoby_list').find('input[value="'+object.id+'"]');
+        /*if (isBlocked.size()) {
+            return false;
+        }*/
+
+        if (status) {
+            var newTag = $('<div class="seloptmin">'),
+                    groupId = this.closest('.group-row').attr('data-id'),
+                    roleId = this.closest('.role-row').attr('data-id');
+            newTag.append($('<span></span>').text(object.displayName));
+            newTag.append($('<i title="Usuń" class="glyphicon glyphicon-trash remove-element" data-closest-target=".seloptmin">'));
+            newTag.append($('<input type="hidden" name="group['+groupId+']['+roleId+'][]" value="'+object.id+'">'));
+            this.closest('.role-row').find('.ticket_group_osoby_list').append(newTag);
+
+            systemAssignHandlers();
+        } else {
+            this.closest('.role-row').find('.ticket_group_osoby_list').find('input[value="'+object.id+'"]').closest('.seloptmin').remove();
+        }
+    }
+</script>

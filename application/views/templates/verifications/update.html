@@ -1,0 +1,275 @@
+<div class="row">
+    <div class="col-lg-6">
+        <form name="f_data" id="f_data" method="POST" action="{$baseUrl}/save" enctype="multipart/form-data">
+            <fieldset>
+                {if $data.id}
+                <input type="hidden" name="id" value="{$data.id}"/>
+                {/if}
+
+                <div class="form-group row">
+                    <label for="name" class="col-sm-4">Nazwa:</label>
+                    <div class="col-sm-8">
+                        <input type="text" name="name" id="name" class="form-control validate[required]" value="{$data.name}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="description" class="col-sm-4">Opis:</label>
+                    <div class="col-sm-8">
+                        <textarea  name="description" id="description" class="form-control">{$data.description}</textarea>
+                    </div>
+                </div> <div class="form-group row">
+                    <label for="description" class="col-sm-4">Termin od:</label>
+                    <div class="col-sm-8">
+                          <input type="text" name="date_start" id="date_start" class="form-control datepicker-input validate[required]" value="{$data.date_start}">
+                    </div>
+                </div>
+                
+                <div class="form-group row">
+                    <label for="description" class="col-sm-4">Termin do:</label>
+                    <div class="col-sm-8">
+                          <input type="text" name="date_due" id="date_due" class="form-control datepicker-input validate[required]" value="{$data.date_due}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                        <label for="survey_typeahead" class="col-sm-4">Powiązana ankieta:</label>
+                        <div class="col-sm-8">
+                            <input type="hidden" name="survey_id" id="survey_id" value="{$data.survey_id}"/>
+                            <div class="input-group">
+                                <input type="text" id="survey_typeahead" class="form-control typeaheadElement" data-source-function="getSurveys" data-target-element="#survey_object_id"/>
+
+                            </div>
+                        </div>
+                    </div>
+                 <div class="form-group row">
+                     <label for="" class="col-sm-4">Osoby odpowiedzialne za zbiór</label>
+                                             
+                     <div class="col-sm-8"><button class="btn btn-info join choose-from-dial" data-dial-url="/osoby/addmini/?useProcess=1" data-dial-ready-fn="filterOsobyPopup" data-dial-process-fn="configAddOsoba" type="button">Wybierz</button>
+                         <div id="responsible_persons"></div>
+                                    </div>
+                                 
+                                   
+                                </div>
+               <!--               <div class="form-group row">
+                    <label for="osoba_id" class="col-sm-4">Osoba odpowiedzialna za sprawdzenie:</label>
+                    <div class="col-sm-8">
+                        <input type="hidden" name="audit_person_id" id="osoba_id" value="{$data.audit_person_id}"/>
+                        <div class="input-group">
+                            <input type="text" id="osoba_typeahead" class="form-control typeaheadElement" data-source-function="getOsoby" data-target-element="#osoba_id"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default choose-from-dial" data-dial-url="/osoby/addmini/?useProcess=true" data-dial-process-fn="processAddOsoba" type="button">Dodaj</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>-->
+                        <div class="form-group row">
+            <label for="" class="col-sm-4">Zbiory:</label>
+            <div class="col-sm-8">
+               <input type="button" class="btn btn-info join" value="Wybierz" onclick="showDial('/zbiory/addmini/?notDeleted=true','','');" />
+               <br />
+               <br />
+               <div id="zbioryhtml"></div>
+            </div>
+        </div>
+               <p><i>W ramach sprawdzenia zostaną utworzone zadania. Dla wybranych zbiorów zostaną one przydzielone dla właściwego ZZD (oraz ABI lub KODO). W przypadku wybrania osób sprawdzenia zostaną stworzone dla zbiorów, dla których te osoby pełnią funkcje ZZD.</i> </p>
+                <div>
+                    <a href="{$baseUrl}"><input type="button" value="Powrót" class="btn"></a>
+                    <input type="button" value="Zapisz" class="btn btn-info" onclick="return checkSubmit()">
+                    <input type="button" value="Zapisz i przejdź do sprawdzenia" class="btn btn-info" onclick="return checkSubmit(true)">
+                </div>
+            </fieldset>
+            <div class="hiddenElement">
+                
+                <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+                <input type="hidden" name="id" id="id" value="{$data.id}" />
+                <input type="hidden" name="redirect" id="redirect" value="" />
+                <input type="hidden" name="options" id="options" value="" />
+            </div>
+        </form>
+    </div>
+     <div class="col-lg-2">
+            <div class="row">
+            <span class="input-group-btn show-notify" data-notify-text="#notify_activate_before_days">
+                    <button class="btn btn-info" type="button">?</button>
+                </span><div id="notify_activate_before_days" class="notify-message">Sprawdzenie - elektroniczna weryfikacja polega na uzgodnieniu poprawności posiadanej dokumentacji, która jest elementem sprawdzenia. Zlecający zadanie wysyła zakres do weryfikacji danej osobie, uprawnionej do akceptacji. Poprzez zmianę statusów, zgłaszanie uwag, uczestnicy weryfikują wspólnie dane zaganienie (zbiór, plik, dokument, raport itp.) do momentu aż użytkownik uprawniony do akceptacji zatwierdzi poprawność klikając na przycisk ZATWIERDŹ i autoryzując ten fakt podpisem elektronicznym.</div> 
+        </div>
+    </div>
+</div>
+</div>
+
+<script type="text/javascript">
+    function checkSubmit(redirect){
+        var setsWithoutZZD = {$setsWithoutZZD|json_encode nofilter};
+        var result ='';
+                 var result = '';
+        $.each(t_opts['t_zbiorydata'], function( k,v ) {
+            if(setsWithoutZZD != null && ($.inArray(v, setsWithoutZZD)!== -1)){
+                result += '<li>' + k + '</li>';
+            }
+        });
+        
+        if(redirect){
+            $('#redirect').val('true');
+        }
+       
+        if (result!=''){
+            return bootbox.confirm('<h3>Ważna informacja</h3>Wybrano zbiory, w których nie zdefiniowano ZZD:<br/><ul>'+result+'</ul></br>Spowoduje to brakiem utworzenia zadań dla tych zbiorów.<br /><br />Czy na pewno chcesz kontynuwać?',function(result){ if ( result == true ) { $('#formSubmit').click(); } });
+        }
+        else{
+            return $('#formSubmit').click();;
+        }
+    }
+    
+    backendUtilities.addVatidationEngine("f_data");
+</script>
+
+<script type="text/javascript">
+    
+        function filterOsobyPopup() {
+        $('#responsible_persons').find('input').each(function () {
+            $('#optsSearch').find('#id' + this.value).addClass('active');
+        });
+    }
+
+    function configAddOsoba(id, object, status) {
+        if (status) {
+            var newTag = $('<div class="seloptmin">');
+            newTag.append($('<span></span>').text(object.displayName));
+            newTag.append($('<i title="Usuń" class="glyphicon glyphicon-trash remove-element" data-closest-target=".seloptmin">'));
+            newTag.append($('<input type="hidden" name="responsive_persons[]" value="' + object.id + '">'));
+            $('#responsible_persons').append(newTag);
+
+            systemAssignHandlers();
+        } else {
+            $('#responsible_persons').find('input[value="' + object.id + '"]').closest('.seloptmin').remove();
+        }
+    }
+    
+        var osoby = {$osoby|json_encode nofilter};
+    function getOsoby() {
+        return osoby;
+    }
+ function processAddOsoba(id) {
+        $('#osoba_id').val(id).change();
+        $('#ajaxDial').modal('hide');
+    }
+</script>
+
+<script type="text/javascript">
+   var t_opts = {if $jsonoptions <> ''}jQuery.parseJSON('{$jsonoptions nofilter}');{else}{ldelim}t_zbiory:new Array(),t_zbiorydata:{ }{rdelim};{/if};
+       
+	backendUtilities.addVatidationEngine("f_data");
+   $('#date_from').datepicker();
+   $('#date_to').datepicker();
+   
+   function runZbiorySel() {
+      setZbiorySel() ;
+      $('.selopt2bl').click(function() {
+         var html = $(this).html();
+         var a = t_opts['t_zbiory'].indexOf(html);
+         if ( a == -1 ) { addZbior($(this).attr('id'),$(this).html()); }
+         else { deleteZbior($(this).attr('id'),$(this).html()); }
+         runOptsSearch();
+     });
+     $('#checkall').click(function() {
+         $('.selopt2bl').each(function() {
+            if ( !$(this).hasClass('active') && $(this).css('display') != 'none' ) { addZbior($(this).attr('id'),$(this).html(),1); }
+         });
+         setZbiorySel();
+         setView();
+     });
+     $('#uncheckall').click(function() {
+         $('.selopt2bl').each(function() {
+            if ( $(this).hasClass('active') && $(this).css('display') != 'none' ) { deleteZbior($(this).attr('id'),$(this).html(),1); }
+         });
+         setZbiorySel();
+         setView();
+     });
+   }
+   function setZbiorySel() {
+      $('.selopt2bl').each(function() {
+         var html = $(this).html();
+         var a = t_opts['t_zbiory'].indexOf(html);
+         if ( a == -1 ) { $(this).removeClass('active'); }
+         else { $(this).addClass('active'); }
+      });
+   }
+   function addZbior(id,html,noview) {
+      t_opts['t_zbiory'].push(html);
+      t_opts['t_zbiory'].sort();
+      t_opts['t_zbiorydata'][html] = id;
+      if ( !noview ) {
+         setZbiorySel();
+         setView();
+      }
+   }
+   function deleteZbior(id,html,noview) {
+      t_opts['t_zbiory'].splice( $.inArray(html,t_opts['t_zbiory']) ,1 );
+      delete t_opts['t_zbiorydata'][html];
+      
+      if ( !noview ) {
+         setZbiorySel();
+         setView();
+      }
+   }
+   
+   
+// WIDOK
+
+function setView() {
+   
+   // PERSONS TABS
+   
+   $('#zbioryhtml').html('');
+   $.each(t_opts['t_zbiory'], function( k,v ) {
+        $('#zbioryhtml').append('<div class="seloptmin"><span>'+v+'</span><i title="Usuń" class="glyphicon glyphicon-trash" onclick="deleteZbior(\''+t_opts['t_zbiorydata'][v]+'\',\''+v+'\');"></i></div>');
+   });
+   
+   $('#options').val(JSON.stringify(t_opts));
+}
+
+var okit = 0;
+function validateZbiory() {
+   okit = 0;
+   var zbiory = '';
+   
+   $.each(t_opts['t_zbiory'], function( k,v ) {
+      zbiory = zbiory + t_opts['t_zbiorydata'][v] + ',';
+   });
+   
+   $.ajax({
+      dataType : 'html',
+      async : false,
+      url : '/transfers/validatezbiory/',
+      data : 'id={$data.id}&type='+$('#type').val()+'&date_from='+$('#date_from').val()+'&date_to='+$('#date_to').val()+'&zbiory='+zbiory+'',
+      method : 'POST',
+      success : function(mess,textStatus,xhr) { 
+        if ( mess == '1' ) { okit = 1; }        
+      },
+   });
+   
+   if ( okit == 1 || $('#type').val() != 1 || $('#active').val() == 0 ) {
+      if ( $('#type').val() != 1 ) {
+         return true;
+      }
+   } else {
+      addFixedAlert('danger','Co najmniej jeden z wybranych zbiorów jest już powierzony w wybranym przedziale czasowym.');
+      return false;
+   }
+}
+
+
+// START
+
+$( document ).ready(function() {
+   setView();
+});
+
+</script>
+
+<script type="text/javascript">
+    var surveys = {$surveys|json_encode nofilter};
+    function getSurveys() {
+        return surveys;
+    }
+
+</script>

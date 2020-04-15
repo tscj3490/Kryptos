@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+<head>
+     <meta charset="UTF-8">
+     <title>Upoważnienie</title>
+	 
+	 <link rel="stylesheet" href="/css/templates/reset.css">
+	 <link rel="stylesheet" href="/css/templates/style.css">
+     <link rel="stylesheet" href="/css/docs.css">
+
+     <style type="text/css">
+        
+     </style>
+</head>
+
+<body style="margin: 0 5px; padding: 0">
+
+    <div id="page-wrap" >
+        <div>
+            <div style="float:left">
+                {$nazwa_firmy|strtoupper}<br />
+            </div>
+            <div style="float: right">
+                {$city}, {$data}
+            </div>
+        </div>
+        <div class="clear space"></div>
+
+		<h1 class="fn">WYCOFANIE UPOWAŻNIENIA DO PRZETWARZANIA DANYCH OSOBOWYCH <br />NR {$number}</h1>
+
+		<div class="clear space"></div>
+		
+		<p class="center">
+            Na podstawie art.37 ustawy z dnia 29 sierpnia 1997 r. o ochronie danych osobowych (Dz. U. z 2002 r. Nr 101, poz. 926 z późń. zm.)
+        </p>
+		
+		<div class="clear space"></div>
+
+        <p class="center header">COFAM UPOWAŻNIENIE DLA</p>
+        <h2 class="center header">PANIĄ/PANA {$imie} {$nazwisko}</h2>
+        <p class="center header">DO PRZETWARZANIA DANYCH OSOBOWYCH</p>
+        <div class="clear space"></div>
+        <span class="header">SZCZEGÓŁY:</span>
+        <table>
+            <tr>
+                <td width="25%">NR WYCOFANEGO UPOWAŻNIENIA:</td>
+                <td colspan="3">{$number_old}</td>
+            </tr>
+            <tr>
+                <td width="25%">FORMA ZATRUDNIENIA/WSPÓŁPRACY</td>
+                <td width="25%">UMOWA  {if $rodzajUmowy == 'o-prace'}O PRACĘ{else if $rodzajUmowy=='cywilnoprawna'}CYWILNOPRAWNA{/if}
+                <td width="25%">STANOWISKO</td>
+                <td width="25%">{$stanowisko|strtoupper}</td>
+            </tr>
+            <tr>
+                <td >UPOWAŻNIENIE OD (DATA)</td>
+                <td>{$data}</td>
+                <td>UPOWAŻNIENIE DO (DATA)</td>
+                <td>BEZTERMINOWO</td>
+            </tr>
+            <tr>
+                <td colspan="2">NADANO IDENTYFIKATOR</td>
+                <td colspan="2">{$login_do_systemu}</td>
+            </tr>
+            <tr>
+                <td colspan="1">ZAKRES</td>
+                <td colspan="3">{$nazwy_zbiorow|substr:1}</td>
+            </tr>
+        </table>
+        <div class="clear space"></div>
+        <div class="clear space"></div>
+		<dl class="description right">
+
+			<dt>
+            <p style="text-transform: uppercase;font-size: 12px">Pełnomocnik Administratora Danych osobowy</p>
+                (data,podpis)
+            </dt>
+		</dl>
+    </div>
+</body>
+
+</html>

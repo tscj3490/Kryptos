@@ -1,0 +1,138 @@
+<div>
+    <form name="f_profile" id="f_profile" action="/budynki/save" method="post" class="form-horizontal" role="form" >
+        <div class="form-group row">
+            <label class="col-sm-2 ">Nazwa:</label>
+            <div class="col-sm-4"><input type="text" id="identity" name="nazwa" value="{$data.nazwa}" class="form-control validate[required]" /></div>
+        </div>
+        <div class="form-group row">
+            <label for="opis" class="col-sm-2 ">Opis:</label>
+            <div class="col-sm-4"><input class="form-control validate[required]" type="text" name="opis" id="opis" value="{$data.opis}"></div>
+        </div>
+        <div class="form-group row">
+            <label for="adres" class="col-sm-2 ">Adres:</label>
+            <div class="col-sm-4"><textarea name="adres" id="adres" class="form-control validate[required]">{$data.adres}</textarea></div>
+        </div>
+
+        <div class="panel-group accordion-toggle" id="accordiondemo">
+            <div class="panel panel-default" id="applicationscont">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a class="toggle-collapse" data-target="#accordion1">
+                            Zabezpieczenia &nbsp;
+                            {element tag='button' route='zabezpieczenia/addmini' routeParams=[] attributes=[
+                                'dialog' => true,
+                                'class' => 'btn btn-xs btn-info',
+                                'icon' => 'add',
+                                'type' => 'button',
+                                'tooltip' => 'Wybierz zabezpieczenia',
+                                'value' => 'Dodaj',
+                                'data-dial-url' => '/zabezpieczenia/addmini?useProcess=1',
+                                'innerHtml' => 'Dodaj'
+                            ]}
+                        </a>
+                    </h4>
+                </div>
+                <div id="accordion1" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <div id="zabezpieczeniaa"></div>
+                        <div id="zabezpieczeniab"></div>
+                        <div id="zabezpieczeniac"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+        <div class="hiddenElement">
+            <select class="form-control" name="zabezpieczenia[]" id="zabezpieczenia" multiple="multiple">
+                {foreach $t_zabezpieczenia as $opcja}
+                    <option value="{$opcja.id}" {if in_array($opcja.id, $zabezpieczeniaArray)}selected="selected"{/if} title="{$opcja.nazwa}" rel="{$opcja.typ}"{if !in_array($opcja.id, $zabezpieczeniaSelf)} data-origin="inherited"{/if}>{$opcja.nazwa}</option>
+                {/foreach}
+            </select>
+        </div>
+
+        <div>
+            <a class="btn btn-default" href="/pomieszczenia">Powrót</a>
+            <input type="submit" value="Zapisz" class="btn btn-info" />
+        </div>
+        <input type="hidden" name="id" id="id" value="{$data.id}" />
+    </form>
+</div>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_profile");
+
+    function runZabezpieczeniaSel(){
+        setZabezpieczeniaSel() ;
+        $('.selopt2bl').click(function(){
+            var ide = $(this).attr('id').replace('id','');
+            if ( $('#zabezpieczenia option[value="'+ide+'"]').is(':selected') ) { $('#zabezpieczenia option[value="'+ide+'"]').prop('selected',false); }
+            else { $('#zabezpieczenia option[value="'+ide+'"]').prop('selected',true); }
+            setZabezpieczeniaSel();
+            setZabezpieczenia();
+            runOptsSearch();
+        });
+        $('#checkall').click(function() {
+            $('.selopt2bl').each(function() {
+                var ide = $(this).attr('id').replace('id','');
+                if ( !$(this).hasClass('active') && $(this).css('display') != 'none' ) { $('#zabezpieczenia option[value="'+ide+'"]').prop('selected',true); }
+            });
+            setZabezpieczeniaSel();
+            setZabezpieczenia();
+            runOptsSearch();
+        });
+        $('#uncheckall').click(function() {
+            $('.selopt2bl').each(function() {
+                var ide = $(this).attr('id').replace('id','');
+                if ( $(this).hasClass('active') && $(this).css('display') != 'none' ) { $('#zabezpieczenia option[value="'+ide+'"]').prop('selected',false); }
+            });
+            setZabezpieczeniaSel();
+            setZabezpieczenia();
+            runOptsSearch();
+        });
+    }
+    function addzabezpieczenia(id,html,type) {
+        if ( !$('#zabezpieczenia option[value="'+id+'"]').length > 0 ) { $('#zabezpieczenia').append('<option value="'+id+'" title="'+html+'" rel="'+type+'">'+html+'</option>'); }
+        $('#zabezpieczenia option[value="'+id+'"]').prop('selected',true);
+    }
+    function setZabezpieczeniaSel () {
+        $('.selopt2bl').removeClass('active');
+        $('#zabezpieczenia option').each(function(){
+            if ( $(this).is(':selected') ) { $('.selopt2bl[id="id'+$(this).attr('value')+'"]').addClass('active'); }
+        });
+    }
+    function setZabezpieczenia() {
+        $('.tooltip').remove();
+        $('#zabezpieczeniaa').html('');
+        $('#zabezpieczeniab').html('');
+        $('#zabezpieczeniac').html('');
+        var organizacyjne = '';
+        var fizyczne = '';
+        var informatyczne = '';
+
+        $('#zabezpieczenia option').each(function(){
+            var tg = $(this),
+                    tgRel = tg.attr('rel'),
+                    tgExternal = tg.attr('data-origin') === 'external',
+                    tgHtml = tg.html();
+
+            if (tg.is(':selected')) {
+                var buttonRemove = tgExternal ? '<i title="Usuń" class="glyphicon glyphicon-trash" onclick="$(\'#zabezpieczenia option[value=\\\''+$(this).attr('value')+'\\\']\').prop(\'selected\',false); setZabezpieczenia();"></i>' : '';
+
+                if (tgRel == '1') {
+                    organizacyjne = organizacyjne + '<div class="seloptmin" title="'+tgHtml+'"><span>'+tgHtml+'</span>'+buttonRemove+'</div>';
+                } else if (tgRel == '2') {
+                    fizyczne = fizyczne + '<div class="seloptmin" title="'+tgHtml+'"><span>'+tgHtml+'</span>'+buttonRemove+'</div>';
+                } else if (tgRel == '3') {
+                    informatyczne = informatyczne + '<div class="seloptmin" title="'+tgHtml+'"><span>'+tgHtml+'</span>'+buttonRemove+'</div>';
+                }
+            }
+        });
+
+        if ( organizacyjne != '' ) { $('#zabezpieczeniaa').append('<h4>Organizacyjne</h4>'+organizacyjne); }
+        if ( fizyczne != '' ) { $('#zabezpieczeniab').append('<h4>Fizyczne</h4>'+fizyczne); }
+        if ( informatyczne != '' ) { $('#zabezpieczeniac').append('<h4>Informatyczne</h4>'+informatyczne); }
+        if ( organizacyjne == '' && fizyczne == '' && informatyczne == '' ) { $('#zabezpieczeniaa').append('<div class="alert alert-danger">Nie dokonano wyboru. Aby dodać nowe zabezpieczenia kliknij przycisk DODAJ znajdujący się powyżej.</div>'); }
+    }
+    setZabezpieczenia();
+</script>

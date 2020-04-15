@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>{if $meta.title}{$meta.title}{else}Certyfikat bezpieczeństwa{/if}</title>
+        <meta name="description" content="{if $meta.desc}{$meta.desc}{else}Certyfikat Bezpieczeństwa to znak jakości, potwierdzający dbałość o ochronę danych. Program powstał dla Konsumentów, Firm, Instytucji oraz Osób Zaufania Publicznego.{/if}">
+        <meta name="google-site-verification" content="qEi_ivJJ9iBMQaQbHIWEYhMDlPqO1EOATYQRQ-GU_YQ" />
+        <meta name="author" content="Robert Podwika">
+        <meta name="msvalidate.01" content="695F6C2CD35DC38F797A426AE7D41056" />
+        <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,300,700,100&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <link href="/img/fav_ico.ico" rel="icon" type="image/x-icon" />
+        <link rel="stylesheet" href="{$url}css/style.css">
+        <link href="/css/liteaccordion.css" rel="stylesheet" />
+        <link href="/chosen/chosen.css" rel="stylesheet" />
+        
+        <script src="/js/jquery-1.9.1.min.js"></script>
+        <script src="/js/jquery-migrate-1.1.1.min.js"></script>
+        <script src="http://nicolahibbert.com/demo/liteAccordion/js/liteaccordion.jquery.js"></script>
+        <script src="/js/jquery.easing.1.3.js"></script>
+        <script src="/chosen/chosen.jquery.min.js"></script>
+        <script src="/js/jquery.cookie.js"></script>
+        <script src="/js/jquery.cookiecuttr.js"></script>
+        <script src="/js/scripts.js"></script>
+        {*
+		<script src="/js/jquery-migrate-1.1.1.min.js"></script>
+        <script src="/js/jquery.simplyscroll.min.js"></script>
+		
+        
+        *}
+	</head>
+    <!-- Cóżeś tutaj chciał odkrywco :) -->
+	<body>
+    	<a id="wypelnij_wniosek" href="/wypelnij-wniosek"></a>
+		<div id="main_container">
+        	<header>
+            		<a href="/" id="logo"><img src="/img/certyfikat_logo.png" alt="certyfikat bezpiezczeństwa logo"></a>
+                    <nav class="main">
+                    	<a {if $action=='index' && $controller=='index'}class="active"{/if} href="/">Strona główna</a>
+                        <a  {if $action=='ocertyfikacie' && $controller=='static'}class="active"{/if} href="/o-certyfikacie">O certyfikacie</a>
+                        <a {if $action=='dlamediow' && $controller=='static'}class="active"{/if} href="/dla-mediow">Dla mediów</a>
+                        <a {if $action=='partnerzy' && $controller=='static'}class="active"{/if} href="/partnerzy">Partnerzy</a>
+                        <a {if $action=='kontakt'}class='active'{/if} href="/kontakt">Kontakt</a>
+                    </nav>
+                    <nav class="sub">
+                    	<a href="/dla-konsumentow" class="dlakons{if $action =='dlakonsumenta'} active{/if}"><span>Dla</span><span>Konsumentów</span></a>
+                    	<a href="/dla-firm" class="dlafirm{if $action =='dlafirm'} active{/if}"><span>Dla</span><span>Firm</span></a>
+                        <a href="/dla-instytucji" class="dlainst{if $action =='dlainstytucji'} active{/if}"><span>Dla</span><span>Instytucji</span></a>
+                        <a href="/dla-osob-zaufania-publicznego" class="dlaozp{if $action =='dlaosobzp'} active{/if}"><span>Dla</span><span>Osób zaufania publicznego</span></a>
+                    </nav>
+            </header>

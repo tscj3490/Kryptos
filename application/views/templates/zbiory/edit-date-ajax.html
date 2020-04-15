@@ -1,0 +1,33 @@
+<h1>Data aktualizacji zbioru</h1>
+<p>Czy zapisanie danych ma również skutkować aktualizacją jawnego rejestru zbiorów?</p>
+<div class="row">
+    <div class="col-sm-6">
+        <label for="editDateModal">Data aktualizacji:</label>
+        <input class="form-control datepicker-input" name="editDateModal" id="editDateModal" value="{$smarty.now|date_format:'%Y-%m-%d'}">
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <label>Obecna data aktualizacji: {smart_date value=$data.data_edycji}</label>
+    </div>
+</div>
+<br/>
+<div class="row">
+    <div class="col-sm-6">
+        <a id="saveModalDate" class="btn btn-success dialog-form-submit">Tak</a>
+        <a id="doNotSaveModalDate" class="btn btn-danger dialog-form-submit">Nie</a>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#saveModalDate').on("click", function () {
+            $('#dataEdycji').val($('#editDateModal').val());
+            $('#formSubmit').click();
+        });
+
+        $('#doNotSaveModalDate').on("click", function () {
+            $('#formSubmit').click();
+        });
+    });
+</script>

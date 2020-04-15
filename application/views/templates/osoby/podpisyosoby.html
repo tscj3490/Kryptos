@@ -1,0 +1,32 @@
+<div class="well">
+    <b>Nazwa:</b> {$podpis.podpis}<br>
+    <b>Numer: {$podpis.numer}</b>
+</div>
+
+<form method="POST" action="/osoby/podpisyosobysave">
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped example-small">
+        <thead>
+        <tr>
+            <th>Nazwisko</th>
+            <th>Imię</th>
+            <th>Zaznacz</th>
+            <th>Data od</th>
+            <th>Data do</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $osoby as $o}
+            <tr>
+                <td>{$o.nazwisko}</td>
+                <td>{$o.imie}</td>
+                <td class="text-center"><input type="checkbox" {if array_key_exists('assigned',$o)}checked="true"{/if} name="osoby[{$o.id}][id]" value="{$o.id}" {if $przypisaneOsoby[$o.id]}checked="true"{/if}></td>
+                <td><input type="text" name="osoby[{$o.id}][data_od]" value="{$przypisaneOsoby[$o.id]['data_od']|substr:0:10}" class="form-control validate[required] datepicker-input"/></td>
+                <td><input type="text" name="osoby[{$o.id}][data_do]" value="{$przypisaneOsoby[$o.id]['data_do']|substr:0:10}" class="form-control validate[required] datepicker-input"/></td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    <hr>
+    <input type="submit" value="Zapisz" class="btn btn-info">
+    <input type="hidden" value="{$podpis.id}" name="id">
+</form>

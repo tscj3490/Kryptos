@@ -1,0 +1,22 @@
+{$message}
+<div class="btn-group row">
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+            	<thead>
+                	<tr>
+                        <th>data wersji</th>                        
+                        <th width="75px"></th>
+                    </tr>
+                </thead>
+                <tbody >
+                	{foreach $paginator as $d}
+                	<tr>
+                        <td>{$d.data_archiwum}</td>                        
+                        <td>							
+							<a class="glyphicon glyphicon-import" title="Ustaw wersję dokumentów" href="javascript:;" onclick="if(confirm('UWAGA! Operacja spowoduje nadpisanie dokumentów z wybranej wersji. Przeładować?')) window.location='/dokumenty/ustawwersje/id/{$d.data_archiwum}'"></a>
+                        </td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+</table>

@@ -1,0 +1,28 @@
+<h3 class="text-center" style="margin-top:0px;margin-bottom:10px;">Wybór dostępnych pomieszczeń</h3>
+<div class="modtop">
+    <div class="form-group row">
+        <div class="col-sm-12">
+            <input type="text" name="searcher" id="searcher" class="form-control" placeholder="Wpisz szukaną frazę" onkeyup="runOptsSearch();" />
+        </div>
+    </div>
+</div>
+
+<div id="optsSearch">
+    <div class="alert alert-danger optsnodata"><i class="fa fa-4x fa-exclamation-triangle"></i><div class="floathead"><div class="ins">Zmień kryteria wyszukiwania lub skorzystaj z formularza dodawania nowych rekordów znajdującego się poniżej.</div></div><div class="clear"></div></div>
+    {foreach $records as $d}
+        <div class="selopt2bl" id="id{$d.id}">{$d.name}</div>
+    {/foreach}
+</div>
+
+<script type="text/javascript">
+    setTimeout(function() {
+        $('#searcher').focus();
+    },500);
+
+    {if $smarty.get.useProcess}
+    $('#optsSearch .selopt2bl').on('click', function() {
+        dial.lastDialProcessFn(this.id.replace('id',''));
+    });
+    dial.lastDialReadyFn();
+    {/if}
+</script>

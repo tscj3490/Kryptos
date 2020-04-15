@@ -1,0 +1,16 @@
+<div class="gallery-wrap">
+    {foreach from=$attachments item=attachment}
+        <div class="column">
+            <div class="inner">
+                <a title="{$attachment.file.name}" href="/files/download/t/{$attachment.file.token}" target="_blank">
+                    <div class="img-wrap">
+                        <img class="mfp-fade" title="{$attachment.file.name}" src="/files/thumbnail/t/{$attachment.file.token}">
+                    </div>
+                    <div class="caption-static">
+                        {$attachment.file.name} ({$attachment.file.size|filesize})
+                    </div>
+                </a>
+            </div>
+        </div>
+    {/foreach}
+</div>

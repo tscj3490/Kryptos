@@ -1,0 +1,170 @@
+
+@page {
+    margin: 1cm 2cm 1cm 2cm !important;
+    padding: 0 !important;
+    line-height: 1;
+    font-family: Arial;
+    color: #000;
+    background: none;
+}
+body {
+    font-size: 9pt;
+    line-height:12pt;
+}
+h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    margin-bottom:10mm;
+}
+h1 {
+    font-size: 19pt;
+}
+h2 {
+    font-size: 17pt;
+}
+h3 {
+    font-size: 15pt;
+}
+h4, h5, h6 {
+    font-size: 14pt;
+}
+.break {
+    page-break-after: always;
+}
+p {
+    margin:3pt 0;
+}
+p, h2, h3 {
+    orphans: 3;
+    widows: 3;
+}/*
+        code {
+            font: 12pt Courier, monospace;
+        }*/
+blockquote {
+    margin: 1.2em;
+    padding: 1em;
+    font-size: 12pt;
+}
+hr {
+    background-color: #ccc;
+}
+table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+    border:1px solid #3d3d3d;
+}
+table,
+th,
+td {
+    vertical-align: top;
+    border:1px solid #3d3d3d;
+}
+th {
+}
+td {
+}
+th, td {
+    padding: 3pt;
+}
+tfoot {
+    font-style: italic;
+}
+caption {
+    background: #fff;
+    margin-bottom: 2em;
+    text-align: left;
+}
+thead {
+    display: table-header-group;
+}
+img, tr {
+    page-break-inside: avoid;
+}
+.no-print {
+    display: none
+}
+
+img {
+    float: left;
+    margin: 1em 1.5em 1.5em 0;
+    max-width: 100% !important;
+}
+a img {
+    border: none;
+}
+a:link, a:visited {
+    background: transparent;
+    font-weight: 700;
+    text-decoration: underline;
+    color: #333;
+}
+a:link[href^="http://"]:after, a[href^="http://"]:visited:after {
+    content: " (" attr(href) ") ";
+    font-size: 90%;
+}
+abbr[title]:after {
+    content: " (" attr(title) ")";
+}
+a[href^="http://"] {
+    color: #000;
+}
+a[href$=".jpg"]:after, a[href$=".jpeg"]:after, a[href$=".gif"]:after, a[href$=".png"]:after {
+    content: " (" attr(href) ") ";
+    display: none;
+}
+a[href^="#"]:after, a[href^="javascript:"]:after {
+    content: "";
+}
+
+.page-break-inside-avoid {
+    page-break-inside: avoid
+}
+
+
+
+/* icon/thumbnail */
+.elfinder-cwd-icon {
+    display:block;
+    width:48px;
+    height:48px;
+    margin:0 auto;
+    background-repeat: no-repeat;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+}
+
+/* mimetypes icons */
+.elfinder-cwd-icon-directory         { background-position:0 -50px; }
+.elfinder-cwd-icon-application       { background-position:0 -150px; }
+.elfinder-cwd-icon-x-empty,
+.elfinder-cwd-icon-text              { background-position:0  -200px; }
+.elfinder-cwd-icon-image,
+.elfinder-cwd-icon-postscript        { background-position:0 -250px;  }
+.elfinder-cwd-icon-audio             { background-position:0 -300px; }
+.elfinder-cwd-icon-video,
+.elfinder-cwd-icon-flash-video       { background-position:0 -350px; }
+.elfinder-cwd-icon-rtf,
+.elfinder-cwd-icon-rtfd              { background-position: 0 -401px; }
+.elfinder-cwd-icon-pdf               { background-position: 0 -450px; }
+.elfinder-cwd-icon-ms-excel,
+.elfinder-cwd-icon-msword  { background-position: 0 -500px; }
+.elfinder-cwd-icon-html              { background-position: 0 -550px; }
+.elfinder-cwd-icon-css               { background-position: 0 -600px; }
+.elfinder-cwd-icon-javascript,
+.elfinder-cwd-icon-x-javascript      { background-position: 0 -650px; }
+.elfinder-cwd-icon-x-perl            { background-position: 0 -700px; }
+.elfinder-cwd-icon-x-python          { background-position: 0 -750px; }
+.elfinder-cwd-icon-x-ruby            { background-position: 0 -800px; }
+.elfinder-cwd-icon-x-sh,
+.elfinder-cwd-icon-x-shellscript     { background-position: 0 -850px; }
+.elfinder-cwd-icon-x-java     { background-position: 0 -900px; }
+.elfinder-cwd-icon-x-php             { background-position: 0 -950px; }
+.elfinder-cwd-icon-xml               { background-position: 0 -1000px; }
+.elfinder-cwd-icon-zip { background-position: 0 -1050px; }
+.elfinder-cwd-icon-x-gzip { background-position: 0 -1100px; }
+.elfinder-cwd-icon-x-bzip { background-position: 0 -1150px; }
+.elfinder-cwd-icon-x-rar { background-position: 0 -1200px; }
+.elfinder-cwd-icon-x-shockwave-flash { background-position: 0 -1250px; }
+.elfinder-cwd-icon-group             { background-position:0 -1300px;}

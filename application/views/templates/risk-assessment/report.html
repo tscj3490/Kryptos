@@ -1,0 +1,43 @@
+<div style="text-align:right">{smart_date value=$date}</div>
+<div style="text-align:left">{$name}</div>
+
+<h1 style="text-align:center;">{$title}</h1>
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+        <tr>
+            <th style="background-color:#ADD8E6">Lp.</th>
+            <th style="background-color:#ADD8E6">Nazwa</th>
+            <th style="background-color:#ADD8E6">C</th>
+            <th style="background-color:#ADD8E6">I</th>
+            <th style="background-color:#ADD8E6">A</th>
+            <th style="background-color:#ADD8E6">AV</th>
+            <th style="background-color:#ADD8E6">CNSQ</th>
+            <th style="background-color:#ADD8E6">LKLH</th>
+            <th style="background-color:#ADD8E6">Poziom ryzyka</th>
+            <th style="background-color:#ADD8E6">Klasyfikacja ryzyka</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach $paginator as $d}
+        <tr>
+            <td>{$d@index+1}</td>
+            <td>{$d.name}</td>
+            <td>{$d.value_c}</td>
+            <td>{$d.value_i}</td>
+            <td>{$d.value_a}</td>
+            <td>{$d.av}</td>
+            <td>{$d.cnsq}</td>
+            <td>{$d.lklh}</td>
+            <td>{$d.risk_value}</td>
+            {*
+            <td>{smart_date value=$d.date_created}</td>
+            <td>{smart_date value=$d.date_updated}</td>*}
+            <td class="center">
+                {if $d.risk_assessment == 1}
+                <i class="fa fa-circle" style="color: green;" data-toggle="tooltip" title="" data-original-title="Akceptowalne"><span class="select-item hiddenElement" data-value="1">Akceptowalne</span></i>                {else} {if ($d.risk_assessment == 2)}
+                <i class="fa fa-circle" style="color: yellow;" data-toggle="tooltip" title="" data-original-title="Akceptowalne / Nieakceptowalne"><span class="select-item hiddenElement" data-value="1">Akceptowalne / Nieakceptowalne</span></i>                {else}
+                <i class="fa fa-circle" style="color: red;" data-toggle="tooltip" title="" data-original-title="Nieakceptowalne"><span class="select-item hiddenElement" data-value="1">Nieakceptowalne</span></i>                {/if} {/if}
+            </td>
+            {/foreach}
+    </tbody>
+</table>

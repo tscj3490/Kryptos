@@ -1,0 +1,45 @@
+{include file='modals/modal.tpl' title='Dysk online - co to jest?' content='Kryptos24 pozwala na integrację z dowolną platformą hostingową poprzez podłączenie konta FTP. Dbając o bezpieczeństwo i wydajność Systemu, wszystkie załączone pliki znajdują się na serwerze należącym do Klienta, do którego masz nieustanny dostęp. Wszystko zależy od Twoich wymagań. By zarządzać dodanymi plikami można albo skonfigurować Klienta sFTP/FTP lub przejść do zakładki Dysk online. Mamy możliwość skopiowania całej struktury lokalnej, którą posiadamy wraz z plikami. Dodatkowo sami możemy tworzyć foldery, a dla wygody wgrywanie plików odbywa się metodą przeciągnij i opuść.'}
+<form method="post" action="/file-sources">
+    <div class="table-operations-header">
+        {if $auth->isGranted('node/file-sources/update', ['type' => Application_Model_FileSources::TYPE_FTP])}
+        <a class="btn btn-success" href="/file-sources/update/type/{Application_Model_FileSources::TYPE_FTP}" data-title="Dodaj nowe połączenie FTP" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;FTP</a>
+        {/if}
+        {if $auth->isGranted('node/file-sources/update', ['type' => Application_Model_FileSources::TYPE_GD])}
+        <a class="btn btn-success" href="/file-sources/update/type/{Application_Model_FileSources::TYPE_GD}" data-title="Dodaj nowe połączenie Goole Drive" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Google Drive</a>
+        {/if}
+        {if $auth->isGranted('node/file-sources/update', ['type' => Application_Model_FileSources::TYPE_DB])}
+        <a class="btn btn-success" href="/file-sources/update/type/{Application_Model_FileSources::TYPE_DB}" data-title="Dodaj nowe połączenie DropBox" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;DropBox</a>
+        {/if}
+        {if $auth->isGranted('node/file-sources/update', ['type' => Application_Model_FileSources::TYPE_OD])}
+        <a class="btn btn-success" href="/file-sources/update/type/{Application_Model_FileSources::TYPE_OD}" data-title="Dodaj nowe połączenie OneDrive" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;OneDrive</a>
+        {/if}
+    </div>
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="string">Nazwa</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $paginator as $p}
+        <tr>
+            <td>{$p.name}</td>
+            <td class="operations">
+                {element tag='a' route='elfinder/browser' routeParams=['source_id' => $p.id] attributes=[
+                    'class' => 'glyphicon glyphicon-camera',
+                    'title' => 'Podgląd',
+                    'target' => '_blank',
+                    'data' => [
+                        'toggle' => 'tooltip'
+                    ]
+                ]}
+                {if $auth->isGranted('node/file-sources/remove', ['id' => $p.id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="/file-sources/remove/id/{$p.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="Usuń"></a>
+                {/if}                
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>
+</form>

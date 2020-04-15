@@ -1,0 +1,30 @@
+{$message}
+
+        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+            <thead>
+                <tr>
+                    <th>numer</th>
+                    <th>opis</th>
+                    <th>typ</th>
+                    <th>termin zapoznania</th>
+                    <th>zapoznałem się</th>
+                    <th>data</th>
+          
+                </tr>
+            </thead>
+            <tbody >
+                {foreach $docs as $d}
+                <tr>
+                    <td>{$d.number}</td>
+                    <td>{$d.description}</td>
+                    <td>{$d.type}</td>
+                    <td>{if $d.termin_zapoznania=='0000-00-00 00:00:00'} brak{else}{$d.termin_zapoznania}{/if}</td>
+                    <td>{if $d.czas_zapoznania=='0000-00-00 00:00:00'} brak {else}{$d.czas_zapoznania}{/if}</td>
+                    <td>{$d.data}</td>
+
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+
+ 

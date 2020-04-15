@@ -1,0 +1,38 @@
+<div class="table-operations-header">
+    {element tag='a' route='aplikacje-moduly/update' routeParams=[] attributes=[
+        'class' => 'btn btn-success',
+        'icon' => 'plus',
+        'tooltip' => 'Dodaj moduł',
+        'innerHtml' => 'Dodaj'
+    ]}
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="string">Nazwa</th>
+        <th data-filter-type="string">Aplikacja</th>
+        <th class="text-center">Operacje</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $paginator as $d}
+        <tr>
+            <td><span class="{$d.icon}"></span> {$d.name}</td>
+            <td>{$d.application.nazwa}</td>
+            <td class="operations">
+                {element tag='a' route='aplikacje-moduly/update' routeParams=['id' => $d.id] attributes=[
+                    'icon' => 'edit',
+                    'tooltip' => 'Edytuj'
+                ]}
+
+                {element tag='a' route='aplikacje-moduly/remove' routeParams=['id' => $d.id] attributes=[
+                    'icon' => 'delete',
+                    'delete' => 'singleDelete',
+                    'tooltip' => 'Usuń'
+                ]}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

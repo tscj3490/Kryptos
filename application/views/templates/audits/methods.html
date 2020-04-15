@@ -1,0 +1,25 @@
+{$message}
+<form name="f_data" id="f_data" method="POST" action="/audits/methods-save">
+    <fieldset>
+        {foreach from=$auditMethods key=methodId item=methodName}
+        <div class="form-group row">
+            <label for="method_name_{$methodId}" class="col-sm-2">Nazwa metody:</label>
+            <div class="col-sm-4"><input type="text" name="method[{$methodId}]" id="method_name_{$methodId}" class="form-control" value="{$methodName}"></div>
+        </div>
+        {/foreach}
+        <div class="form-group row">
+            <label for="new_method_1" class="col-sm-2">Nowa metoda:</label>
+            <div class="col-sm-4"><input type="text" name="new_method[]" id="new_method_1" class="form-control"></div>
+            <div class="col-sm-2 bs-glyphicons"><a class="glyphicon glyphicon-plus-sign generateFormRow" data-index="1"></a></div>
+        </div>
+        <div id="globalMessage"></div>
+        <div class="">
+            <a href="/audits/"><input type="button" value="Powrót" class="btn"></a>
+            <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+        </div>
+    </fieldset>
+    <div style="width:0px;height:0px;overflow:hidden;">
+        <input type="text" name="addAnother" id="addAnother" value="0"/>
+        <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+    </div>
+</form>

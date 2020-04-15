@@ -1,0 +1,95 @@
+{include file='modals/modal.tpl' title='Rejestr zbiorów - co to jest?' content='Kryptos24 jako jedyna tego typu aplikacja, dostosowuje się do użytkownika. System umożliwia tworzenie ewidencji zbiorów danych osobowych wspólnie przez całą organizację. Jednym z największych błędów jest powierzenie tego zadania wyłącznie administratorowi bezpieczeństwa informacji. Nie ma takiego ABI, który posiada odpowiednią wiedzę merytoryczną by znać specyfikę pracy każdej komórki organizacji, w której pełni funkcję. Na mocy ustawy o ochronie danych osobowych oraz obowiązujących rozporządzeniach nie musi posiadać merytorycznej wiedzy z tematyki zbiorów, które ewidencjonuje, również nie jest zobligowany by znać się na wszystkim. Warto jednak wspomnieć, że program umożliwia załadowanie dotychczasowej dokumentacji, bez konieczności tworzenia jej na nowo. Kryptos24 daje możliwość weryfikacji posiadanej dokumentacji przez podmiot, zewidencjonowania wszystkich dokumentów, a na tej podstawie aplikacja zaproponuje pełną strukturę zbiorów danych osobowych. Korzystając z bazy szablonów oraz samouczków umożliwiających realizację samodzielnego audytu przez Kierowników/Dyrektorów komórek organizacyjnych, jesteśmy w stanie w łatwy i szybki sposób utworzyć szczegółowy opis zawartości zbiorów.'}
+<form method="post" action="/zbiory/bulk-actions">
+    <div class="table-operations-header">
+        {if $auth->isGranted('node/zbiory/update')}
+        <a class="btn btn-success" href="/zbiory/update" data-title="Dodaj nowy zbiór" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Zbiór</a>
+        {/if}
+        {if $auth->isGranted('node/zbiory/update')}
+        <a class="btn btn-success" href="/zbiory/update/type/2" data-title="Dodaj nową grupę zbiorów" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Grupa</a>
+        {/if}
+    </div>
+
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead class="ui-widget-header">
+        <tr>
+            <th></th>
+            <th data-filter-type="string" class="min-width">id</th>
+            <th data-filter-type="string">nazwa</th>
+            <th data-filter-type="string" data-visible="false">pomieszczenia</th>
+            <th data-filter-type="date-range" class="text-center min-width">modyfikacja</th>
+            <th data-filter-type="select" class="text-center">forma</th>
+            <th data-filter-type="select" class="text-center">elementy</th>
+            <th class="text-center">operacje</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content js-checkbox-container">
+        {foreach $paginator as $d}
+            <tr{if $d@iteration > 10} style="display:none"{/if}>
+                <td>
+                    <div class="icheckbox_square-aero js-checkbox-from-container" data-target-id="id[{$d.id}]">
+                        <ins class="iCheck-helper"></ins>
+                        <span class="hidden text-indicator"></span>
+                    </div>
+                </td>
+                <td>{$d.id}</td>
+                <td><a class="choose-from-dial" data-dial-url="/zbiory/profile/id/{$d.id}" data-toggle="tooltip" title="SZCZEGÓŁY"><span class="{$d.icon}"></span> {if $d.parent_id}{$d.parent_nazwa}: {/if}{$d.nazwa}</a></td>
+                <td>{", "|implode:Application_Service_Utilities::getValues($d.pomieszczenia, 'pomieszczenie.display_name')}</td>
+                <td class="text-center">{if $d.data_edycji}<span data-toggle="tooltip" data-title="{$d.data_edycji}">{smart_date value=$d.data_edycji}</span>{else}{smart_date value=$d.data_stworzenia}{/if}</td>
+                <td class="text-center">{$d.formaGromadzeniaDanych}</td>
+                <td class="text-center">{if $d.haveProducts == '0'}
+                        <span class="label label-danger button-xl">NIE</span>
+                    {/if}{if $d.haveProducts == '1'}
+                        <span class="label label-success">TAK</span>
+                    {/if}</td>
+                <td class="operations">
+                    {if $auth->isGranted('node/zbiory/profile', ['id' => $d.id])}
+                    <a class="choose-from-dial" data-dial-url="/zbiory/profile/id/{$d.id}" data-toggle="tooltip" title="SZCZEGÓŁY"><i class="fa fa-eye"></i></a>
+                    {/if}
+                    {if $auth->isGranted('node/zbiory/update', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-pencil" href="/zbiory/update/id/{$d.id}" data-toggle="tooltip" title="EDYTUJ"></a>
+                    {/if}
+                    {if $auth->isGranted('node/zbiory/update')}
+                    <a class="glyphicon glyphicon-star" href="/zbiory/update/clone/{$d.id}" data-toggle="tooltip" title="DUPLIKUJ"></a>
+                    {/if}
+                    {if $d.podlega_rejestracji == 1}<a class="glyphicon glyphicon-download" href="/zbiory/giodoXml/id/{$d.id}" data-toggle="tooltip" title="POBIERZ XML DLA GIODO"></a>{/if}
+                    {if $auth->isGranted('node/zbiory/remove', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-trash modal-confirm" data-href="/zbiory/remove/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                    {/if}
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+
+    <div class="table-operations-footer">
+        <div class="btn-group">
+            <button type="submit" class="btn btn-default table-row-action" data-toggle="tooltip" data-title="Przenieś do grupy" name="rowsAction" value="move-to-group" data-trigger-fn="runMoveToGroup" data-new-dialog="1"><i class="fa fa-folder-open"></i></button>
+            <span class="btn btn-default dt-select-all-button" data-toggle="tooltip" data-title="Zaznacz / odznacz wszystkie"><i class="fa fa-check"></i></span>
+        </div>
+    </div>
+
+    <div class="hiddenElement">
+        {foreach $paginator as $d}
+            <input type="hidden" name="id[{$d.id}]" class="js-checkbox-target">
+        {/foreach}
+    </div>
+</form>
+
+{literal}
+    <script type="text/javascript">
+        function runMoveToGroup() {
+            var data = $('.example').closest('form').serializeObject(),
+                ids = getIdsFromCheckboxesHelper(data.id);
+
+            $.ajax({
+                dataType: 'html',
+                url: '/zbiory/move-to-group',
+                data: {ids: ids},
+                method: 'POST',
+                success: newDialogSuccess
+            });
+
+            return false;
+        }
+    </script>
+{/literal}

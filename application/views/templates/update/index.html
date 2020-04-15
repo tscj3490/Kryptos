@@ -1,0 +1,49 @@
+{$message}
+<div class="body-action">
+    <a class="btn btn-info" href="/update/update" onclick="return potwierdzAktualizacje();">Zaktualizuj zmiany</a>
+    <a class="btn btn-info" href="/update/update?mode=test">Testuj zmiany</a>
+</div>
+<form method="post">
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead class="ui-widget-header">
+        <tr>
+            <th></th>
+            <th>nr</th>
+            <th>nazwa bazy</th>
+            <th>selected</th>
+            <th>operacje</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content">
+        {foreach $databases as $d}
+        <tr>
+            <td style="width:22px">
+                <input type="checkbox" name="databases[]" id="id_{$d.Database}" value="{$d.Database}"{if $d.selected} checked{/if}>
+            </td>
+            <td>{$d@iteration}</td>
+            <td>{$d.Database}</td>
+            <td>{if $d.selected}selected{/if}</td>
+            <td><a href="/update/install/db/{$d.Database}" class="btn btn-default">Instalacja</a></td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    <input type="submit" value="Zapisz docelowe bazy" class="btn btn-default"/>
+</form>
+
+{literal}
+<script>
+    function potwierdzAktualizacje() {
+        var op = Math.ceil(Math.random() * 5) + ' + ' + Math.ceil(Math.random() * 5),
+            realResult = eval(op).toString(),
+            userResult = prompt('Aby potwierdzić wpisz wynik działania: ' + op);
+
+        if (realResult === userResult) {
+            return true;
+        } else {
+            alert('Nieprawidłowy wynik');
+            return false;
+        }
+    }
+</script>
+{/literal}

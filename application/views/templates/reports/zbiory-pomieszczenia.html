@@ -1,0 +1,25 @@
+<h1>Rejestr zbiorów papierowych</h1>
+<table class="printable" cellspacing='1' cellpadding="5">
+    <thead>
+    <tr>
+        <th>L.p.</th>
+        <th>Nazwa zbioru</th>
+        <th rowspan="2">Budynek</th>
+        <th colspan="2">Pomieszczenia, w ktorych przetwarzane są dane</th>
+    </tr>
+    </thead>
+    <tbody>
+     {foreach $model as $d}
+        <tr>
+            <td rowspan="{count($d.pomieszczenia)}">{$d@iteration}</td>
+            <td rowspan="{count($d.pomieszczenia)}">{join data=[$d.nazwa, $d.opis]}<br>{$d.adres}</td>
+                {foreach $d.pomieszczenia as $pomieszczenie}
+                    {if !$pomieszczenie@first}<tr>{/if}
+                        <td>{join data=[$pomieszczenie.wydzial, $pomieszczenie.pietro] glue=' / '}</td>
+                        <td>{$pomieszczenie.nr} {$pomieszczenie.nazwa}</td>
+                    {if !$pomieszczenie@last}</tr>{/if}
+                {/foreach}
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

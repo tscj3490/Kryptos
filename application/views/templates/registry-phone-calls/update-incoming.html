@@ -1,0 +1,83 @@
+<div class="row">
+    <div class="col-lg-6">
+        <form name="f_data" id="f_data" method="POST" action="{$baseUrl}/save" enctype="multipart/form-data">
+            <fieldset>
+                {if $data.id}
+                <input type="hidden" name="arrival[id]" value="{$data.id}"/>
+                {/if}
+
+                <input type="hidden" id="direction" name="arrival[direction]" value="1"/>
+
+                <div class="form-group row">
+                    <label for="receive_user_id" class="col-sm-4">Osoba odbierająca:</label>
+                    <div class="col-sm-8">
+                        <input type="hidden" name="arrival[receive_user_id]" id="receive_user_id" value="{$data.receive_user_id}" data-source-variable="storageUsers"/>
+                        <div class="input-group">
+                            <input type="text" id="osoba_typeahead" class="form-control typeaheadElement" data-source-variable="storageUsers" data-target-element="#receive_user_id"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default choose-from-dial" data-dial-url="/osoby/mini-add-person/?useProcess=true" data-target-element="#receive_user_id" type="button">Dodaj</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="source_user_id" class="col-sm-4">Osoba dzwoniąca:</label>
+                    <div class="col-sm-8">
+                        <input type="hidden" name="arrival[source_user_id]" id="source_user_id" value="{$data.source_user_id}" data-source-variable="storageUsers"/>
+                        <div class="input-group">
+                            <input type="text" id="source_employee_typeahead" class="form-control typeaheadElement" data-source-variable="storageUsers" data-target-element="#source_user_id"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default choose-from-dial" data-dial-url="/osoby/mini-add-person/?useProcess=true" data-target-element="#source_user_id" type="button">Dodaj</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="destination_user_id" class="col-sm-4">Osoba wywoływana:</label>
+                    <div class="col-sm-8">
+                        <input type="hidden" name="arrival[destination_user_id]" id="destination_user_id" value="{$data.destination_user_id}" data-source-variable="storageUsers"/>
+                        <div class="input-group">
+                            <input type="text" id="osoba_typeahead" class="form-control typeaheadElement" data-source-variable="storageUsers" data-target-element="#destination_user_id"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default choose-from-dial" data-dial-url="/osoby/mini-add-person/?useProcess=true" data-target-element="#destination_user_id" type="button">Dodaj</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="date" class="col-sm-4">Data i godzina rozmowy:</label>
+                    <div class="col-sm-8"><input type="text" name="arrival[date]" id="date" class="form-control datetimepicker-input" value="{$data.date}" placeholder="AKTUALNY CZAS"></div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="topic" class="col-sm-4">Temat rozmowy:</label>
+                    <div class="col-sm-8"><input type="text" name="arrival[topic]" id="topic" class="form-control validate[required]" value="{$data.topic}"></div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="comment" class="col-sm-4">Komentarz:</label>
+                    <div class="col-sm-8"><textarea name="arrival[comment]" id="comment" class="form-control">{$data.comment}</textarea></div>
+                </div>
+
+                <div>
+                    <a href="{$baseUrl}"><input type="button" value="Powrót" class="btn"></a>
+                    <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+                    <input type="button" value="Zapisz i dodaj" class="btn btn-info" onclick="$('#formSubmit').click();">
+                </div>
+            </fieldset>
+            <div class="hiddenElement">
+                <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+
+    var storageUsers = objectsStorage.init({$users|json_encode nofilter});
+    var storageCompanies = objectsStorage.init({$companies|json_encode nofilter});
+</script>

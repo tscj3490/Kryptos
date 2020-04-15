@@ -1,0 +1,26 @@
+<table cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered">
+    <thead>
+    <tr>
+        <th width="60%">Moduł</th>
+        <th>Dostęp</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach from=$rightsConfig key=baseRight item=baseRightConfig}
+        <tr>
+            <td>{$baseRightConfig.label}</td>
+            <td>
+                <input type="checkbox" {if $rights[$baseRight]}checked{/if} name="rights[{$baseRight}]">
+            </td>
+        </tr>
+        {foreach $baseRightConfig.children as $extendedRight => $extendedRightLabel}
+            <tr>
+                <td>-- {$extendedRightLabel}</td>
+                <td>
+                    <input type="checkbox" {if $rights[$extendedRight]}checked{/if} name="rights[{$extendedRight}]">
+                </td>
+            </tr>
+        {/foreach}
+    {/foreach}
+    </tbody>
+</table>

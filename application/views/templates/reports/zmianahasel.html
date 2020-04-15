@@ -1,0 +1,22 @@
+	<span style="display:block; float:right; clear:both;">Załącznik nr 16</span>
+	<h1>Potwierdzenie zmiany haseł</h1>
+	<table class="printable" cellspacing='1' cellpadding="5">
+		<thead>
+			<tr>
+				<th>identyfikator</th>
+				<th>nazwa programu/systemu</th>
+				<th>data wprowadzenia</th>
+				<th>Nazwisko i podpis wykonawcy</th>
+			</tr>	
+		</thead>
+		<tbody>
+			{foreach $apps as $ap}
+			<tr>
+				<td>{$ap.login_do_systemu}</td>
+				<td>{$ap.nazwa}</td>
+				<td>{$smarty.now|date_format:"%d.%m.%Y"}</td>
+				<td>&nbsp;</td>
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>

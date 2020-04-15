@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Upoważnienie</title>
+
+    <link rel="stylesheet" href="/css/templates/reset.css">
+    <link rel="stylesheet" href="/css/templates/style.css">
+    <link rel="stylesheet" href="/css/docs.css">
+
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body style="margin: 0 5px; padding: 0">
+
+<div id="page-wrap" >
+    <div>
+        <div style="float:left">
+            {$data.nazwa_organizacji|strtoupper}<br />
+        </div>
+        <div style="float: right">
+            {$data.city}, {$data.data}
+        </div>
+    </div>
+    <div class="clear space"></div>
+
+    <h1 class="fn">
+        RAPORT Z POWIERZENIA DANYCH OSOBOWYCH   <br />NR {$data.document_number} <br /> NA PODSTAWIE UMOWY {$data.umowa}
+    </h1>
+
+    <div class="clear space"></div>
+
+    <table>
+        <tr>
+            <td width="25%">DANE PODMIOTU, (któremu powierzono dane)</td>
+            <td>{$data.podmiot}</td>
+        </tr>
+        <tr>
+            <td>CEL:</td>
+            <td>{$data.cel}</td>
+        </tr>
+        <tr>
+            <td>ZAKRES:</td>
+            <td>{$data.zakres}</td>
+        </tr>
+        <tr>
+            <td>OKRES POWIERZENIA:</td>
+            <td>{$data.data_od} - {$data.data_do}</td>
+        </tr>
+        <tr>
+            <td>UWAGI:</td>
+            <td>{$data.uwagi}</td>
+        </tr>
+    </table>
+    <div class="clear space"></div>
+    <div class="clear space"></div>
+    <dl class="description right">
+
+        <dt>
+        <p style="text-transform: uppercase;font-size: 12px">Pełnomocnik Administratora Danych osobowy</p>
+        (data,podpis)
+        </dt>
+    </dl>
+</div>
+</body>
+
+</html>

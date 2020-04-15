@@ -1,0 +1,96 @@
+{$message}
+{include file='modals/modal.tpl' title='Elementy zbioru - co to jest?' content='Mamy tutaj dostęp do pełnego zarządzania elementami oraz prześledzenia, które z elementów są używane przez nas, a które nie. Łatwo zauważyć, że przy każdym elemencie znajduje się ikonka. Co ona oznacza? Kryptos udostępnia 3 typy elementów: ustawowe – to takie, których zawartość bezpośrednio wynika z przepisów prawa i podlegają one automatycznej aktualizacji; globalne, czyli szablony dodane przez specjalistów Kryptos, które również są aktualizowane oraz elementy lokalne. Te ostatnie charakteryzują się tym, że są indywidualne dla danego systemu i nie podlegają nigdy aktualizacji. Jeśli w Twojej organizacji znajdują się identyfikatory ze zdjęciem i numerem buta, to nie znajdzisz ich w bazie Kryptos. Należy taki unikalny element dodać i opisać samodzielnie. Zawsze mamy możliwość „odblokować” element ustawowy lub globalny, klikając na kłódkę. Wtedy nie będzie on podlegał aktualizacji. W przypadku aktualizacji bazy elementów, Administrator informowany jest o zmianach oraz wymagana jest akceptacja.'}
+<form method="post" action="/fielditems/delChecked/" id="ajaxTable">
+    <div class="table-operations-header">
+        <a class="btn btn-success" href="/fielditems/update" data-title="Dodaj nowy element zbioru" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+        <a class="btn btn-success" href="/fielditems/hq-index" data-title="Globalne" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Globalne</a>
+        <a class="btn btn-success" href="/fielditems/hq-update" data-title="Aktualizacja" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Aktualizacja</a>
+        <a class="btn btn-success" href="/fielditems/hq-update-legal" data-title="Aktualizacja elementów ustawowych" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Aktualizacja elementów ustawowych</a>
+        <a class="btn btn-success" href="/fielditems/hq-import-new" data-title="Aktualizacja o nowe elementy" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Aktualizacja o nowe elementy</a>
+        <a class="btn btn-danger confirm-delete" href="/fielditems/remove-all-kryptos-fielditems" data-confirmation-title="Czy na pewno chcesz usunąć wszystkie elementy Kryptos?" data-title="Usuń wszyskie elementy kryptos" data-toggle="tooltip"><i class="fa fa-recycle"></i> &nbsp;Usuń</a>
+        <div class="btn-group">
+            <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-cog"></i> Filtrowanie <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu warning" role="menu">
+                <li><a href="?filter=local">Pokaż tylko lokalne elementy</a></li>
+                <li><a href="?filter=active">Pokaż tylko aktywne elementy</a></li>
+                <li><a href="?filter=all">Pokaż wszystkie</a></li>
+            </ul>
+        </div>
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead class="ui-widget-header">
+        <tr>
+            <th class="min-width"></th>
+            <th data-filter-type="string" class="min-width">id</th>
+            <th data-filter-type="string">nazwa</th>
+            <th data-filter-type="string">kategoria</th>
+            <th data-filter-type="select" class="text-center">aktywny</th>
+            <th data-filter-type="date-range" class="text-center">data utworzenia</th>
+            <th data-filter-type="date-range" class="text-center">data edycji</th>
+            <th class="text-center">opcje</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content js-checkbox-container">
+        {foreach $paginator as $d}
+        <tr{if $d@iteration > 10} style="display:none"{/if}>
+            <td>
+                <div class="icheckbox_square-aero js-checkbox-from-container" data-target-id="id[{$d.id}]">
+                    <ins class="iCheck-helper"></ins>
+                    <span class="hidden text-indicator"></span>
+                </div>
+            </td>
+            <td>{$d.id}</td>
+            <td><span class="{$d.icon}"></span> {$d.name|ucfirst}</td>
+            {assign var="cat" value=$d.fielditemscategory_id}
+            <td>{if !empty($t_cats.$cat)}{$t_cats.$cat}{/if}</td>
+            <td class="text-center">{if $d.active == '0'}
+                    <span class="label label-danger button-xl">NIE</span>
+                {/if}{if $d.active == '1'}
+                    <span class="label label-success" data-title="{$d.aktywne_zbiory|replace:'"':''}" data-toggle="tooltip">TAK</span>
+                {/if}
+            </td>
+            <td class="text-center">{smart_date value=$d.created_at}</td>
+            <td class="text-center">{smart_date value=$d.updated_at}</td>
+            <td class="operations nowrap">
+                {if $auth->isGranted('node/fielditems/update', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-pencil" href="/fielditems/update/id/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                {/if}
+                {if $auth->isGranted('node/fielditems/unlock', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-lock" href="/fielditems/unlock/id/{$d.id}" data-toggle="tooltip" title="Odblokuj"></a>
+                {/if}
+                {if $auth->isGranted('node/fielditems/update', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-star" href="/fielditems/update/copy/{$d.id}" data-toggle="tooltip" title="Duplikuj"></a>
+                {/if}
+                {if $auth->isGranted('node/fielditems/del', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="/fielditems/del/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+
+    </table>
+    <div class="table-operations-footer">
+        <div class="btn-group">
+            <button type="submit" class="btn btn-danger confirm-delete" data-toggle="tooltip" data-title="Usuń zaznaczone" data-confirmation-title="Czy na pewno chcesz usunąć zaznaczone pozycje?"><i class="fa fa-remove"></i></button>
+            <span class="btn btn-default dt-select-all-button" data-toggle="tooltip" data-title="Zaznacz / odznacz wszystkie"><i class="fa fa-check"></i></span>
+        </div>
+    </div>
+    <div class="hiddenElement">
+        <div class="hiddenFormElements"></div>
+        <div id="klucze-form-data">
+            {foreach $paginator as $d}
+                <input type="hidden" name="id[{$d.id}]" class="js-checkbox-target">
+            {/foreach}
+        </div>
+    </div>
+</form>
+{literal}
+<script>
+    $(function() {
+        var table = $('#ajaxTable');
+        table.find('tr:hidden').show();
+    });
+</script>
+{/literal}

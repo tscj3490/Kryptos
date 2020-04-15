@@ -1,0 +1,439 @@
+<div class="dpiContent form-locked">
+    <div class="dpiIns" id="groupInsPersonal" rel="groupPersonal">
+        Powiązania podmiotów<br />
+        <br />
+        <div id="joineslist"></div>
+        <hr />
+        <div class="row">
+            <div class="col-sm-1"><label for="persons">Podmiot</label></div>
+            <div class="col-sm-5">
+                <select name="persons" id="persons" class="form-control"></select>
+            </div>
+        </div>
+        <hr />
+        <div id="personsView"></div>
+    </div>
+    <div class="dpiIns" id="groupInsNotPersonal" rel="groupNotPersonal"></div>
+</div>
+
+<script type="text/javascript">
+    function checkSubmit () {
+        $.ajax({
+            dataType : 'html',
+            url : '/fielditems/checkExist/',
+            data : 'name='+$('#name').val()+'&id={$data.id}',
+            method : 'POST',
+            success : function(mess,textStatus,xhr) { if ( mess == 1 ) { $('#formSubmit').click(); } else { $('#globalMessage').html('<div class="alert alert-danger">Rekord z podaną nazwą już istnieje. Proszę zmienić nazwę.</div>'); setTimeout('$(\'#globalMessage\').html(\'\')',5000); } },
+            error : function(xhr,textStatus,errorThrown) { }
+        });
+    }
+    var t_opts = {if $jsonoptions <> ''}jQuery.parseJSON('{$jsonoptions nofilter}');{else}{ldelim}joines:{ },t_persons:new Array(),t_personsdata:{ldelim}{rdelim},t_fields0: new Array(),t_fields0data: { },t_fields0checked: { }{rdelim};{/if}
+    console.log(t_opts);
+    var copyactive = 0;
+    var t_copy = { };
+    var activePerson = '';
+    var activeFields = 0;
+
+    // JOINS
+
+    function addJoin() {
+        var joinfrom = $('#joinfrom').val();
+        var jointo = $('#jointo').val();
+        if ( joinfrom != '' && jointo != '' ) {
+            if ( !t_opts['joines'][joinfrom] ) { t_opts['joines'][joinfrom] = { }; }
+            t_opts['joines'][joinfrom][jointo] = 1;
+            $('#ajaxDial').modal('hide');
+            setView();
+            console.log(t_opts['joines']);
+        }
+    }
+    function deleteJoin(joinfrom,jointo) {
+        if ( joinfrom != '' && jointo == '' ) { delete t_opts['joines'][joinfrom]; }
+        if ( joinfrom != '' && jointo != '' ) {
+            delete t_opts['joines'][joinfrom][jointo];
+            var ijoines = 0;
+            $.each(t_opts['joines'][joinfrom], function( k,v ) {
+                ijoines++;
+            });
+            if ( ijoines == 0 ) { delete t_opts['joines'][joinfrom]; }
+        }
+        setView();
+    }
+
+    // COPY
+
+    function copyData() {
+        copyactive = 1;
+        t_copy = clone(t_opts['t_personsdata'][activePerson]);
+        $('#paste').removeClass('disabled');
+        setView();
+    }
+    function pasteData() {
+        if ( copyactive == 1 ) {
+            var to_paste = clone(t_copy);
+            to_paste['id'] = clone(t_opts['t_personsdata'][activePerson]['id']);
+            t_opts['t_personsdata'][activePerson] = clone(to_paste);
+            setView();
+        }
+    }
+
+    function selOptGetItemTitle(el) {
+        return $(el).find('.title').html();
+    }
+
+    // PODMIOTY
+    function runPersonsSel() {
+        setPersonsSel() ;
+        $('.selopt2bl').click(function() {
+            var html = selOptGetItemTitle(this);
+            var a = t_opts['t_persons'].indexOf(html);
+            if ( a == -1 ) { addPerson($(this).attr('id'), html); }
+            else { deletePerson($(this).attr('id'), html); }
+            runOptsSearch();
+        });
+        $('#checkall').click(function() {
+            $('.selopt2bl').each(function() {
+                if ( !$(this).hasClass('active') && $(this).css('display') != 'none' ) { addPerson($(this).attr('id'),selOptGetItemTitle(this),1); }
+            });
+            setPersonsSel();
+            setView();
+        });
+        $('#uncheckall').click(function() {
+            $('.selopt2bl').each(function() {
+                if ( $(this).hasClass('active') && $(this).css('display') != 'none' ) { deletePerson($(this).attr('id'),selOptGetItemTitle(this),1); }
+            });
+            setPersonsSel();
+            setView();
+        });
+    }
+    function setPersonsSel() {
+        $('.selopt2bl').each(function() {
+            var html = selOptGetItemTitle(this);
+            var a = t_opts['t_persons'].indexOf(html);
+            if ( a == -1 ) { $(this).removeClass('active'); }
+            else { $(this).addClass('active'); }
+        });
+    }
+    function addPerson(id,html,noview) {
+        t_opts['t_persons'].push(html);
+        t_opts['t_persons'].sort();
+        t_opts['t_personsdata'][html] = {
+            'id' : id,
+            'addPerson' : '0',
+            't_persontypes' : new Array(),
+            't_persontypesdata' : { },
+            't_fields1' : new Array(),
+            't_fields1data' : { },
+            't_fields1checked' : { },
+            't_fields2' : new Array(),
+            't_fields2data' : { },
+            't_fields2checked' : { },
+            't_fields3' : new Array(),
+            't_fields3data' : { },
+            't_fields3checked' : { },
+            't_fields4' : new Array(),
+            't_fields4data' : { },
+            't_fields4checked' : { }
+        };
+
+        activePerson = html;
+
+        if ( !noview ) {
+            setPersonsSel();
+            setView();
+        }
+
+        var rel = $('.selopt2bl#'+id).attr('rel');
+        if ( rel && rel != '' ) {
+            var data = rel.split('|');
+            addPersontype(data['0'],data['1'],1);
+        }
+
+        if ( !noview ) {
+            setPersonsSel();
+            setView();
+        }
+    }
+    function deletePerson(id,html,noview) {
+        t_opts['t_persons'].splice( $.inArray(html,t_opts['t_persons']) ,1 );
+        delete t_opts['t_personsdata'][html];
+
+        $.each(t_opts['joines'], function( k,v ) {
+            $.each(v, function( k2,v2 ) {
+                if ( k2 == id ) { delete t_opts['joines'][k][k2]; }
+            });
+            var ijoines = 0;
+            $.each(t_opts['joines'][k], function( k2,v2 ) {
+                ijoines++;
+            });
+            if ( ijoines == 0 ) { delete t_opts['joines'][k]; }
+            if ( k == id ) { delete t_opts['joines'][k]; }
+        });
+
+        if ( !noview ) {
+            setPersonsSel();
+            setView();
+        }
+    }
+
+    // POLA
+
+    function runPersontypesSel() {
+        setPersontypesSel() ;
+        $('.selopt2bl').click(function() {
+            var html = selOptGetItemTitle(this);
+            var a = t_opts['t_personsdata'][activePerson]['t_persontypes'].indexOf(html);
+            if ( a == -1 ) { addPersontype($(this).attr('id'),html); }
+            else { deletePersontype($(this).attr('id'),html); }
+            runOptsSearch();
+        });
+        $('#checkall').click(function() {
+            $('.selopt2bl').each(function() {
+                if ( !$(this).hasClass('active') && $(this).css('display') != 'none' ) { addPersontype($(this).attr('id'),selOptGetItemTitle(this),1); }
+            });
+            setPersontypesSel();
+            setView();
+        });
+        $('#uncheckall').click(function() {
+            $('.selopt2bl').each(function() {
+                if ( $(this).hasClass('active') && $(this).css('display') != 'none' ) { deletePersontype($(this).attr('id'),selOptGetItemTitle(this),1); }
+            });
+            setPersontypesSel();
+            setView();
+        });
+    }
+    function setPersontypesSel() {
+        $('.selopt2bl').each(function() {
+            var html = selOptGetItemTitle(this);
+            var a = t_opts['t_personsdata'][activePerson]['t_persontypes'].indexOf(html);
+            if ( a == -1 ) { $(this).removeClass('active'); }
+            else { $(this).addClass('active'); }
+        });
+    }
+    function addPersontype(id,html,noview) {
+        t_opts['t_personsdata'][activePerson]['t_persontypes'].push(html);
+        t_opts['t_personsdata'][activePerson]['t_persontypes'].sort();
+        t_opts['t_personsdata'][activePerson]['t_persontypesdata'][html] = id;
+        if ( !noview ) {
+            setPersontypesSel();
+            setView();
+        }
+    }
+    function deletePersontype(id,html,noview) {
+        t_opts['t_personsdata'][activePerson]['t_persontypes'].splice( $.inArray(html,t_opts['t_personsdata'][activePerson]['t_persontypes']) ,1 );
+        delete t_opts['t_personsdata'][activePerson]['t_persontypesdata'][html];
+        if ( !noview ) {
+            setPersontypesSel();
+            setView();
+        }
+    }
+
+    // POLA
+
+    function runFieldsSel() {
+        setFieldsSel() ;
+        $('.selopt2bl').click(function() {
+            var html = selOptGetItemTitle(this);
+            if ( activeFields > 0 ) { var a = t_opts['t_personsdata'][activePerson]['t_fields'+activeFields].indexOf(html); }
+            else { var a = t_opts['t_fields0'].indexOf(html); }
+            if ( a == -1 ) { addField($(this).attr('id'),html); }
+            else { deleteField($(this).attr('id'),html); }
+            runOptsSearch();
+        });
+        $('#checkall').click(function() {
+            $('.selopt2bl').each(function() {
+                if ( !$(this).hasClass('active') && $(this).css('display') != 'none' ) { addField($(this).attr('id'),selOptGetItemTitle(this),1); }
+            });
+            setFieldsSel();
+            setView();
+        });
+        $('#uncheckall').click(function() {
+            $('.selopt2bl').each(function() {
+                if ( $(this).hasClass('active') && $(this).css('display') != 'none' ) { deleteField($(this).attr('id'),selOptGetItemTitle(this),1); }
+            });
+            setFieldsSel();
+            setView();
+        });
+    }
+    function setFieldsSel() {
+        $('.selopt2bl').each(function() {
+            var html = selOptGetItemTitle(this);
+            if ( activeFields > 0 ) { var a = t_opts['t_personsdata'][activePerson]['t_fields'+activeFields].indexOf(html); }
+            else { var a = t_opts['t_fields0'].indexOf(html); }
+            if ( a == -1 ) { $(this).removeClass('active'); }
+            else { $(this).addClass('active'); }
+        });
+    }
+    function addField(id,html,noview) {
+        if ( activeFields > 0 ) {
+            t_opts['t_personsdata'][activePerson]['t_fields'+activeFields].push(html);
+            t_opts['t_personsdata'][activePerson]['t_fields'+activeFields].sort();
+            t_opts['t_personsdata'][activePerson]['t_fields'+activeFields+'data'][html] = id;
+            t_opts['t_personsdata'][activePerson]['t_fields'+activeFields+'checked'][html] = 1;
+        } else {
+            t_opts['t_fields0'].push(html);
+            t_opts['t_fields0'].sort();
+            t_opts['t_fields0data'][html] = id;
+            t_opts['t_fields0checked'][html] = 1;
+        }
+        if ( !noview ) {
+            setFieldsSel();
+            setView();
+        }
+    }
+    function deleteField(id,html,noview) {
+        if ( activeFields > 0 ) {
+            t_opts['t_personsdata'][activePerson]['t_fields'+activeFields].splice( $.inArray(html,t_opts['t_personsdata'][activePerson]['t_fields'+activeFields]) ,1 );
+            delete t_opts['t_personsdata'][activePerson]['t_fields'+activeFields+'data'][html];
+            delete t_opts['t_personsdata'][activePerson]['t_fields'+activeFields+'checked'][html];
+        } else {
+            t_opts['t_fields0'].splice( $.inArray(html,t_opts['t_fields0']) ,1 );
+            delete t_opts['t_fields0data'][html];
+            delete t_opts['t_fields0checked'][html];
+        }
+        if ( !noview ) {
+            setFieldsSel();
+            setView();
+        }
+    }
+
+    // WIDOK
+
+    function setView() {
+
+        // PERSONS SELECTOR
+
+        $('#persons').html('');
+        var activeExists = 0;
+        if ( t_opts['t_persons'].length == 0 ) { $('#persons').html('<option value="">nie wybrano podmiotów</option>'); }
+        else {
+            $.each(t_opts['t_persons'], function( k,v ) {
+                $('#persons').append('<option value="'+v+'">'+v+'</option>');
+                if ( v == activePerson ) { activeExists = 1; }
+            });
+        }
+        if ( activeExists == 0 ) {
+            activePerson = $('#persons option:first').attr('value');
+        }
+
+        $('#persons').val(activePerson);
+
+        // JOINES
+
+        $('#joineslist').html('');
+        var ijoines = 0;
+        $.each(t_opts['joines'], function( k,v ) {
+            $.each(v, function( k2,v2 ) {
+                ijoines++;
+            });
+        });
+        if ( ijoines == 0 ) {
+            $('#joineslist').append('<div class="alert alert-info"><i class="fa fa-info fa-fw"></i> &nbsp;<i>Nie zdefiniowano żadnych powiązań.</i></div>');
+        }
+
+        $.each(t_opts['joines'], function( k,v ) {
+            var joinfrom = '';
+            $.each(t_opts['t_persons'], function( k2,v2 ) {
+                if ( t_opts['t_personsdata'][v2]['id'] == k ) { joinfrom = v2; }
+            });
+            $('#joineslist').append('<table cellspacing="0" class="joinesopt"><tbody><tr><td><div class="seloptmin block"><span>'+joinfrom+'</span></div></td><td></td><td id="joinesto'+k+'"></td></tr></tbody></table>');
+            $.each(t_opts['joines'][k], function( k2,v2 ) {
+                var jointo = '';
+                $.each(t_opts['t_persons'], function( k3,v3 ) {
+                    if ( t_opts['t_personsdata'][v3]['id'] == k2 ) { jointo = v3; }
+                });
+                $('#joinesto'+k).append('<div class="seloptmin block"><span>'+jointo+'</span></div>');
+            });
+        });
+
+        $('#joineslist').append('<div class="clear"></div>');
+
+        // PERSONS TABS
+
+        $('#personsView').html('');
+        $.each(t_opts['t_persons'], function( k,v ) {
+            $('#personsView').append('<div style="display:none;" class="personTab" rel="'+v+'"></div>');
+
+            var opt = $('.personTab[rel="'+v+'"] select[name="addPersonInPack"]:last').val();
+            $('.personTab[rel="'+v+'"]').append('<div class="personTypes" rel="'+v+'"><br /></div>');
+            if ( t_opts['t_personsdata'][v]['t_persontypes'].length == 0 ) { $('.personTypes[rel="'+v+'"]').append('<div class="alert alert-info"><i class="fa fa-info fa-fw"></i> &nbsp;<i>Nie wybrano żadnej osoby.</i></div>'); }
+            $.each(t_opts['t_personsdata'][v]['t_persontypes'], function( i2, v2 ) {
+                $('.personTypes[rel="'+v+'"]').append('<div class="seloptmin"><span>'+v2+'</span></div>');
+            });
+
+            $('.personTab[rel="'+v+'"]').append('<hr />');
+
+            $('.personTab[rel="'+v+'"]').append('<div class="row"><div class="col-xs-12"><h2 class="pull-left" style="margin:0;">Pola danych osobowych</h3></div></div>');
+            $('.personTab[rel="'+v+'"] .addautomatic:last').click(function() { activeFields = 2; showDial('/fields/addautomatic/','',''); });
+
+            $('.personTab[rel="'+v+'"]').append('<hr />');
+
+            $('.personTab[rel="'+v+'"]').append('<strong>Pola w sekcji "DANE DODATKOWE"</strong>');
+            $('.personTab[rel="'+v+'"]').append('<div class="fields1" rel="'+v+'"><br /></div>');
+            if ( t_opts['t_personsdata'][v]['t_fields1'].length == 0 ) { $('.fields1[rel="'+v+'"]').append('<div class="alert alert-info"><i class="fa fa-info fa-fw"></i> &nbsp;<i>Nie wybrano pól w tej sekcji.</i></div>'); }
+            $.each(t_opts['t_personsdata'][v]['t_fields1'], function( i2, v2 ) {
+                $('.fields1[rel="'+v+'"]').append('<div class="selopt"><div class="checknew"><input type="checkbox" disabled name="field1'+t_opts['t_personsdata'][v]['t_fields1data'][v2]+'" class="field1'+t_opts['t_personsdata'][v]['t_fields1data'][v2]+'" id="field1'+t_opts['t_personsdata'][v]['id']+''+t_opts['t_personsdata'][v]['t_fields1data'][v2]+'" rel="'+v+'" value="1"><label for="field1'+t_opts['t_personsdata'][v]['id']+''+t_opts['t_personsdata'][v]['t_fields1data'][v2]+'"></label></div><span>'+v2+'</span></div>');
+                if ( t_opts['t_personsdata'][v]['t_fields1checked'][v2] == 1 ) { $('.field1'+t_opts['t_personsdata'][v]['t_fields1data'][v2]+'[rel="'+v+'"]').prop('checked', true); }
+            });
+
+            $('.personTab[rel="'+v+'"]').append('<hr />');
+
+            $('.personTab[rel="'+v+'"]').append('<strong>Pola w sekcji "DANE PODSTAWOWE"</strong>');
+            $('.personTab[rel="'+v+'"]').append('<div class="fields2" rel="'+v+'"><br /></div>');
+            if ( t_opts['t_personsdata'][v]['t_fields2'].length == 0 ) { $('.fields2[rel="'+v+'"]').append('<div class="alert alert-info"><i class="fa fa-info fa-fw"></i> &nbsp;<i>Nie wybrano pól w tej sekcji.</i></div>'); }
+            $.each(t_opts['t_personsdata'][v]['t_fields2'], function( i2, v2 ) {
+                $('.fields2[rel="'+v+'"]').append('<div class="selopt"><div class="checknew"><input type="checkbox" disabled name="field2'+t_opts['t_personsdata'][v]['t_fields2data'][v2]+'" class="field2'+t_opts['t_personsdata'][v]['t_fields2data'][v2]+'" id="field2'+t_opts['t_personsdata'][v]['id']+''+t_opts['t_personsdata'][v]['t_fields2data'][v2]+'" rel="'+v+'" value="1"><label for="field2'+t_opts['t_personsdata'][v]['id']+''+t_opts['t_personsdata'][v]['t_fields2data'][v2]+'"></label></div><span>'+v2+'</span></div>');
+                if ( t_opts['t_personsdata'][v]['t_fields2checked'][v2] == 1 ) { $('.field2'+t_opts['t_personsdata'][v]['t_fields2data'][v2]+'[rel="'+v+'"]').prop('checked', true); }
+            });
+
+            $('.personTab[rel="'+v+'"]').append('<hr />');
+
+            $('.personTab[rel="'+v+'"]').append('<strong>Pola w sekcji "DANE WRAŻLIWE"</strong>');
+            $('.personTab[rel="'+v+'"]').append('<div class="fields3" rel="'+v+'"><br /></div>');
+            if ( t_opts['t_personsdata'][v]['t_fields3'].length == 0 ) { $('.fields3[rel="'+v+'"]').append('<div class="alert alert-info"><i class="fa fa-info fa-fw"></i> &nbsp;<i>Nie wybrano pól w tej sekcji.</i></div>'); }
+            $.each(t_opts['t_personsdata'][v]['t_fields3'], function( i2, v2 ) {
+                $('.fields3[rel="'+v+'"]').append('<div class="selopt"><div class="checknew"><input type="checkbox" disabled name="field3'+t_opts['t_personsdata'][v]['t_fields3data'][v2]+'" class="field3'+t_opts['t_personsdata'][v]['t_fields3data'][v2]+'" id="field3'+t_opts['t_personsdata'][v]['id']+''+t_opts['t_personsdata'][v]['t_fields3data'][v2]+'" rel="'+v+'" value="1"><label for="field3'+t_opts['t_personsdata'][v]['id']+''+t_opts['t_personsdata'][v]['t_fields3data'][v2]+'"></label></div><span>'+v2+'</span></div>');
+                if ( t_opts['t_personsdata'][v]['t_fields3checked'][v2] == 1 ) { $('.field3'+t_opts['t_personsdata'][v]['t_fields3data'][v2]+'[rel="'+v+'"]').prop('checked', true); }
+            });
+
+
+            $('.personTab[rel="'+v+'"]').append('<hr />');
+
+            $('.personTab[rel="'+v+'"]').append('<strong>Pola w sekcji "INNE"</strong>');
+            $('.personTab[rel="'+v+'"]').append('<div class="fields4" rel="'+v+'"><br /></div>');
+            if ( t_opts['t_personsdata'][v]['t_fields4'].length == 0 ) { $('.fields4[rel="'+v+'"]').append('<div class="alert alert-info"><i class="fa fa-info fa-fw"></i> &nbsp;<i>Nie wybrano pól w tej sekcji.</i></div>'); }
+            $.each(t_opts['t_personsdata'][v]['t_fields4'], function( i2, v2 ) {
+                $('.fields4[rel="'+v+'"]').append('<div class="selopt"><div class="checknew"><input type="checkbox" disabled name="field4'+t_opts['t_personsdata'][v]['t_fields4data'][v2]+'" class="field4'+t_opts['t_personsdata'][v]['t_fields4data'][v2]+'" id="field4'+t_opts['t_personsdata'][v]['id']+''+t_opts['t_personsdata'][v]['t_fields4data'][v2]+'" rel="'+v+'" value="1"><label for="field4'+t_opts['t_personsdata'][v]['id']+''+t_opts['t_personsdata'][v]['t_fields4data'][v2]+'"></label></div><span>'+v2+'</span></div>');
+                if ( t_opts['t_personsdata'][v]['t_fields4checked'][v2] == 1 ) { $('.field4'+t_opts['t_personsdata'][v]['t_fields4data'][v2]+'[rel="'+v+'"]').prop('checked', true); }
+            });
+        });
+
+        $('#groupInsNotPersonal').html('');
+        $('#groupInsNotPersonal').append('<strong>Pola w sekcji "DANE NIEOSOBOWE"</strong>');
+        $('#groupInsNotPersonal').append('<div class="fields0"><br /></div>');
+        if ( t_opts['t_fields0'].length == 0 ) { $('.fields0').append('<div class="alert alert-info"><i class="fa fa-info fa-fw"></i> &nbsp;<i>Nie wybrano pól w tej sekcji.</i></div>'); }
+        $.each(t_opts['t_fields0'], function( i2, v2 ) {
+            $('.fields0').append('<div class="selopt"><div class="checknew"><input type="checkbox" disabled name="field0'+t_opts['t_fields0data'][v2]+'" id="field0'+t_opts['t_fields0data'][v2]+'" value="1"><label for="field0'+t_opts['t_fields0data'][v2]+'"></label></div><span>'+v2+'</span></div>');
+            if ( t_opts['t_fields0checked'][v2] == 1 ) { $('#field0'+t_opts['t_fields0data'][v2]).prop('checked', true); }
+        });
+
+        $('.personTab[rel="'+activePerson+'"]').css('display','block');
+
+        $('#options').val(JSON.stringify(t_opts));
+    }
+
+    // START
+
+    $( document ).ready(function() {
+        $('.dpiTab').click(function() { activeTab = $(this).attr('id'); $('.dpiTab').removeClass('active');$('.dpiIns').removeClass('active');$('.dpiIns[rel="'+$(this).attr('rel')+'"]').addClass('active');$(this).addClass('active'); });
+        $('#addPerson').click(function() { showDial('/persons/addmini/','',''); });
+        $('.dpiTab:first').click();
+        $('#persons').change(function() { activePerson = $(this).val(); setView(); });
+        setView();
+    });
+
+    // INNE
+
+    backendUtilities.addVatidationEngine("f_data");
+
+</script>

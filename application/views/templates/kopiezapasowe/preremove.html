@@ -1,0 +1,49 @@
+<form method="POST" action="/kopiezapasowe/remove">
+    <div>
+        <label>Nazwa</label>
+        <input type="text" name="nazwa" id="nazwa" value="{$data['nazwa']}">
+    </div>
+    <div>
+        <label>Data:</label>
+        <input type="date" id="data" name="data" class="form-control datepicker-input" value="{$data.data}" placeholder="YYYY-mm-dd" />
+        <label>Godzina:</label>
+        <input type="text" id="godzina" name="godzina" placeholder="GG:mm" value="{if $data.data}{$data.godzina}{else}{date('H:i')}{/if}" />
+    </div>
+    <div>
+        <label>Wykonawca</label>
+        <select id="wykonawca" name="wykonawca">
+            {foreach $osoby as $osoba}
+            <option value="{$osoba.osoba_id}" {if $osoba.rola_name == "ASI"}selected{/if}>{$osoba.nazwisko} {$osoba.imie} {if $osoba.rola_name} ({$osoba.rola_name}) {/if}</option>
+            {/foreach}
+        </select>
+    </div>
+    <div>
+        <label>Zakres:</label>
+        <div style="height: 250px; width: 500px; overflow-y: auto">
+            {foreach $zbiory as $id => $zbior}
+            <input type="checkbox" name="zbior[{$zbior['id']}]" id="zbior[{$zbior['id']}]" value="{$zbior['id']}"
+            {if (in_array($zbior['id'], explode(',', $data.zbiory)))}
+            checked
+            {/if}
+            />
+            {$zbior['nazwa']}
+            {/foreach}
+        </div>
+    </div>
+    <div>
+        <label>Nr raportu</label>
+        <input type="text" name="nr_raportu" id="nr_raportu" value="{$data['nr_raportu']}">
+    </div>
+    <div>
+        <label>Lokalizacja</label>
+        <select name="lokalizacja" id="lokalizacja">
+            {foreach $pomieszczenia as $d}
+            <option value="{$d.id}">{$d.nazwa_budynku} :: {$d.nazwa}</option>
+            {/foreach}
+        </select>
+    </div>
+    <div>
+        <input type="submit" value="Zapisz" />
+    </div>
+    <input type="hidden" name="id" id="id" value="{$data.id}" />
+</form>

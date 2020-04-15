@@ -1,0 +1,13 @@
+<section id="main" class="contact-page for-media-page clearfix">
+
+<article class="block">
+<h1>{$tr->_('site map')}</h1>
+<ul class="fancy">
+ {foreach $pages as $p}
+ <li><a href="{$url}{$p.name|ucwords|replace:",":"_"},{$p.id}.html">{if $lang == 'pl'}{$p.name|ucwords}{else if $lang=='en'}{$p.name_en|ucwords}{else if $lang=='de'}{$p.name_de|ucwords}{/if}</a></li>
+ {/foreach}
+ <li><a href="{$url}static/sitemap">{$tr->_('site map')|ucwords}</a></li>
+</ul>
+
+</article>
+</section>

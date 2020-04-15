@@ -1,0 +1,57 @@
+{$message}
+{include file='modals/modal.tpl' title='Zadania - co to jest?' content='Podstawowe zastosowanie modułu zadania zostało zobrazowane przy okazji omówienia modułu szkoleń, jednak przyszła pora na bardziej dokładne omówienie tematu. Tak jak mówi nazwa, stricte Zadania, pozwalają na określenie procedury i zadań do realizacji dla użytkowników, a następnie by móc kontrolować ich realizację oraz mieć dowód na ich zakończenie. To nie tylko doskonały moduł wspierający zarządzanie organizacją, ale przede wszystkim konieczna funkcja do realizacji podstawowego celu jakim jest ograniczenie odpowiedzialności. By lepiej zrozumieć sens zadań, wymieńmy kilka przykładów. Wprowadzona została w jednostce nowa Polityka Bezpieczeństwa informacji wraz z Instrukcją Zarządzania Systemem Informatycznym. Administratorowi Danych Osobowych zależy na tym, aby jak najszybciej zapoznać wszystkich pracowników z nowym dokumentem, oraz monitorować kto się z nim zapoznał. Można w takim wypadku dodać nowy dokument wersjonowany oraz utworzyć zadanie z tym dokumentem, by w pełni nadzorować wprowadzenie nowego dokumentu. Analogicznie możemy wprowadzać inne dokumenty, np. umowy i dzięki połączeniu modułu zadań z dokumentami wersjonowanymi, możemy stopniowo wprowadzać nowe wersje umów monitorując przy okazji ich weryfikowanie przez innych.'}
+<div class="body-action">
+    <a class="btn btn-info" href="{$baseUrl}/update">Dodaj zadanie</a>
+</div>
+<div style="height:10px"></div>
+<hr class="nomargin"/>
+<div style="height:10px"></div>
+<form method="post" action="{$baseUrl}/delChecked/">
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead class="ui-widget-header">
+        <tr>
+            <th class="min-width"></th>
+            <th class="min-width">id</th>
+            <th data-filter-type="string">Tytuł</th>
+            <th data-filter-type="select">Rodzaj</th>
+            <th data-filter-type="string">Autor</th>
+            <th data-filter-type="select">Rodzaj wywołania</th>
+            <th class="text-center">Ilość zadań</th>
+            <th data-filter-type="date-range" class="text-center">Edytowane</th>
+            <th class="text-center">Operacje</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content">
+        {foreach $paginator as $d}
+        <tr>
+            <td>
+                <input type="checkbox" name="id[]" id="id{$d.id}" value="{$d.id}"/>
+            </td>
+            <td>{$d.id}</td>
+            <td>{$d.title}</td>
+            <td>{$taskTypes[$d.type].name}</td>
+            <td>{if $d.author_name}{$d.author_name}{else}{$d.author_login}{/if}</td>
+            <td>{$taskTriggerTypes[$d.trigger_type].name}</td>
+            <td class="text-center">{$d.tasks_count}</td>
+            <td class="text-center">{smart_date value=$d.updated_at}</td>
+            <td class="operations">
+                {*<a class="choose-from-dial" data-toggle="tooltip" title="SZCZEGÓŁY" data-dial-url="{$baseUrl}/mini-preview/id/{$d.id}"><i class="fa fa-eye"></i></a>*}
+                {if $auth->isGranted('node/tasks/storage-tasks', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-list" href="{$baseUrl}/storage-tasks/id/{$d.id}" data-toggle="tooltip" title="LISTA ZADAŃ ZLECONYCH"></a>
+                {/if}
+                {if $auth->isGranted('node/tasks/update', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-pencil" href="{$baseUrl}/update/id/{$d.id}" data-toggle="tooltip" title="EDYTUJ"></a>
+                {/if}
+                {if $userIsKodoOrAbi}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="{$baseUrl}/del/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+
+    </table>
+    {if $userIsKodoOrAbi}
+    <input type="submit" value="Usuń zaznaczone" class="btn btn-default" onclick="return confirm('Usunąć?')"/>
+    {/if}
+</form>

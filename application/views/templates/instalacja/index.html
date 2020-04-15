@@ -1,0 +1,20 @@
+{$message}
+<div>
+    <fieldset>
+        <form method="post" id="f_profile" role="form" enctype="multipart/form-data" action="/instalacja/process">
+            <div>
+                <label>Plik excela z danymi:</label>
+                <input type="file" name="fields" id="fields" class="" />
+            </div>
+            <div>
+                <input type="submit" value="Wgraj" class="btn btn-info" />
+            </div>
+        </form>
+    </fieldset>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	backendUtilities.addVatidationEngine("f_profile");
+});
+</script>

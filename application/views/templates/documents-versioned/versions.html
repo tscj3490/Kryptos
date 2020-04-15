@@ -1,0 +1,52 @@
+<div class="table-operations-header">
+    {if $auth->isGranted('node/documents-versioned/update-version', ['docid' => $document_id])}
+    <a class="btn btn-success" href="{$baseUrl}/update-version/docid/{$document_id}" data-title="Dodaj nową wersję" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+    {/if}
+</div>
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead class="ui-widget-header">
+    <tr>
+        <th data-filter-type="string" class="min-width">id</th>
+        <th data-filter-type="select" class="min-width">status</th>
+        <th data-filter-type="string">wersja</th>
+        <th data-filter-type="select">autor</th>
+        <th data-filter-type="date-range" class="text-center">data od</th>
+        <th data-filter-type="date-range" class="text-center">data do</th>
+        <th data-filter-type="date-range" class="text-center">modyfikacja</th>
+        <th class="text-center">operacje</th>
+    </tr>
+    </thead>
+    <tbody class="ui-widget-content">
+    {foreach $paginator as $d}
+        <tr>
+            <td>{$d.id}</td>
+            <td class="text-center">{smart_string_select value=$d.status config=$status_display_settings}</td>
+            <td>{$d.version}</td>
+            <td>{$d.author_name|smart_osoba:$d.author_id}</td>
+            <td class="text-center">{smart_date value=$d.date_from class="timeago"}</td>
+            <td class="text-center">{smart_date value=$d.date_to class="timeago"}</td>
+            <td class="text-center">{if $d.updated_at}{smart_date value=$d.updated_at class="timeago"}{else}{smart_date value=$d.created_to class="timeago"}{/if}</td>
+            <td class="operations">
+                {element tag='a' route='documents-versioned/preview' routeParams=['id' => $d.id] attributes=[
+                    'dialog' => true,
+                    'icon' => 'view',
+                    'tooltip' => 'Podgląd'
+                ]}
+                {element tag='a' route='files/download' routeParams=['t' => $d.document_token] attributes=[
+                    'icon' => 'download',
+                    'tooltip' => 'Pobierz'
+                ]}
+                {element tag='a' route='documents-versioned/update-version' routeParams=['id' => $d.id] attributes=[
+                    'icon' => 'edit',
+                    'tooltip' => 'Edytuj'
+                ]}
+                {element tag='a' route='documents-versioned/remove-version' routeParams=['id' => $d.id] attributes=[
+                    'icon' => 'delete',
+                    'delete' => 'singleDelete',
+                    'tooltip' => 'Usuń'
+                ]}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

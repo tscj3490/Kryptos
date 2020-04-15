@@ -1,0 +1,36 @@
+<div class="row margin-bottom">
+    <div class="col-sm-12">
+        <button type="button" class="btn" onclick="$('#elements-rights-extended .icheckbox_square-aero').not('.checked').click()">Zaznacz wszystkie</button>
+        <button type="button" class="btn" onclick="$('#elements-rights-extended .icheckbox_square-aero').filter('.checked').click()">Odznacz wszystkie</button>
+    </div>
+</div>
+
+<table cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered" id="elements-rights-extended">
+    <thead>
+    <tr>
+        <th width="30%">Moduł</th>
+        <th>Akcja</th>
+        <th>Dostęp</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach from=$rightsConfigExtended.modules key=moduleName item=moduleConfig}
+        {foreach from=$moduleConfig.permissions item=configItem}
+            <tr
+                {if $configItem.basePermission}
+                class="relative-element"
+                data-relation-base="permission-{$configItem.basePermission|md5}"
+                data-relation-id="1"
+                {/if}
+            >
+                <td>{if $configItem.basePermission} <span class="fa fa-long-arrow-up"></span> {else}{$moduleConfig.label}{/if}</td>
+                <td>{$configItem.label}</td>
+                <td>
+                    <input type="hidden" id="permission-{$configItem.name|md5}" name="rights[{$configItem.name}]" class="toggle-relative" value="{if !empty($rightsExtended[$configItem.name])}1{else}0{/if}">
+                    <div class="icheckbox_square-aero js-checkbox" data-target-id="rights[{$configItem.name}]"><ins class="iCheck-helper"></ins></div>
+                </td>
+            </tr>
+        {/foreach}
+    {/foreach}
+    </tbody>
+</table>

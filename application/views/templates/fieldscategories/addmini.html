@@ -1,0 +1,21 @@
+<h1>Wybór zestawu danych</h1>
+<br />
+<input type="text" name="searcher" id="searcher" class="form-control" placeholder="Wpisz szukaną frazę" onkeyup="runOptsSearch();" />
+<hr />
+<div id="optsSearch">
+<div class="optsnodata">Brak wyników spełniających podane kryteria wyszukiwania</div>
+{foreach $t_data as $d}
+<div class="selopt2bl" id="id{$d.id}">{$d.name}</div>
+{/foreach}
+</div>
+<div style="clear:both;"></div>
+<hr />
+<div class="input-group">
+   <input type="text" name="name" id="newname" value="" class="form-control" placeholder="Podaj nazwę nowej osoby" />
+   <span class="input-group-btn">
+    <button class="btn btn-default" id="addItem" type="button" onclick="showDial('/fieldscategories/savemini/','','name='+$('#newname').val());">Dodaj &nbsp;<i class="fa fa-plus"></i></button>
+  </span>
+</div>
+<script type="text/javascript">
+runPersonsSel();
+</script>

@@ -1,0 +1,54 @@
+<script type="text/javascript" src="{$url}js/file.js"></script>
+
+<div class="downloading-file">
+	<h2 class="p-title">Pobierz plik <u>{$file.name|escape|stripslashes}</u></h2>
+	<div class="fleft file-info">
+		<img class="downloading-image" src="{$url}pic/download_file.png" title="download file" alt="download file" />
+		<div class="downloading-info">
+			Pobieranie zostanie rozpoczęte za<br /><span id="pobieranie_sec"></span> s.
+		</div>
+		<div class="info-reg">
+		{if !$idUsers}
+		<p align="center" style="color:red;font-weight:bold;">
+		<br />Nie chcesz czekać? <a href="{$url}register">Zarejestruj się!</a>
+		</p>
+		{/if}
+		<p>Klikając w przycisk "pobierz plik" akceptujesz regulamin serwis. Muzyka.net.pl nie ponosi odpowiedzialności za pliki, które są wrzucane przez użytkowników. Jeżeli uważasz, że plik narusza prawa autorskie zgłoś to niezwłocznie administracji serwisu. Gdy klikniesz na link opuścisz serwis muzyka.net.pl
+		</p>
+		{*<a href="#"><img class="clear fleft" src="/pic/icons_gif/001_30.gif" alt="zgłoś naruszenie praw autorskich" title="zgłoś naruszenie praw autorskich" /></a>
+		<a href="#"><img class="fleft" style="margin-left:5px" src="/pic/icons_gif/001_11.gif" alt="zgłoś niedziałający link" title="zgłoś niedziałający link" /></a>
+		<a href="#"><img class="fleft" style="margin-left:5px" src="/pic/icons_gif/001_12.gif" alt="powiadom znajomego" title="powiadom znajomego" /></a>
+		*}
+		{include file="box/addtobox.html"}
+		{assign var='comment_type' value='muzyka'}	
+		{assign var='black' value='black'}
+		{assign var='comment_affects' value=$file.idFiles}
+		{include file="comments/comments.html"}
+		</div>
+	</div>
+	<div class="advert">
+		<script type="text/javascript"><!--
+		google_ad_client = "pub-3248088505317880";
+		/* 160x600, utworzono 10-06-12 */
+		google_ad_slot = "2122905410";
+		google_ad_width = 160;
+		google_ad_height = 600;
+		//-->
+		</script>
+		<script type="text/javascript"
+		src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+		</script>
+	</div>
+	<input type="hidden" id="fid" value="{$file.idFiles|base64_encode}" />
+</div>
+<script type="text/javascript"><!--
+google_ad_client = "pub-3248088505317880";
+/* 728x15, utworzono 10-06-12 */
+google_ad_slot = "8367421809";
+google_ad_width = 728;
+google_ad_height = 15;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>

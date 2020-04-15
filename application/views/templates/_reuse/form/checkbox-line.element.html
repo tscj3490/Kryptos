@@ -1,0 +1,20 @@
+{assign var="sectionId" value="ta"|set_id}
+{if empty($params.attributes.id)}
+    {assign var="id" value=$params.attributes.name|set_id}
+{else}
+    {assign var="id" value=$params.attributes.id}
+{/if}
+{if empty($params.attributes.labelClass)}
+    {assign var="labelClass" value='col-sm-12'}
+{else}
+    {assign var="labelClass" value=$params.attributes.labelClass}
+{/if}
+
+<div class="form-group row">
+    <label class="{$labelClass}">
+        <input type="hidden" value="0" name="{$params.attributes.name}">
+        <input type="checkbox" value="1" name="{$params.attributes.name}" {if $params.attributes.value == 1}checked{/if}>
+        {$params.attributes.label}
+    </label>
+</div>
+

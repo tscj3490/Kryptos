@@ -1,0 +1,74 @@
+{$message}
+{include file='modals/modal.tpl' title='Pomieszczenia i budynki - co to jest?' content='W zakładce pomieszczenia i budynki jak sama nazwa wskazuje zarządzasz pomieszczeniami i budynkami w swoim podmiocie. Do pomieszczeń i budynków można dodatkowo przypisywać zabezpieczenia, które są dziedziczone przez zbiór znajdujący się w tych pomeiszczeniach/budynkach.'}
+<h2>Pomieszczenia</h2>
+<div class="body-action">
+    <a class="btn btn-info" href="/pomieszczenia/update">Dodaj nowe pomieszczenie</a>
+    <a class="btn btn-info" href="/pomieszczenia/profilesPdf">Raport</a>
+</div>
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="string">nazwa</th>
+        <th data-filter-type="string">piętro</th>
+        <th data-filter-type="string">numer pokoju</th>
+        <th data-filter-type="select">wydział</th>
+        <th data-filter-type="select">budynek</th>
+        <th width="80px;"></th>
+    </tr>
+    </thead>
+    <tbody class="ui-widget-content">
+    {foreach $paginator as $d}
+        <tr>
+            <td>{$d.nazwa_pomieszczenia|ucfirst}</td>
+            <td>{$d.pietro}</td>
+            <td>{$d.nr}</td>
+            <td>{$d.wydzial|ucfirst}</td>
+            <td>{$d.nazwa_budynku|ucfirst}</td>
+            <td>
+                {if $auth->isGranted('node/pomieszczenia/update', ['id' => $d.p_id])}
+                <a class="glyphicon glyphicon-pencil" href="/pomieszczenia/update/id/{$d.p_id}" data-toggle="tooltip" title="Edytuj"></a>
+                {/if}
+                {if $auth->isGranted('node/pomieszczenia/clone', ['id' => $d.p_id])}
+                <a class="glyphicon glyphicon-star" href="/pomieszczenia/update/clone/{$d.p_id}" data-toggle="tooltip" title="Duplikuj"></a>
+                {/if}                
+                {if $auth->isGranted('node/pomieszczenia/del', ['id' => $d.p_id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="/pomieszczenia/del/id/{$d.p_id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+
+</table>
+<h2>Budynki</h2>
+<div class="body-action">
+    <a class="btn btn-info" href="/budynki/update">Dodaj nowy budynek</a>
+</div>
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead class="ui-widget-header">
+    <tr>
+        <th data-filter-type="string">nazwa</th>
+        <th data-filter-type="string">opis</th>
+        <th data-filter-type="string">adres</th>
+        <th width="75px;"></th>
+    </tr>
+    </thead>
+    <tbody class="ui-widget-content">
+    {foreach $budynki as $b}
+        <tr>
+            <td>{$b.nazwa|ucfirst}</td>
+            <td>{$b.opis|ucfirst}</td>
+            <td>{$b.adres|ucfirst}</td>
+            <td>
+                {if $auth->isGranted('node/budynki/update', ['id' => $b.id])}
+                <a href="/budynki/update/id/{$b.id}" class="glyphicon glyphicon-pencil" data-toggle="tooltip" title="Edytuj"></a>
+                {/if}
+                {if $auth->isGranted('node/budynki/remove', ['id' => $b.id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="/budynki/remove/id/{$b.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+
+</table>

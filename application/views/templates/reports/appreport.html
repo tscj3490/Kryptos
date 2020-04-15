@@ -1,0 +1,31 @@
+<h1>Wykaz aplikacji wraz z zabezpieczeniami</h1>
+<table class="printable" cellspacing='1' cellpadding="5">
+    <thead>
+    <tr>
+        <th>L.p.</th>
+        <th width="15%">Nazwa aplikacji</th>
+        <th width="15%">Załączona dokumentacja</th>
+        <th>Zabezpieczenia</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $data as $d}
+        <tr>
+            <td>{$d@iteration}</td>
+            <td>{$d.producent} {$d.nazwa} {$d.wersja}</td>
+            <td>{if $d.document>0}Tak{else}Nie{/if}</td>
+            <td align="justify">
+                {foreach $d.safeguards as $c}
+                {$c.safeguard.nazwa}<sup>{$c.safeguard.typ}</sup>{if !$c@last}<br>{/if}
+                {foreachelse}
+                <h3>Brak</h3>
+                {/foreach}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>
+<h4>Legenda</h4>
+[<sup>1</sup>] - ZABEZPIECZENIE ORGANIZACYJNE</br>
+[<sup>2</sup>] - ZABEZPIECZENIE FIZYCZNE</br>
+[<sup>3</sup>] - ZABEZPIECZENIE INFORMATYCZNE

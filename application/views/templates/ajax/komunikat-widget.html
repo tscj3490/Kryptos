@@ -1,0 +1,31 @@
+<div id="komunikat-widget">
+    <div>
+        <form action="/ajax/komunikat-widget" method="POST" id="komunikat-widget-form">
+            <input type="hidden" name="id" value="{$komunikat.id}">
+            <div class="form-group row">
+                <div class="col-sm-12">
+                    {$komunikat.topic}
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-12">
+                    {$komunikat.content nofilter}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-12">
+                    <input type="checkbox" value="1" name="confirmed" class="validate[required]">
+                    Oświadczam, że zapoznałem się z powyższym komunikatem
+                </label>
+            </div>
+            <div>
+                <input type="submit" value="AKCEPTUJĘ" class="btn btn-success"/>
+                <span class="md-close hidden"></span>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    backendUtilities.addVatidationEngine("komunikat-widget-form");
+</script>

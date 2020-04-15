@@ -1,0 +1,90 @@
+{include file='modals/modal.tpl' title='Rejestr udostępnień - co to jest?' content='Ewidencję udostępnień danych oraz określenie źródła skąd pobieramy dane do naszych zbiorów jesteśmy zobligowani prowadzić na podstawie aktualnie obowiązujących przepisów, o czym przypominają nam liczne protokoły z kontroli GIODO. Prowadzenie indywidualnej ewidencji udostępnień i pobrania danych to konieczne zabezpieczenie organizacyjne wg kancelarii prawnych z całej Polski. To klarowny dowód dla administratora danych, pozwalający konkretnie określić kto udostępnił informacje. Eksperci merytoryczni Kryptos to praktycy, którzy opracowali autorski formularz dodawania wpisu do rejestru. Stan faktyczny jest taki, że przeciętny pracownik nie posługuje się swobodnie pojęciem zbioru danych osobowych i czas jaki musiałby poświęcić na określenie z jakiego zbioru udostępnia jaki element byłby zbyt długi, a sam fakt prowadzenia ewidencji błędogenny. Kryptos24 umożliwia posługiwanie się inteligentną wyszukiwarką, w której pracownik wpisuje nazwę dokumentu/zasobu danych, które udostępnia. Po lewej znajdują się również dwa rejestry mianowicie osób i podmiotów, którym udostępniamy dane. Dzięki nim możemy zweryfikować listę osób z danego podmiotu zewnętrznego, który odbierał od nas dane.'}
+<form method="post" action="{$baseUrl}/delchecked/">
+    <div class="table-operations-header">
+        {if $showPobranie}
+        {element tag='a' route='data-transfers/update-pobranie' routeParams=[] attributes=[
+            'class' => 'btn btn-success',
+            'icon' => 'plus',
+            'title' => 'Dodaj pobranie',
+            'extra' => ['tooltip'],
+            'innerHtml' => 'Pobranie'
+        ]}
+        {/if}
+        
+        {if $showUdostepnienie}
+        {element tag='a' route='data-transfers/update-udostepnienie' routeParams=[] attributes=[
+            'class' => 'btn btn-success',
+            'icon' => 'plus',
+            'title' => 'Dodaj udostępnienie',
+            'extra' => ['tooltip'],
+            'innerHtml' => 'Udostępnienie'
+        ]}
+        {/if}
+
+        {if $showPowierzenie}
+        {element tag='a' route='data-transfers/update-powierzenie' routeParams=[] attributes=[
+            'class' => 'btn btn-success',
+            'icon' => 'plus',
+            'title' => 'Dodaj powierzenie',
+            'extra' => ['tooltip'],
+            'innerHtml' => 'Powierzenie'
+        ]}
+        {/if}
+
+        {element tag='a' route='data-transfers/report' routeParams=[] attributes=[
+            'class' => 'btn btn-info',
+            'title' => 'Raport',
+            'extra' => ['tooltip'],
+            'innerHtml' => 'Raport'
+        ]}
+    </div>
+
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead class="ui-widget-header">
+        <tr>
+            <th></th>
+            <th data-filter-type="string">Nr</th>
+            <th data-filter-type="select">Rodzaj</th>
+            <th data-filter-type="date-range">Data transferu</th>
+            <th data-filter-type="string">Osoba odpowiedzialna</th>
+            <th data-filter-type="string">Podmiot</th>
+            <th data-filter-type="string">Pracownik podmiotu</th>
+            <th>Operacje</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content">
+        {foreach $paginator as $d}
+        <tr>
+            <td style="width:22px">
+                <input type="checkbox" name="id[]" id="id{$d.id}" value="{$d.id}"/>
+            </td>
+            <td>{$d.id}</td>
+            <td>{$transferTypes[$d.type].name}</td>
+            <td>{$d.transfer_date}</td>
+            <td>{$d.osoba_name|upper}</td>
+            <td>{$d.source_company_name}</td>
+            <td>{$d.source_employee_name}</td>
+            <td>
+                {element tag='a' route='data-transfers/mini-preview' routeParams=['id' => $d.id] attributes=[
+                    'icon' => 'view',
+                    'tooltip' => 'Szczegóły'
+                ]}
+                {element tag='a' route='data-transfers/update' routeParams=['id' => $d.id] attributes=[
+                    'icon' => 'edit',
+                    'tooltip' => 'Edytuj'
+                ]}
+                {element tag='a' route='data-transfers/del' routeParams=['id' => $d.id] attributes=[
+                    'icon' => 'remove',
+                    'delete' => 'singleDelete',
+                    'tooltip' => 'Usuń'
+                ]}
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+
+    </table>
+    {if $auth->isGranted('node/data-transfers/delchecked')}
+        <input type="submit" value="Usuń zaznaczone" class="btn btn-default" onclick="return confirm('Usunąć?')"/>
+    {/if}
+</form>

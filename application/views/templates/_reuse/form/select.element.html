@@ -1,0 +1,30 @@
+{if empty($params.attributes.id)}
+    {assign var="id" value=$params.attributes.name|set_id}
+{else}
+    {assign var="id" value=$params.attributes.id}
+{/if}
+
+<div class="form-group row {$wrapper.class nofilter}" {$wrapper.attributes_string nofilter}>
+    <label for="{$id}" class="col-sm-4">{$params.attributes.label}</label>
+    <div class="col-sm-8">
+        <select name="{$params.attributes.name}" id="{$id}" class="form-control {$attributes.class}">
+            {if $params.attributes.empty_option}
+                <option value="">{if $params.attributes.empty_option === true}Wybierz{else}{$params.attributes.empty_option}{/if}</option>
+            {/if}
+
+            {if $params.attributes.values}
+                {foreach $params.attributes.values as $option}
+                    <option value="{$option.id}"{if $params.attributes.value == $option.id} selected{/if}>{$option.name}</option>
+                {/foreach}
+            {/if}
+            {if $params.attributes.options === 'typeahead'}
+                {assign "options" Application_Service_Utilities::getModel($params.attributes.model)->getAllForTypeahead()}
+            {else}
+                {assign "options" $params.attributes.options}
+            {/if}
+            {foreach $options as $option}
+                <option value="{$option.id}"{if $params.attributes.value == $option.id} selected{/if}>{$option.name}</option>
+            {/foreach}
+        </select>
+    </div>
+</div>

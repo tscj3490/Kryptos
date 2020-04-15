@@ -1,0 +1,53 @@
+{$message}
+<link rel="stylesheet" href="/assets/plugins/bootstrap-switch/css/bootstrap-switch.min.css">
+<div class="body-action">
+    <a class="btn btn-info" href="/messages/create">Dodaj nową</a>
+</div>
+<table class="table table-striped table-bordered example" >
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>Tytuł</th>
+        <th>Opis</th>
+        <th>Treść</th>
+        <th>Link</th>
+        <th>Data utworzenia</th>
+        <th>Utworzone przez</th>
+        <th width="150px">Aktywne</th>
+        <th>Akcje</th>
+    </tr>
+    </thead>
+    <tbody class="ui-widget-content">
+    {foreach $paginator as $item}
+    <tr>
+        <td>{$item.id}</td>
+        <td>{$item.title}</td>
+        <td>{$item.description}</td>
+        <td>{$item.content}</td>
+        <td>
+            <a href="{$item.link}" class="btn btn-primary"><i class="glyphicon glyphicon-globe"></i></a>
+        </td>
+        <td>{$item.created_at}</td>
+        <td>{$item.login}</td>
+       <td>
+            <input type="checkbox" class="js-switcher" name="active" data-id ="{$item.id}" value="1" {if $item.active == 1} checked {/if} data-size="small">
+        </td>
+        <td>
+            <a  class="glyphicon glyphicon-pencil" href="/messages/edit/id/{$item.id}"></a>
+            <a  class="glyphicon glyphicon-trash" href="/messages/delete/id/{$item.id}"></a>
+        </td>
+    </tr>
+    {/foreach}
+    </tbody>
+</table>
+<script src="/assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+<script src="/_gfx/js/controllers/messges/ui-messages.js"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        UIInfo.init();
+    });
+</script>
+
+
+
+

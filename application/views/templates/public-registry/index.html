@@ -1,0 +1,39 @@
+{include file='modals/modal.tpl' title='Rejestry publiczne - co to jest?' content='Zgodnie z Rozporządzeniem Rady Ministrów z dnia 12 kwietnia 2012 r. w sprawie Krajowych Ram Interoperacyjności, minimalnych wymagań dla rejestrów publicznych i wymiany informacji w postaci elektronicznej oraz minimalnych wymagań dla systemów teleinformatycznych, podmioty jakich dotyczy Rozporządzenie, zobligowane są do prowadzenia rejestru systemów teleinformacyjnych oraz rejestrów publicznych. Kryptos24 pozwala ewidencjonować oraz prowadzić te rejestry zgodnie z wymaganiami organów kontrolnych.'}
+<div class="table-operations-header">
+    {element tag='a' route='public-registry/update' routeParams=[] attributes=[
+        'class' => 'btn btn-success',
+        'icon' => 'plus',
+        'tooltip' => 'Dodaj rejestr',
+        'innerHtml' => 'Dodaj'
+    ]}
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="string">Nazwa</th>
+        <th data-filter-type="date-range">Data rozpoczęcia</th>
+        <th class="text-center">Operacje</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $paginator as $d}
+        <tr>
+            <td><span class="{$d.icon}"></span> {$d.name}</td>
+            <td>{smart_date value=$d.operation_start_date}</td>
+            <td class="operations">
+                {element tag='a' route='public-registry/update' routeParams=['id' => $d.id] attributes=[
+                    'icon' => 'edit',
+                    'tooltip' => 'Edytuj'
+                ]}
+
+                {element tag='a' route='public-registry/remove' routeParams=['id' => $d.id] attributes=[
+                    'icon' => 'delete',
+                    'delete' => 'singleDelete',
+                    'tooltip' => 'Usuń'
+                ]}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+   <forms>
+      <step0>
+         <print/>
+         <step>step0</step>
+         <action>step</action>
+         <dispMonitMessage/>
+         <next_page>/formular_step0.dhtml?prepareExportXml=true</next_page>
+         <export_action/>
+         <monitConfirm/>
+         
+         {if $zbior.po_raz_pierwszy == 1}
+            {if $zbior.dane_wrazliwe == 1}
+               <v3>1</v3>
+            {else}
+               <v1>1</v1>
+            {/if}
+         {else}
+            <v2>1</v2>
+         {/if}
+      </step0>
+      <step1>
+         <print/>
+         <step>step1</step>
+         <action>step</action>
+         <errorCleaning>1</errorCleaning>
+         <next_page>/formular_step2.dhtml</next_page>
+         <export_action/>
+         <monitConfirm/>
+         
+         <setname>{$zbior.nazwa}</setname>
+         <admin_name>{$t_setes.id1}</admin_name>
+         <admin_street>{$t_setes.id3}</admin_street>
+         <admin_local1>{$t_setes.id5}</admin_local1>
+         <admin_local2>{$t_setes.id6}</admin_local2>
+         <admin_zipcode>{$t_setes.id4}</admin_zipcode>
+         <admin_city>{$t_setes.id2}</admin_city>
+         <admin_regon>{$t_setes.id8}</admin_regon>
+      </step1>
+      <step2>
+         <print/>
+         <step>step2</step>
+         <action>step</action>
+         <errorCleaning>1</errorCleaning>
+         <next_page>/formular_step3.dhtml</next_page>
+         <export_action/>
+         <monitConfirm/>
+         
+         <rep_name></rep_name>
+         <rep_street>{$t_setes.id25}</rep_street>
+         <rep_local1>{$t_setes.id23}</rep_local1>
+         <rep_local2>{$t_setes.id24}</rep_local2>
+         <rep_zipcode>{$t_setes.id22}</rep_zipcode>
+         <rep_city>{$t_setes.id20}</rep_city>
+      </step2>
+      <step3>
+         <print/>
+         <step>step3</step>
+         <action>step</action>
+         <errorCleaning>1</errorCleaning>
+         <next_page>/formular_step4.dhtml</next_page>
+         <export_action/>
+         <monitConfirm/>
+         
+         {if $powierzenie_kontakt->id > 0}
+            <v4>1</v4>
+            <v4text>{$powierzenie_kontakt->name}, {$powierzenie_kontakt->street} {$powierzenie_kontakt->house} {$powierzenie_kontakt->locale}, {$powierzenie_kontakt->postal_code} {$powierzenie_kontakt->city} {$powierzenie_kontakt->country}</v4text>
+         {/if}
+         {if $zbior.powierzenie_planowane == 1}<v5>1</v5>{/if}
+      </step3>
+      <step4>
+         <print/>
+         <step>step4</step>
+         <action>step</action>
+         <errorCleaning>1</errorCleaning>
+         <next_page>/formular_step5.dhtml</next_page>
+         <export_action/>
+         <monitConfirm/>
+         
+         {if $zbior.zgoda_zainteresowanego == 1}<v6>1</v6>{/if}
+         {if $zbior.wymogi_przepisow_prawa == 1}<v7>1</v7>{/if}
+         {if $zbior.wymogi_przepisow_prawa == 1}<v7text>{foreach $t_legalacts as $legalact}{$legalact['name']}, {/foreach}</v7text>{/if}
+         {if $zbior.realizacja_umowy}<v8>1</v8>{/if}
+         {if $zbior.wykonywanie_zadan}<v9>1</v9>{/if}
+         {if $zbior.wykonywanie_zadan}<v9text>{$zbior.zadania}</v9text>{/if}
+         {if $zbior.prawnie_usprawiedliwione_cele}<v10>1</v10>{/if}
+      </step4>
+      <step5>
+         <print/>
+         <step>step5</step>
+         <action>step</action>
+         <errorCleaning>1</errorCleaning>
+         <next_page>/formular_step6.dhtml</next_page>
+         <export_action/>
+         <monitConfirm/>
+         
+         <s2_C1>{$zbior.cel}</s2_C1>
+      </step5>
+      <step6>
+         <print/>
+         <step>step6</step>
+         <action>step</action>
+         <errorCleaning>1</errorCleaning>
+         <next_page>/formular_step7.dhtml</next_page>
+         <export_action/>
+         <monitConfirm/>
+         
+         <s2_C2>{$l_kategorie_osob}</s2_C2>
+      </step6>
+      <step7>
+         <print/>
+         <step>step7</step>
+         <action>step</action>
+         <dispMonitMessage/>
+         <next_page>/formular_step7.dhtml?prepareExportXml=true</next_page>
+         <export_action/>
+         <monitConfirm/>
+         
+         {if in_array(1,$t_giodofields)}<s2_C3>1</s2_C3>{/if}
+         {if in_array(2,$t_giodofields)}<s2_C4>1</s2_C4>{/if}
+         {if in_array(3,$t_giodofields)}<s2_C5>1</s2_C5>{/if}
+         {if in_array(4,$t_giodofields)}<s2_C6>1</s2_C6>{/if}
+         {if in_array(5,$t_giodofields)}<s2_C7>1</s2_C7>{/if}
+         {if in_array(6,$t_giodofields)}<s2_C8>1</s2_C8>{/if}
+         {if in_array(7,$t_giodofields)}<s2_C9>1</s2_C9>{/if}
+         {if in_array(8,$t_giodofields)}<s2_C10>1</s2_C10>{/if}
+         {if in_array(9,$t_giodofields)}<s2_C11>1</s2_C11>{/if}
+         {if in_array(10,$t_giodofields)}<s2_C12>1</s2_C12>{/if}
+         {if in_array(11,$t_giodofields)}<s2_C13>1</s2_C13>{/if}
+         {if in_array(12,$t_giodofields)}<s2_C14>1</s2_C14>{/if}
+      </step7>
+      <step8>
+         <print/>
+         <step>step8</step>
+         <action>step</action>
+         <errorCleaning>1</errorCleaning>
+         <next_page>/formular_step9.dhtml</next_page>
+         <export_action/>
+         <monitConfirm/>
+         
+         <s2_C15>{foreach $t_fields as $field}{if $field['giodofield'] == 0}{$field['name']}, {/if}{/foreach}</s2_C15>
+      </step8>
+      <step9>
+         <print/>
+         <step>step9</step>
+         <action>step</action>
+         <dispMonitMessage/>
+         <next_page>/formular_step9.dhtml?prepareExportXml=true</next_page>
+         <export_action/>
+         <monitConfirm/>
+         <skipNext/>
+         
+         {if in_array(13,$t_giodofields)}<s2_C16>1</s2_C16>{/if}
+         {if in_array(14,$t_giodofields)}<s2_C17>1</s2_C17>{/if}
+         {if in_array(15,$t_giodofields)}<s2_C18>1</s2_C18>{/if}
+         {if in_array(16,$t_giodofields)}<s2_C19>1</s2_C19>{/if}
+         {if in_array(17,$t_giodofields)}<s2_C20>1</s2_C20>{/if}
+         {if in_array(18,$t_giodofields)}<s2_C21>1</s2_C21>{/if}
+         {if in_array(19,$t_giodofields)}<s2_C22>1</s2_C22>{/if}
+         {if in_array(20,$t_giodofields)}<s2_C23>1</s2_C23>{/if}
+         {if in_array(21,$t_giodofields)}<s2_C24>1</s2_C24>{/if}
+         {if in_array(22,$t_giodofields)}<s2_C25>1</s2_C25>{/if}
+         {if in_array(23,$t_giodofields)}<s2_C26>1</s2_C26>{/if}
+         {if in_array(24,$t_giodofields)}<s2_C27>1</s2_C27>{/if}
+         {if in_array(25,$t_giodofields)}<s2_C28>1</s2_C28>{/if}
+         {if in_array(26,$t_giodofields)}<s2_C29>1</s2_C29>{/if}
+         {if in_array(27,$t_giodofields)}<s2_C30>1</s2_C30>{/if}
+         {if in_array(28,$t_giodofields)}<s2_C31>1</s2_C31>{/if}
+      </step9>
+      <step10>
+         <print/>
+         <step>step10</step>
+         <action>step</action>
+         <errorCleaning>1</errorCleaning>
+         <next_page>/formular_step11.dhtml</next_page>
+         <export_action/>
+         <monitConfirm/>
+         
+         {if in_array(0, (array)json_decode($zbior.dane_wrazliwe_podstawa))}<s2_C32>1</s2_C32>{/if}
+         {if in_array(1, (array)json_decode($zbior.dane_wrazliwe_podstawa))}<s2_C33>1</s2_C33>{/if}
+         {if in_array(1, (array)json_decode($zbior.dane_wrazliwe_podstawa))}<s2_C34>{foreach $t_legalacts2 as $legalact}{$legalact['name']}, {/foreach}</s2_C34>{/if}
+         {if in_array(2, (array)json_decode($zbior.dane_wrazliwe_podstawa))}<s2_C35>1</s2_C35>{/if}
+         {if in_array(3, (array)json_decode($zbior.dane_wrazliwe_podstawa))}<s2_C36>1</s2_C36>{/if}
+         {if in_array(3, (array)json_decode($zbior.dane_wrazliwe_podstawa))}<s2_C37>{$zbior.dane_wrazliwe_opis}</s2_C37>{/if}
+         {if in_array(4, (array)json_decode($zbior.dane_wrazliwe_podstawa))}<s2_C38>1</s2_C38>{/if}
+         {if in_array(5, (array)json_decode($zbior.dane_wrazliwe_podstawa))}<s2_C39>1</s2_C39>{/if}
+         {if in_array(6, (array)json_decode($zbior.dane_wrazliwe_podstawa))}<s2_C40>1</s2_C40>{/if}
+         {if in_array(7, (array)json_decode($zbior.dane_wrazliwe_podstawa))}<s2_C41>1</s2_C41>{/if}
+         {if in_array(8, (array)json_decode($zbior.dane_wrazliwe_podstawa))}<s2_C42>1</s2_C42>{/if}
+         {if in_array(9, (array)json_decode($zbior.dane_wrazliwe_podstawa))}<s2_C43>1</s2_C43>{/if}
+      </step10>
+      <step11>
+         <print/>
+         <step>step11</step>
+         <action>step</action>
+         <errorCleaning>1</errorCleaning>
+         <next_page>/formular_step12.dhtml</next_page>
+         <export_action/>
+         <monitConfirm/>
+         
+         {if in_array(1, (array)json_decode($zbior.dane_do_zbioru_beda_zbierane_status))}<s3_D1>1</s3_D1>{/if}
+         {if in_array(2, (array)json_decode($zbior.dane_do_zbioru_beda_zbierane_status))}<s3_D2>1</s3_D2>{/if}
+      </step11>
+      <step12>
+         <print/>
+         <step>step12</step>
+         <action>step</action>
+         <errorCleaning>1</errorCleaning>
+         <next_page>/formular_step13.dhtml</next_page>
+         <export_action/>
+         <monitConfirm/>
+         
+         {if $zbior.dane_ze_zbioru_beda_udostepniane_status == 1}<s3_D7>1</s3_D7>{/if}
+      </step12>
+      <step13>
+         <print/>
+         <step>step13</step>
+         <action>step</action>
+         <errorCleaning>1</errorCleaning>
+         <next_page>/formular_step14.dhtml</next_page>
+         <export_action/>
+         <monitConfirm/>
+         <s3_D10>{foreach $t_udostepnienie_kontakt as $contact}{$contact->name}, {$contact->street} {$contact->house} {$contact->locale}, {$contact->postal_code} {$contact->city} {$contact->country}; {/foreach}</s3_D10>
+      </step13>
+      <step14>
+         <print/>
+         <step>step14</step>
+         <action>step</action>
+         <errorCleaning>1</errorCleaning>
+         <next_page>/formular_step15.dhtml</next_page>
+         <export_action/>
+         <monitConfirm/>
+         
+         {if $zbior.nazwa_panstwa_3 != ''}<s3_D11>{$zbior.nazwa_panstwa_3}</s3_D11>{/if}
+      </step14>
+      <step15>
+         <print/>
+         <step>step15</step>
+         <action>step</action>
+         <errorCleaning>1</errorCleaning>
+         <next_page>formular_step16.dhtml?s16checkbox=disabled</next_page>
+         <export_action/>
+         <monitConfirm/>
+         
+         {if in_array(1, (array)json_decode($zbior.prowadzenie_danych))}<s4_E1>1</s4_E1>{/if}
+         {if in_array(2, (array)json_decode($zbior.prowadzenie_danych))}<s4_E2>1</s4_E2>{/if}
+         {if $zbior.formaGromadzeniaDanych == 'papierowa'}<s4_E1_2>1</s4_E1_2>{/if}
+         {if $zbior.formaGromadzeniaDanych == 'elektroniczna'}<s4_E2_2>1</s4_E2_2>{/if}
+         {if in_array(5, (array)json_decode($zbior.prowadzenie_danych))}<s4_E1_3>1</s4_E1_3>{/if}
+         {if in_array(6, (array)json_decode($zbior.prowadzenie_danych))}<s4_E1_4>1</s4_E1_4>{/if}
+      </step15>
+      <step16>
+         <print/>
+         <step>step16</step>
+         <action>step</action>
+         <errorCleaning>1</errorCleaning>
+         <next_page>formular_step17.dhtml?s17checkbox=disabled</next_page>
+         <export_action/>
+         <monitConfirm/>
+         <s16checkbox>disabled</s16checkbox>
+         
+         {foreach $zabezpieczeniaZbioru as $zabezpieczenie}
+            {foreach $tabArr as $key => $def}
+               {assign var="zabezpieczenie_test" value=$zabezpieczenie.nazwa|mb_strtolower}
+               {assign var="zabezpieczenie_test2" value="$zabezpieczenie_test`.`"}
+               {assign var="def2" value=$def|mb_strtolower}
+               {if $zabezpieczenie_test == $def2 OR $zabezpieczenie_test2 == $def2}<{$key}>1</{$key}>{/if}
+            {/foreach}
+         {/foreach}
+      </step16>
+      <step17>
+         <print/>
+         <step>step17</step>
+         <action>step</action>
+         <next_page>/formular_step18.dhtml</next_page>
+         <export_action/>
+         <monitConfirm/>
+         <s17checkbox>disabled</s17checkbox>
+         
+         {if $zbior.poziomBezpieczenstwa == 'A'}<F_v6>1</F_v6>{/if}
+         {if $zbior.poziomBezpieczenstwa == 'B'}<F_v7>1</F_v7>{/if}
+         {if $zbior.poziomBezpieczenstwa == 'C'}<F_v8>1</F_v8>{/if}
+      </step17>
+      <step18>
+         <print/>
+         <step>step18</step>
+         <action>final_step</action>
+         <errorField>files1</errorField>
+         <errorCleaning>1</errorCleaning>
+         <export_action/>
+         <monitConfirm/>
+         <dispMonitMessage/>
+         
+         <setemail>{$t_setes.id11}</setemail>
+         <attachmentText></attachmentText>
+         <s18_reject>1</s18_reject>
+         <next_page>/formular_step18b.dhtml</next_page>
+         <errorMessage>ALERT_F18_FILE</errorMessage>
+         <files3/>
+         <files2/>
+         <files1/>
+      </step18>
+   </forms>
+</doc>

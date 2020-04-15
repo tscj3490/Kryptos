@@ -1,0 +1,34 @@
+<div style="text-align:right">{smart_date value=$date}</div>
+<div style="text-align:left">{$name}</div>
+
+<h1 style="text-align:center;">{$title}</h1>
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead>
+        <tr>
+            <th data-filter-type="string">Login</th>
+            <th data-filter-type="string">Organizacja</th>
+            <th data-filter-type="string">NIP</th>
+            <th data-filter-type="string">Regon</th>
+            <th data-filter-type="string">Imię</th>
+            <th data-filter-type="string">Nazwisko</th>
+            <th data-filter-type="string">E-mail</th>
+            <th data-filter-type="date-range">Data dodania</th>
+            <th data-filter-type="date-range">Data logowania</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $paginator as $d}
+        <tr>
+            <td>{$d.login}</td>
+            <td>{$d.organisation}</td>
+            <td>{$d.nip}</td>
+            <td>{$d.regon}</td>
+            <td>{$d.name}</td>
+            <td>{$d.surname}</td>
+            <td>{$d.email}</td>
+            <td>{$d.data_added}</td>
+            <td>{$d.user.login_date}</td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>

@@ -1,0 +1,93 @@
+<div class="layout">
+    <div class="header-top">
+         <div class="container">
+             <div class="row">
+                  <div class="col-md-4">
+                      <img src="i13^pimgpsh_thumbnail_win_distr.jpg" />
+                 </div>
+                 <div class="col-md-8">
+                      <legend>Add an incident</legend>
+                </div>
+         </div>
+      </div>
+    </div>
+
+  <div class="incident-layout">  
+    <div class="container incident-add">
+        <div class="row">
+             <fieldset class="col-md-12">
+             
+                <!--<div class="form-group clearfix"> 
+                     <label class="control-label col-sm-4" for="pwd">Location</label>
+                      <div class="col-sm-8 radio-btn">  
+                     <label><input type="radio"> Room</label>
+                     <label><input type="radio">Other</label>
+                        </div>
+                    </div>-->
+                  <form method="POST" action="/webform/saveform">  
+                
+                <div class="form-group clearfix">
+                    <label class="control-label col-sm-4" for="fname">First name:</label>
+                  <div class="col-sm-8">          
+                    <input type="text" class="form-control" id="fname" name="parameter[fname]">
+                  </div>
+                </div>
+                <div class="form-group clearfix">
+                    <label class="control-label col-sm-4" for="surname">Surname:</label>
+                   <div class="col-sm-8">          
+                    <input type="text" class="form-control" id="surname" name="parameter[surname]">
+                  </div>
+                </div>
+                
+                <div class="form-group clearfix">
+                    <label class="control-label col-sm-4" for="email">E-mail :</label>
+                   <div class="col-sm-8">          
+                     <input type="text" class="form-control" id="email" name="parameter[email]">
+                  </div>
+                </div>
+                
+                <div class="form-group clearfix">
+                    <label class="control-label col-sm-4" for="tel">Telephone number  :</label>
+                   <div class="col-sm-8">          
+                     <input type="text" class="form-control" id="tel" name="parameter[tel]">
+                  </div>
+                </div>
+                
+                <div class="form-group clearfix">
+                    <label class="control-label col-sm-4" for="detail">Description of the application:</label>
+                   <div class="col-sm-8">          
+                     <input type="text" class="form-control" id="detail" name="parameter[detail]">
+                  </div>
+                </div>
+                
+                <div class="form-group clearfix">
+                    <label class="control-label col-sm-4" for="location">Location</label>
+                   <div class="col-sm-8">          
+                     <input type="text" class="form-control" id="location" name="parameter[location]">
+                  </div>
+                </div>
+                
+                
+                
+                <div class="form-group clearfix">
+                   <div class="col-sm-12 attachments-btn"> 
+                      <button type="button" class="btn btn-attech" data-target="#section-attachments-add-276237" data-auto-hide=".form-group clearfix">Add attachments</button>
+                      
+                      <button type="button" class="btn btn-default close-btn" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info save-btn" onclick="alert('Thanks for submitting form!');">Save</button>
+                  </div>
+                </div>
+               </fieldset>   
+         </div>
+       </div>
+     </div>
+ </div> 
+ <div class="footer-section"> 
+     <div class="container">
+             <div class="row">
+                  <div class="col-md-12">
+                  <p>Footer</p>
+                </div>
+         </div>
+ </div> 
+</div>

@@ -1,0 +1,28 @@
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead class="ui-widget-header">
+    <tr>
+        <th>Nr</th>
+        <th>Tytuł</th>
+        <th>Data od</th>
+        <th>Data do</th>
+        <th>Metoda</th>
+        <th>Identyfikator raportu</th>
+        <th>Ilość zbiorów zaplanowanych</th>
+        <th>Ilość zbiorów zaudytowanych</th>
+    </tr>
+    </thead>
+    <tbody class="ui-widget-content">
+    {foreach $paginator as $d}
+        <tr>
+            <td>{$d@iteration}</td>
+            <td>{$d.title}</td>
+            <td>{$d.date_from}</td>
+            <td>{$d.date_to}</td>
+            <td>{$auditMethods[$d.method_id]}</td>
+            <td>{$d.identifier}</td>
+            <td>{$d.zbiory_count}</td>
+            <td>{$d.zbiory_count_done}</td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

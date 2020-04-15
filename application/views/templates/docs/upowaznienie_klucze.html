@@ -1,0 +1,55 @@
+<p>
+<meta charset="UTF-8">
+<link href="http://abi1.kryptos24.pl/css/templates/reset.css" rel="stylesheet" />
+<link href="http://abi1.kryptos24.pl/css/templates/style.css" rel="stylesheet" />
+<link href="http://abi1.kryptos24.pl/css/docs.css" rel="stylesheet" />   </meta>
+</p>
+<div id="page-wrap">
+<div class="clear space">&nbsp;</div>
+<div class="clear space">&nbsp;</div>
+<h1 class="fn">Upoważnienie nr {$number}</h1>
+<h2>do dysponowania kluczami do pomieszczeń gdzie są przetwarzane oraz gromadzone dane osobowe</h2>
+<div class="clear space">&nbsp;</div>
+<div class="clear space">&nbsp;</div>
+<span class="align header">Upoważniam</span>
+<dl>
+    <dt>Pana/Panią</dt>
+    <dd>                 <span class="underline center">{$imie} {$nazwisko}</span>             </dd>
+    <dd class="clear"><br />
+    </dd>
+    <dd class="clear"><br />
+    </dd>
+    <dt>zatrudnioną (ego)<br />
+    <span class="small">umowa {if $rodzajUmowy == 'o-prace'}o pracę{else if $rodzajUmowy=='cywilnoprawna'}cywilnoprawna{else}działalność gospodarcza{/if}</span><br />
+    {*odbywa staż/praktykę**}</dt>
+    <dd>
+    <div class="left">W</div>
+    <div class="right"><span class="underline">{$nazwa_organizacji|strtoupper}</span> 					<span class="underline">{$adres|strtoupper}</span> 					<span class="underline">&nbsp;</span></div>
+    </dd>
+    <dd class="clear"><br />
+    </dd>
+    <dd class="clear"><br />
+    </dd>
+    <dt>na stanowisku</dt>
+    <dd> 				<span class="underline">{$stanowisko|strtoupper}</span>             </dd>
+    <dd class="clear"><br />
+    </dd>
+</dl>
+<div class="clear space">&nbsp;</div>
+<p>do dysponowania od dnia {$data_z_ustawien} r kluczami do:</p>
+<div class="clear space">&nbsp;</div>
+<p class="upline">pomieszczeń w kt&oacute;rych są przechowywane dane osobowe - pomieszczenia:</p>
+<p class="center upline bottomline">{$klucze}</p>
+<div class="clear space">&nbsp;</div>
+<div class="clear space">&nbsp;</div>
+<div class="clear space">&nbsp;</div>
+<div class="clear space">&nbsp;</div>
+<dl class="description right">
+    <dd><br />
+    </dd>
+    <dt>data i podpis Administratora Danych Osobowych</dt>
+</dl>
+<div class="clear space">&nbsp;</div>
+<div class="clear space">&nbsp;</div>
+<span class="small"> 		* nie właściwe skreślić 		</span></div>
+<p>&nbsp;</p>

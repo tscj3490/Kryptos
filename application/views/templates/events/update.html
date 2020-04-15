@@ -1,0 +1,150 @@
+{$message}
+<form name="f_data" id="f_data" method="POST" action="/events/save" id="dataform-add">
+   <fieldset>
+       <div class="form-group row">
+           <label for="type" class="col-sm-2">Rodzaj:</label>
+           <div class="col-sm-4">
+               <select type="text" name="type" id="type"  class="form-control" onchange="showcar();">
+                   {if !$isReversed || $data['type'] == '1'}<option value="1" {if $data['type'] == '1'}selected="selected"{/if}>wjazd</option>{/if}
+                   {if  $isReversed && $data['type'] == '2'}<option value="2" {if $data['type'] == '2'}selected="selected"{/if}>wyjazd</option>{/if}
+                   {if !$isReversed || $data['type'] == '3'}<option value="3" {if $data['type'] == '3'}selected="selected"{/if}>wejście</option>{/if}
+                   {if  $isReversed && $data['type'] == '4'}<option value="4" {if $data['type'] == '4'}selected="selected"{/if}>wyjście</option>{/if}
+               </select>
+           </div>
+       </div>
+       <div class="form-group row">
+           <label for="eventscompany" class="col-sm-2">Firma:</label>
+           <div class="col-sm-4"><input type="text" id="eventscompany"  class="form-control" value="{$data.eventscompany.name}" readonly></div>
+           <div class="col-sm-2"><input type="button" value="Szukaj" class="btn btn-success" onclick="showDial('/eventscompanies/addmini/','','');" />
+               &nbsp;
+               <input type="button" value="Odznacz" class="btn btn-warning" onclick="$('#eventscompany').val('');$('#eventscompany_id').val('');" />
+           </div>
+       </div>
+       <div class="form-group row">
+          <label for="eventsperson" class="col-sm-2">Osoba:</label>
+          <div class="col-sm-4"><input type="text" name="eventsperson" id="eventsperson"  class="form-control validate[required]" value="{$data['eventsperson']['name']} {$data['eventsperson']['lastname']} - {$data['eventspersonstype']['name']}" readonly></div>
+          <div class="col-sm-2">
+              <input type="button" value="Szukaj" class="btn btn-success" onclick="wybierzOsobe();" />
+              &nbsp;
+              <input type="button" value="Odznacz" class="btn btn-warning" onclick="$('#eventsperson').val('');$('#eventsperson_id').val('');" />
+          </div>
+      </div>
+       <div class="form-group row" id="rowcar">
+          <label for="eventscar" class="col-sm-2">Samochód:</label>
+          <div class="col-sm-4"><input type="text" name="eventscar" id="eventscar"  class="form-control" value="{$data['eventscar']['name']}" readonly></div>
+          <div class="col-sm-2"><input type="button" value="Szukaj" class="btn btn-success" onclick="wybierzSamochod()" /></div>
+      </div>
+      <div class="form-group row">
+         <label for="date" class="col-sm-2">Data:</label>
+         <div class="col-sm-4"><input type="text" name="date" id="date"  class="form-control validate[required]" value="{$data['date']}" readonly ></div>
+      </div>
+      <div class="form-group row">
+         <label for="hour" class="col-sm-2">Godzina:</label>
+         <div class="col-sm-4"><input type="text" name="hour" id="hour"  class="form-control validate[required]" value="{$data['hour']}" readonly ></div>
+      </div>
+      <div class="form-group row">
+         <label for="info" class="col-sm-2">Uwagi:</label>
+         <div class="col-sm-4"><textarea name="info" id="info" class="form-control">{$data['info']}</textarea></div>
+      </div>
+       <div class="form-group row">
+           <label for="purpose_id" class="col-sm-2">Cel:</label>
+           <div class="col-sm-4">
+               <select name="purpose_id" id="purpose_id" class="form-control">
+                   <option value="0">BRAK</option>
+                   {foreach from=$rooms item=room}
+                   <option value="{$room.id}" {if $data.purpose_id == $room.id}selected="selected"{/if}>{$room.nazwa}{if $room.nr}, pok. {$room.nr}{/if}, {$room.nazwa_budynku}</option>
+                   {/foreach}
+               </select>
+           </div>
+       </div>
+       <div class="form-group row">
+           <label for="number_of_accompanying_persons" class="col-sm-2">Ilość osób towarzyszących:</label>
+           <div class="col-sm-4"><input type="text" name="number_of_accompanying_persons" id="number_of_accompanying_persons"  class="form-control" value="{$data['number_of_accompanying_persons']}" ></div>
+       </div>
+       <div class="form-group row" id="rownumber">
+           <label for="type" class="col-sm-2">Numer karty:</label>
+           <div class="col-sm-4">
+               <select name="eventsnumber_id" id="type" class="form-control">
+                   <option value="">Brak karty</option>
+                    {foreach from=$freeNumbers item=number}
+                    <option value="{$number.id}" {if $data.eventsnumber_id == $number.id}selected="selected"{/if}>{$number.number}</option>
+                   {/foreach}
+               </select>
+           </div>
+       </div>
+       <div class="form-group row">
+           <label class="col-sm-2">Typ załadunku:</label>
+           <div class="col-sm-4">
+               <div class="row">
+                   <div class="col-sm-6">
+                       <label class="radio-inline">
+                           <input type="radio" name="loading_type" value="0" class="form-control" {if $data.loading_type === '0'} checked{/if}> Pusty
+                       </label>
+                   </div>
+                   <div class="col-sm-6">
+                       <label class="radio-inline">
+                           <input type="radio" name="loading_type" value="1" class="form-control" {if $data.loading_type} checked{/if}> Pełny
+                       </label>
+                   </div>
+               </div>
+           </div>
+       </div>
+       <div class="form-group row {if $data.eventsperson.eventspersonstype_id != 443 || $data.type != 2}hidden{/if}" id="ilosc_serwatki">
+           <label class="col-sm-2">Ilość serwatki:</label>
+           <div class="col-sm-4">
+               <input type="text" name="ilosc_serwatki" id="ilosc_serwatki"  class="form-control validate[required]" value="{$data['ilosc_serwatki']}" >
+           </div>
+       </div>
+      <div id="globalMessage"></div>
+      <div class="">
+         <a href="/events/"><input type="button" value="Powrót"  class="btn"  ></a>
+         <input type="button" value="Zapisz"  class="btn btn-info" onclick="$('#formSubmit').click();">
+         <input type="button" value="Zapisz i dodaj następny"  class="btn btn-info" onclick="$('#addAnother').val('1');$('#formSubmit').click();"  >
+         <input type="hidden" name="id" id="id" value="{$data.id}" />
+      </div>
+   </fieldset>
+   <div style="width:0px;height:0px;overflow:hidden;">
+       <input type="text" id="eventscompany_id" value="{$data.eventscompany.id}" />
+       <input type="text" name="eventsperson_id" id="eventsperson_id" value="{$data['eventsperson_id']}" />
+       <input type="text" name="eventsperson_type" id="eventsperson_type" value="{$data.eventsperson.eventspersonstype_id}" />
+      <input type="text" name="eventscar_id" id="eventscar_id" value="{$data['eventscar_id']}" />
+      <input type="text" name="addAnother" id="addAnother" value="0" />
+      <input type="submit" id="formSubmit" value="Zapisz"  class="btn btn-info"  >
+   </div>
+</form>
+<script type="text/javascript">
+    function showcar() {
+        if ($('#type').val() == 3 || $('#type').val() == 4) {
+            $('#rowcar').css('display', 'none');
+            $('#eventscar').val('');
+            $('#eventscar_id').val('');
+            $('#rownumber').css('display', '');
+        }
+        else {
+            $('#rowcar').css('display', '');
+            $('#rownumber').css('display', 'none');
+        }
+    }
+    showcar();
+    function wybierzSamochod() {
+        var eventCompanyId = $('#eventscompany_id').val(),
+            eventPersonId = $('#eventsperson_id').val();
+        if (eventPersonId) {
+            // showDial('/eventscars/addmini/?personId=' + parseInt(eventPersonId) + '&companyId=' + parseInt(eventCompanyId),'','');
+            showDial('/eventscars/addmini/?personId=' + parseInt(eventPersonId), '','');
+        } else if (eventCompanyId) {
+            showDial('/eventscars/addmini/?companyId=' + parseInt(eventCompanyId), '', '');
+        } else {
+            showDial('/eventscars/addmini/', '','');
+        }
+    }
+    function wybierzOsobe() {
+        var eventCompanyId = $('#eventscompany_id').val(),
+            url = '/eventspersons/addmini/';
+        if (eventCompanyId) {
+            url += '?companyId=' + parseInt(eventCompanyId);
+        }
+        showDial(url, '', '');
+    }
+	backendUtilities.addVatidationEngine("f_data");
+</script>

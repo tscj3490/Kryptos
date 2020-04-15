@@ -1,0 +1,5 @@
+Options All -Indexes
+
+RewriteEngine On
+RewriteRule \.[a-z0-9]+$ - [NC,L]
+RewriteRule (.*) index.php [L,QSA]

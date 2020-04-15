@@ -1,0 +1,51 @@
+{if $add}
+<form method="post" action="{$url}adminpages/doadd/">
+{else}
+<form method="post" action="{$url}adminpages/doedit/id/{$data.id}">
+{/if}
+	<table class="data">
+		<tr>
+			<td>nazwa</td>
+			<td><input type="text" name="data[name]" value="{$data.name}" /></td>
+		</tr>
+        <tr>
+			<td>opis meta</td>
+			<td><input type="text" name="data[meta_pl]" value="{$data.meta_pl}" /></td>
+		</tr>
+		<tr>
+			<td>treść</td>
+			<td><textarea name="data[content]" class="ckeditor">{$data.content|stripslashes}</textarea></td>
+		</tr>
+		<tr>
+			<td>nazwa po angielsku</td>
+			<td><input type="text" name="data[name_en]" value="{$data.name_en}" /></td>
+		</tr>
+        <tr>
+			<td>opis meta po angielsku</td>
+			<td><input type="text" name="data[meta_en]" value="{$data.meta_en}" /></td>
+		</tr>
+		<tr>
+			<td>treść po angielsku</td>
+			<td><textarea name="data[content_en]" class="ckeditor">{$data.content_en|stripslashes}</textarea></td>
+		</tr>
+		<tr>
+			<td>nazwa po niemiecku</td>
+			<td><input type="text" name="data[name_de]" value="{$data.name_de}" /></td>
+		</tr>
+        <tr>
+			<td>opis meta po niemiecku</td>
+			<td><input type="text" name="data[meta_de]" value="{$data.meta_de}" /></td>
+		</tr>
+		<tr>
+			<td>treść po niemiecku</td>
+			<td><textarea name="data[content_de]" class="ckeditor">{$data.content_de|stripslashes}</textarea></td>
+		</tr>
+		<tr>
+			<td>zapisz</td>
+			<td><input type="submit" value="zapisz" /></td>
+		</tr>
+	</table>
+	{if !$add}
+		<input type="hidden" name="id" value="{$data.id}" />"
+	{/if}
+</form>

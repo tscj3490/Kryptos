@@ -1,0 +1,109 @@
+{include file='modals/modal.tpl' title='Dokumenty oczekujące - co to jest?' content='Jeśli dokument jest w trakcie akceptacji przez ABI/ADO/Radcę prawnego możemy z pomocą zakładki „Dokumenty oczekujące” moderować wybrany dokument jeszcze przed jego wprowadzeniem.'}
+<form method="post" action="/documents/bulk-operations">
+    <input type="hidden" name="type" value="pending"/>
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead class="ui-widget-header">
+        <tr>
+            <th></th>
+            <th data-filter-type="string">nazwisko</th>
+            <th data-filter-type="string">imię</th>
+            <th data-filter-type="string">stanowisko</th>
+            <th data-filter-type="select">typ</th>
+            <th data-filter-type="select">dokument</th>
+            <th data-filter-type="select">status</th>
+            <th>operacje</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content js-checkbox-container">
+        {foreach $paginator as $d}
+            <tr>
+                <td>
+                    <div class="icheckbox_square-aero js-checkbox-from-container" data-target-id="id[{$d.id}]">
+                        <ins class="iCheck-helper"></ins>
+                        <span class="hidden text-indicator"></span>
+                    </div>
+                </td>
+                <td>{$d.nazwisko} <span class="hiddenElement">{$d.imie}</span></td>
+                <td>{$d.imie}</td>
+                <td>{$d.stanowisko}</td>
+                <td>{smart_string_select value=$d.template_type config=$template_type_display}</td>
+                <td>{$d.template_name}</td>
+                <td>{smart_string_select value=$d.status config=$pending_document_status_display}</td>
+                <td class="operations">
+                    {if $auth->isGranted('node/documents/pending-preview', ['id' => $d.id])}
+                    <a href="#"
+                       class="choose-from-dial"
+                       data-dial-url="/documents/pending-preview/id/{$d.id}"
+                       data-dial-class="modal-lg modal-max"
+                       data-toggle="tooltip"
+                       title="Podgląd"
+                    ><i class="fa fa-eye"></i></a>
+                    {/if}
+                    {if $auth->isGranted('node/documents/pending-process', ['id' => $d.id])}
+                    <a href="#"
+                       class="choose-from-dial"
+                       data-dial-url="/documents/pending-process/id/{$d.id}"
+                       data-dial-class="modal-lg modal-max"
+                       data-toggle="tooltip"
+                       title="Moderacja"
+                       data-new-dialog="1"
+                    ><i class="fa fa-list"></i></a>
+                    {/if}
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+
+    <div class="table-operations-footer">
+        <div class="btn-group">
+            <button type="submit" class="btn btn-default table-row-action" data-toggle="tooltip" data-title="Wydrukuj zaznaczone" name="rowsAction" value="print"><i class="fa fa-print"></i></button>
+            <button type="submit" class="btn btn-default table-row-action" data-toggle="tooltip" data-title="Pobierz zaznaczone" name="rowsAction" value="download"><i class="fa fa-download"></i></button>
+            <button type="submit" class="btn btn-default table-row-action" data-toggle="tooltip" data-title="Utwórz zaznaczone dokumenty" data-trigger-fn="runUpdateAllAction" name="action" value="create_documents"><i class="fa fa-book"></i></button>
+            <button type="submit" class="btn btn-default table-row-action" data-toggle="tooltip" data-title="Zastąp zaznaczone dokumenty" data-trigger-fn="runReplaceAllAction" name="action" value="create_documents"><i class="fa fa-medkit"></i></button>
+            <span class="btn btn-default dt-select-all-button" data-toggle="tooltip" data-title="Zaznacz / odznacz wszystkie"><i class="fa fa-check"></i></span>
+        </div>
+    </div>
+
+    <div class="hiddenElement">
+        <div class="hiddenFormElements"></div>
+        <div id="klucze-form-data">
+            {foreach $paginator as $d}
+                <input type="hidden" name="id[{$d.id}]" class="js-checkbox-target">
+            {/foreach}
+        </div>
+    </div>
+</form>
+
+{literal}
+    <script type="text/javascript">
+        function showGetChecked() {
+            var ids = '';
+            $('.checkedall').each(function () {
+                if ($(this).is(':checked')) {
+                    ids = ids + '' + $(this).attr('id').replace('id', '') + ',';
+                }
+            });
+            if (ids != '') {
+                showDial('/documents/get-choice/?ids=' + ids, '', '');
+            }
+        }
+
+        function runUpdateAllAction() {
+            var data = $('.example').closest('form').serializeObject();
+            showDial('/documents/pending-update-all/', '', {rowSelect: data.id}); return false;
+        }
+
+        function runReplaceAllAction() {
+            var data = $('.example').closest('form').serializeObject(),
+                ids = getIdsFromCheckboxesHelper(data.id);
+
+            $.ajax({
+                method: 'post',
+                url: '/documents/pending/',
+                data: {rowSelect: ids.join(','), rowsAction: 'actualize', mode: 'replace', dateupdate: 'now'},
+                success: defaultAjaxResponseHandler
+            });
+        }
+    </script>
+{/literal}

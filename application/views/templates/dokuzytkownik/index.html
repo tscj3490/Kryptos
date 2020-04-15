@@ -1,0 +1,177 @@
+{$message}
+
+<div class="md-modal md-3d-flip-vertical" id="task-progress">
+    <div class="md-content">
+
+        <p class="text-center">
+            <button class="btn btn-danger btn-sm md-close">Close</button>
+        </p>
+    </div>
+</div>
+
+
+
+<div class="body-action">
+
+</div>
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#podstawowe" data-toggle="tab">Podstawowe</a></li>
+    <li><a href="#auto" data-toggle="tab">Automatyczne</a></li>
+    <li><a href="#inne" data-toggle="tab">Plikowe</a></li>
+
+</ul>
+<div class="tab-content">
+    <div class="tab-pane active form-horizontal" id="podstawowe" style="padding:15px 5px">
+        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+            <thead>
+                <tr>
+                    <th>numer</th>
+                    <th>opis</th>
+                    <th>typ</th>
+                    <th>termin zapoznania</th>
+                    <th>zapoznałem się</th>
+                    <th>data</th>
+                    <th width="115px"></th>
+                </tr>
+            </thead>
+            <tbody >
+                {foreach $dokzszab as $d}
+                <tr>
+                    <td>{$d.number}</td>
+                    <td>{$d.description}</td>
+                    <td>{$d.type}</td>
+                    <td>{if $d.termin_zapoznania=='0000-00-00 00:00:00'} brak{else}{$d.termin_zapoznania}{/if}</td>
+                    <td>
+                        {if $d.czas_zapoznania=='0000-00-00 00:00:00'} 
+
+                        <div class="md-modal md-3d-slit" id="zappod{$d.id}">
+                            <div class="md-content">
+                                <h3>Oświadczenie zapoznania się z dokumentem</h3>
+                                <div>
+                                    <p>Oświadczam, że zapoznałem się z treścią dokumentu: </p>
+                                    <p>{$d.type}</p>
+                                    <p>
+                                        <button class="btn btn-danger md-close">Anuluj</button>
+                                        <a class="btn btn-success md-close" href="/dokuzytkownik/zapoznajdokzszab/id/{$d.id}" >Zapoznałem się</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button data-modal="zappod{$d.id}" class="btn btn-default btn-sm md-trigger">Zapoznałem się</button>
+                        {else}{$d.czas_zapoznania}{/if}</td>
+                    <td>{$d.data}</td>
+                    <td>
+
+                        <a target="_blank" title="{$d.type}" href="/dokuzytkownik/pobierz/dok_id/{$d.id}"><img src="/files/docs/icons/{$d.type}.png"/></a>				
+                    </td>
+                </tr>
+                {/foreach}
+
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="tab-pane" id="auto" style="padding:15px 5px">
+        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+            <thead>
+                <tr>
+                    <th>numer</th>
+                    <th>opis</th>
+                    <th>typ</th>
+                    <th>termin zapoznania</th>
+                    <th>zapoznałem się</th>
+                    <th>data</th>
+                    <th width="115px"></th>
+                </tr>
+            </thead>
+            <tbody >
+                {foreach $docs as $d}
+                <tr>
+                    <td>{$d.number}</td>
+                    <td>{$d.description}</td>
+                    <td>{$d.type}</td>
+                    <td>{if $d.termin_zapoznania=='0000-00-00 00:00:00'} brak{else}{$d.termin_zapoznania}{/if}</td>
+                    <td>
+                        {if $d.czas_zapoznania=='0000-00-00 00:00:00'} 
+
+                        <div class="md-modal md-3d-slit" id="zapauto{$d.id}">
+                            <div class="md-content">
+                                <h3>Oświadczenie zapoznania się z dokumentem</h3>
+                                <div>
+                                    <p>Oświadczam, że zapoznałem się z treścią dokumentu: </p>
+                                    <p>{$d.number}</p>
+                                    <p>
+                                        <button class="btn btn-danger md-close">Anuluj</button>
+                                        <a class="btn btn-success md-close" href="/dokuzytkownik/zapoznajdok/id/{$d.id}" >Zapoznałem się</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button data-modal="zapauto{$d.id}" class="btn btn-default btn-sm md-trigger">Zapoznałem się</button>
+                        {else}{$d.czas_zapoznania}{/if}</td>
+                    <td>{$d.data}</td>
+                    <td>
+
+                        <a target="_blank" title="{$d.type}" href="/dokuzytkownik/pobierzauto/dok_id/{$d.id}"><img src="/files/docs/icons/{$d.type}.png"/></a>				
+                    </td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+    
+    
+    <div class="tab-pane" id="inne" style="padding:15px 5px">
+        <table cellpadding="0" cellspacing="0" border="0"
+               class="table table-striped table-bordered" id="example">
+            <thead>
+                <tr>
+                    <th>nazwa pliku</th>
+                    <th>opis</th>
+                    <th>termin zapoznania</th>
+                    <th>zapoznałem się</th>
+                    <th width="75px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {foreach $pliki as $p}
+                <tr>
+                    <td>{$p.nazwa_pliku}</td>
+                    <td>{$p.id}</td>
+                    <td>{if $p.termin_zapoznania=='0000-00-00 00:00:00'} brak{else}{$p.termin_zapoznania}{/if}</td>
+                    <td>{if $p.czas_zapoznania=='0000-00-00 00:00:00'} 
+
+                          <div class="md-modal md-super-scaled" id="zapplik{$p.id}">
+                            <div class="md-content">
+                                <h3>Oświadczenie zapoznania się z dokumentem</h3>
+                                <div>
+                                    <p>Oświadczam, że zapoznałem się z treścią dokumentu: </p>
+                                    <p>{$p.nazwa_pliku}</p>
+                                    <p>
+                                        <button class="btn btn-danger md-close">Anuluj</button>
+                                        <a class="btn btn-success md-close" href="/dokuzytkownik/zapoznajplik/id/{$p.id}" >Zapoznałem się</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button data-modal="zapplik{$p.id}" class="btn btn-default btn-sm md-trigger">Zapoznałem się</button>  
+                        {else}{$p.czas_zapoznania}{/if}</td>
+                    <td>
+                        <a class="glyphicon glyphicon-download-alt" title="pobierz" target="_blank"
+                           href="/dokuzytkownik/pobierzplik/id/{$p.id}"></a>
+                    </td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+
+

@@ -1,0 +1,11 @@
+<div class="middle-content">
+	<h3>Edycja profilu {$user.login|strip_tags|ucfirst}</h3>
+	<div class="profile-img">
+		<img src="{$user.avatarUrl}" alt="muzyka {$user.login}" title="$muzyka {$user.login}" />
+	</div>
+	<div class="profile-info">
+		punktów: {$user.points}<br />
+		miasto: {if $user.city}{$user.city}{else}brak{/if}<br />
+		płeć: {$tr->_($user.sex|strtolower)}
+	</div>
+</div>

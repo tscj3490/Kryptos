@@ -1,0 +1,70 @@
+<h2>Wykaz - konta bankowe</h2>
+{include file='modals/modal.tpl' title='Konta bankowe wraz z uprawnieniami' content='Umożliwiam Ci prowadzenie rejestru kont bankowych wraz z osobami upoważnionymi do ich prowadzenia. Przypisz tutaj konta bankowe, którymi zarządzasz oraz osoby do nich uprawnione.'}
+<hr>
+<div class="table-operations-header">
+    {if $auth->isGranted('node/osoby/kontobankoweupdate')}
+        <a class="btn btn-success" href="/osoby/kontobankoweupdate" data-title="Dodaj konto" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+        {/if}
+</div>
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th>bank</th>
+        <th>numer</th>
+        <th width="125px;"></th>
+    </tr>
+    </thead>
+    <tbody class="ui-widget-content">
+    {foreach $paginator as $d}
+        <tr>
+            <td>{$d.bank}</td>
+            <td>{$d.numer}</td>
+            <td>
+                {if $auth->isGranted('node/osoby/kontobankoweupdate', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-pencil" href="/osoby/kontobankoweupdate/id/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                {/if}
+                {if $auth->isGranted('node/osoby/kontobankoweosoby', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-user" href="/osoby/kontobankoweosoby/id/{$d.id}" data-toggle="tooltip" title="Edytuj osoby"></a>
+                {/if}
+                {if $auth->isGranted('node/osoby/kontobankowedel', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-trash modal-confirm" data-href="/osoby/kontobankowedel/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+
+</table>
+
+<h2>Upoważnienia</h2>
+<hr>
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead class="ui-widget-header">
+    <tr>
+        <th>imię</th>
+        <th>nazwisko</th>
+        <th>daty</th>
+        <th>konto</th>
+        <th width="100px;"></th>
+    </tr>
+    </thead>
+    <tbody class="ui-widget-content">
+    {foreach $przypisaneOsoby as $o}
+        <tr>
+            <td>{$o.imie|ucfirst}</td>
+            <td>{$o.nazwisko|ucfirst}</td>
+            <td>{if $o.data_od != '0000-00-00 00:00:00'}{$o.data_od|substr:0:10}{/if} - {if $o.data_do != '0000-00-00 00:00:00'}{$o.data_do|substr:0:10}{/if}</td>
+            <td>{$o.bank} {$o.numer}</td>
+            <td>
+                {if $auth->isGranted('node/osoby/kontobankoweosoby', ['id' => $o.konto])}
+                    <a href="/osoby/kontobankoweosoby/id/{$o.konto}/" class="glyphicon glyphicon-pencil" data-toggle="tooltip" title="Edytuj"></a>
+                {/if}
+                {if $auth->isGranted('node/osoby/kontobankoweosobadel', ['id' => $o.konto, 'osoba' => $o.osoba])}
+                    <a class="glyphicon glyphicon-trash modal-confirm" data-href="/osoby/kontobankoweosobadel/id/{$o.konto}/osoba/{$o.osoba}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+
+</table>

@@ -1,0 +1,112 @@
+<h3 class="text-center" style="margin-top:0px;margin-bottom:10px;">Wybór dostępnych zabezpieczeń</h3>
+<div class="modtop">
+   <div class="form-group row">
+      <label for="categories" class="col-sm-2">Rodzaj:</label>
+      <div class="col-sm-10"><select name="categories" id="categories" class="form-control" onchange="if ( $(this).val() !== '' ) { $('#fieldscategory_id').val($(this).val()); } runOptsSearch();">
+         <option value="">wszystkie</option>
+         <option {if $categories === '1'}selected="selected"{/if} value="1">organizacyjne</option>
+         <option {if $categories === '2'}selected="selected"{/if} value="2">fizyczne</option>
+         <option {if $categories === '3'}selected="selected"{/if} value="3">informatyczne</option>
+      </select></div>
+   </div>
+   <div class="form-group row">
+      <div class="col-sm-12">
+         <input type="text" name="searcher" id="searcher" class="form-control" placeholder="Wpisz szukaną frazę" onkeyup="runOptsSearch();" />
+      </div>
+   </div>
+   <div class="form-group row" style="margin-bottom:0px;">
+      <div class="col-sm-6">
+         <div class="row">
+            <div class="col-sm-2">
+               <div class="checknew">
+                  <input type="hidden" name="showchecked" value="0" />
+                  <input type="checkbox" name="showchecked" id="showchecked" value="1" class="" onclick="runOptsSearch();">
+                  <label for="showchecked"></label>
+               </div>
+            </div>
+            <label for="showchecked" class="col-sm-10">Pokaż tyko zaznaczone pozycje</label>
+         </div>
+      </div>
+      <div class="col-sm-6" id="hidelocked-row">
+         <div class="row">
+            <div class="col-sm-2">
+               <div class="checknew">
+                  <input type="hidden" name="hidelocked" value="1" />
+                  <input type="checkbox" name="hidelocked" id="hidelocked" value="1" class="" checked onclick="runOptsSearch();">
+                  <label for="hidelocked"></label>
+               </div>
+            </div>
+            <label for="hidelocked" class="col-sm-10">Ukryj zablokowane pozycje</label>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="text-right">
+   <input type="button" class="btn btn-default btn-xs" id="checkall" value="Zaznacz wszystkie" />
+   <input type="button" class="btn btn-default btn-xs" id="uncheckall" value="Odznacz wszystkie" />
+</div>
+<div style="height:20px"></div>
+<div id="optsSearch">
+<div class="alert alert-danger optsnodata"><i class="fa fa-4x fa-exclamation-triangle"></i><div class="floathead"><div class="ins">Zmień kryteria wyszukiwania lub skorzystaj z formularza dodawania nowych rekordów znajdującego się poniżej.</div></div><div class="clear"></div></div>
+{foreach $t_data as $d}
+<div class="selopt2bl" id="id{$d.id}" title="{$d.nazwa}" rel="category{$d.typ}">{$d.nazwa}</div>
+{/foreach}
+</div>
+<div style="clear:both;"></div>
+<div class="modbottom">
+   <h3 style="margin-top:0px;">Dodawanie nowego aktu prawnego</h3>
+   <div class="row">
+      <div class="col-sm-4">
+         <label for="fieldscategory_id">Rodzaj</label>
+      </div>
+      <div class="col-sm-5">
+         <label>Nazwy aktów prawnych (rozdzielaj średnikami)</label>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-4">
+         <select name="fieldscategory_id" id="fieldscategory_id" class="form-control">
+            <option {if $categories === '1'}selected="selected"{/if} value="1">organizacyjne</option>
+            <option {if $categories === '2'}selected="selected"{/if} value="2">fizyczne</option>
+            <option {if $categories === '3'}selected="selected"{/if} value="3">informatyczne</option>
+         </select>
+      </div>
+      <div class="col-sm-5">
+         <input type="text" name="newname" id="newname" value="" class="form-control" />
+      </div>
+      <div class="col-sm-3">
+         <button class="btn btn-default" id="addZabezpiecz" type="button" style="width:100%;" onclick="addZabezp();">Dodaj &nbsp;<i class="fa fa-plus"></i></button>
+      </div>
+   </div>
+</div>
+<script type="text/javascript">
+function addZabezp(){
+$.ajax({
+   dataType : 'html',
+   url : '/zabezpieczenia/savemini/?&categories='+$('#fieldscategory_id').val(),
+   data : 'name='+$('#newname').val()+'&fieldscategory_id='+$('#fieldscategory_id').val(),
+   method : 'POST',
+   success : function(mess,textStatus,xhr) {
+      var txt = mess.split(';');
+      $.each(txt, function( k,v ) {
+         var txt2 = v.split(',');
+         if ( txt2['0']*1 > 0 ) {
+            addzabezpieczenia{$num}(txt2['0'],txt2['1'],$('#fieldscategory_id').val());
+         }
+      });
+      setZabezpieczenia{$num}Sel();
+      setZabezpieczenia{$num}();
+      runOptsSearch();
+      showDial('/zabezpieczenia/addmini/?num={$num}','','');
+   },
+   error : function(xhr,textStatus,errorThrown) {  }
+});
+}
+{if $smarty.get.useProcess}
+   dial.lastDialReadyFn();
+{/if}
+runZabezpieczeniaSel();
+$('#newname').keypress(function(e) { if(e.which == 13) { $('#addZabezpiecz').click(); return false; }});
+setTimeout('$(\'#searcher\').focus()',500);
+runOptsSearch();
+</script>

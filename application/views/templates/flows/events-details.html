@@ -1,0 +1,106 @@
+<div class="table-operations-header">
+    {if $auth->isGranted('node/course-categories/update')}
+    <a class="btn btn-success" href="{$baseUrl}/events-assign-update/flowid/{$flowId}" data-title="Dodaj" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj wydarzenie do przepływu</a>
+    {/if}
+</div>
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+        <tr>
+            <th data-filter-type="string">Nazwa</th>
+            <th data-filter-type="string">Poprzednie wydarzenie</th>
+            <th data-filter-type="string">Etykieta</th>
+            <th>Dwukierunkowe</th>
+            <th>Opis</th>
+            <!--<th data-filter-type="string">Kolejne wydarzenie</th>-->
+
+            <th>Operacje</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach $model as $d}
+        <tr>
+            <td>{$d.event.name}</td>
+            <td>{$d.previous_event.name}</td>
+            <td>{$d.label}</td>
+            <td>{if $d.bidirectional == '0'}
+                <span class="label label-danger button-xl">NIE</span>
+                {/if}{if $d.bidirectional == '1'}
+                <span class="label label-success">TAK</span>
+                {/if}</</td>
+            <td>{$d.description}</td>
+            <!-- <td>{$d.next_event.name}</td>-->
+            <td class="operations">
+                {if $auth->isGranted('node/flows/update', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-pencil" href="/flows/events-assign-update/flowid/{$d.flow_id}/id/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                {/if}
+                {if $auth->isGranted('node/flows/del', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="/flows/events-assign-delete/flowid/{$d.flow_id}/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>
+<h3>Szczegółwy przepływu</h3>
+<div class="row">
+    <div class="col-lg-2">
+        <strong>Opis:</strong>
+    </div>
+    <div class="col-lg-6">
+        {$data.description}
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-2">
+        <strong>Zakres:</strong>
+    </div>
+    <div class="col-lg-6">
+        {$data.description_scope}
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-2">
+        <strong>Cel:</strong>
+    </div>
+    <div class="col-lg-6">
+        {$data.description_target}
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-2">
+        <strong>Dane wejściowe:</strong>
+    </div>
+    <div class="col-lg-6">
+        {$data.description_input}
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-2">
+        <strong>Dane wyjściowe:</strong>
+    </div>
+    <div class="col-lg-6">
+        {$data.description_output}
+    </div>
+</div>
+    <h3>Diagram przepływu</h3>
+    <div class="mermaid">
+        graph LR;
+        {$flowDiagram nofilter}
+    </div>
+    <link href="//knsv.github.io/mermaid/css/mermaid.css" rel="stylesheet" />
+    <style type="text/css">
+        .edgeLabel{
+            font-size:10px;
+            line-height:0.4;
+            padding:5px;
+        }
+    </style>
+    <script src="//cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.js"></script>
+    <script>
+        {literal}
+        $(document).ready(function () {
+            mermaid.initialize({startOnLoad: true});
+        });
+       
+            {/literal} 
+    </script>

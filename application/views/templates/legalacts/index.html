@@ -1,0 +1,31 @@
+{include file='modals/modal.tpl' title='Akty prawne - co to jest?' content='Kryptos24 jest zintegrowany z Internetowym Systemem Aktów Prawnych Sejmu, więc masz dostęp do najnowszych aktów prawnych oraz tych archiwalnych również. Do dyspozycji oddajemy inteligentną wyszukiwarkę.'}
+<form method="post" action="/legalacts/delChecked/">
+    <div class="table-operations-header">
+        <a class="btn btn-success" href="/legalacts/update" data-title="Dodaj nowy akt prawny" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+        <a class="btn btn-success" href="/legalacts/hq-import-new" data-title="Aktualizacja o nowe elementy" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Aktualizacja o nowe elementy</a>
+    </div>
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example" data-source-url="/legalacts/ajax-get-list">
+        <thead class="ui-widget-header">
+        <tr>
+            <th class="min-width" data-column-name="checkbox"></th>
+            <th data-filter-type="string" class="min-width" data-column-name="id">id</th>
+            <th data-filter-type="string" data-column-name="name">nazwa</th>
+            <th data-filter-type="string" data-column-name="type">typ</th>
+            <th data-filter-type="string" data-column-name="symbol">sygnatura</th>
+            <th data-column-name="operations" data-column-class="operations nowrap">opcje</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content">
+        </tbody>
+    </table>
+
+    <div class="table-operations-footer">
+        <div class="btn-group">
+            <button type="submit" class="btn btn-danger modal-confirm-delete" data-toggle="tooltip" data-title="Usuń zaznaczone" data-modal-name="delete_selected" data-modal-class="delete-selected-confirmation"><i class="fa fa-remove"></i></button>
+        </div>
+    </div>
+
+    <div class="hiddenElement">
+        <input type="submit" value="Usuń zaznaczone" class="btn btn-default modal-confirm-delete_selected-submit"/>
+    </div>
+</form>

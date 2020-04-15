@@ -1,0 +1,714 @@
+{$message}
+
+<link href="/assets/plugins/bootstrap-calendar/css/bic_calendar.css" rel="stylesheet" type="text/css" /> {*
+
+<div class="row top-summary">
+    <div class="col-lg-3 col-md-6">
+        <div class="widget green-1 animated fadeInDown">
+            <div class="widget-content padding">
+                <div class="widget-icon">
+                    <i class="icon-globe-inv"></i>
+                </div>
+                <div class="text-box">
+                    <p class="maindata">{'Ilość zalogowanych razem'|translate}</p>
+                    <h2><span class="animate-number" data-value="{$loggedInCounter}" data-duration="{min($loggedInCounter * 500, 3000)}">0</span></h2>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="widget-footer">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <i class="fa fa-caret-up rel-change"></i> <b>39%</b> {'wzrostu'|translate}
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <div class="widget darkblue-2 animated fadeInDown">
+            <div class="widget-content padding">
+                <div class="widget-icon">
+                    <i class="icon-bag"></i>
+                </div>
+                <div class="text-box">
+                    <p class="maindata">{'Zaoszczędzone godziny pracy'|translate}</p>
+                    <h2><span class="animate-number" data-value="6399" data-duration="3000">0</span></h2>
+
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="widget-footer">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <i class="fa fa-caret-down rel-change"></i> <b>11%</b> {'wzrostu'|translate}
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <div class="widget orange-4 animated fadeInDown">
+            <div class="widget-content padding">
+                <div class="widget-icon">
+                    <i class="fa fa-dollar"></i>
+                </div>
+                <div class="text-box">
+                    <p class="maindata">{'Zaoszczędzone'|translate} <b>PLN</b></p>
+                    <h2><span class="animate-number" data-value="70389" data-duration="3000">0</span></h2>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="widget-footer">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <i class="fa fa-caret-down rel-change"></i> <b>7%</b> {'wzrostu'|translate}
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <div class="widget lightblue-1 animated fadeInDown">
+            <div class="widget-content padding">
+                <div class="widget-icon">
+                    <i class="fa fa-users"></i>
+                </div>
+                <div class="text-box">
+                    <p class="maindata">{'Liczba użytkowników'|translate}</p>
+                    <h2><span class="animate-number" data-value="{$usersCounter}" data-duration="3000">0</span></h2>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="widget-footer">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <i class="fa fa-caret-up rel-change"></i> <b>6%</b> {'wzrostu'|translate}
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+
+</div>*} {*
+<div class="row">
+    <div class="col-lg-8">
+        <div id="website-statistics1" class="widget">
+            <div class="widget-header transparent">*}
+
+                <div class="row">
+                    <div class="col-lg-8 col-md-12">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="widget">
+                                    <div class="widget-header">
+                                        <h2><i class="fa fa-tasks"></i> <strong>{'Zgłoszenia'|translate}</strong></h2>
+                                    </div>
+
+                                    <div class="widget-content">
+                                        {if !empty($myTickets)}
+                                        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-widget">
+                                            <thead class="ui-widget-header">
+                                            <tr>
+                                                <th data-filter-type="date-range">{'Temat'|translate}</th>
+                                                <th data-filter-type="string">{'Autor'|translate}</th>
+                                                <th data-filter-type="string">{'Status'|translate}</th>
+                                                <th class="text-center min-width">{'Data'|translate}</th>
+                                                <th class="text-center min-width">{'Operacje'|translate}</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="ui-widget-content">
+                                            {foreach $myTickets as $ticket}
+                                            <tr>
+                                                <td>{$ticket.topic}</td>
+                                                <td>{$ticket.author.display_name}</td>
+                                                <td><p class="label {if $ticket.status.state==1}label-primary{elseif $ticket.status.state==2}{if $ticket.status.color =="label-primary" OR  $ticket.status.color =="label-warning" OR $ticket.status.color =="label-danger" OR  $ticket.status.color =="label-info" OR $ticket.status.color=="label-default" OR  $ticket.status.color=="label-success"}{$ticket.status.color}{else}label-default{/if}{elseif $ticket.status.state==3}label-success{elseif $ticket.status.state==4}label-warning{elseif $ticket.status.state==5}label-danger{/if}">{$ticket.status.name}</p></span></td>
+                                                <td>{smart_date value=$ticket.timeline}</td>
+                                                <td class="operations">
+                                                    {element tag='a' route='tickets/view' routeParams=['id' => $ticket.id] attributes=[ 'class' => 'glyphicon glyphicon-camera',
+                                                    'title' => 'Podgląd', 'data' => [ 'toggle' => 'tooltip' ] ]}
+                                                </td>
+                                            </tr>
+                                            {/foreach}
+                                            </tbody>
+                                        </table>
+                                        {else}
+                                        <div class="empty-data">{'Aktualnie nie masz żadnych zadań'|translate}</div>
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="widget">
+                                    <div class="widget-header">
+                                        <h2><i class="fa fa-tasks"></i> <strong>{'Twoje zadania'|translate}</strong></h2>
+                                    </div>
+
+                                    <div class="widget-content">
+                                        {if !empty($myTasks)}
+                                        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-widget">
+                                            <thead class="ui-widget-header">
+                                            <tr>
+                                                <th width="25%" data-filter-type="date-range">{'Termin'|translate}</th>
+                                                <th data-filter-type="string">{'Tytuł'|translate}</th>
+                                                <th class="text-center min-width">{'Operacje'|translate}</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="ui-widget-content">
+                                            {foreach $myTasks as $d}
+                                            <tr>
+                                                <td>{smart_date value=$d.deadline_date}</td>
+                                                <td><a class="choose-from-dial" data-toggle="tooltip" title="SZCZEGÓŁY" href="/tasks-my/details/id/{$d.id}">{$d.task_title}</a></td>
+                                                <td class="operations">
+                                                    <a class="choose-from-dial" data-toggle="tooltip" title="SZCZEGÓŁY" href="/tasks-my/details/id/{$d.id}"><i class="fa fa-eye"></i></a>
+                                                </td>
+                                            </tr>
+                                            {/foreach}
+                                            </tbody>
+                                        </table>
+                                        {else}
+                                        <div class="empty-data">{'Aktualnie nie masz żadnych zadań'|translate}</div>
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="widget">
+                                    <div class="widget-header">
+                                        <h2><i class="icon-chart-pie-1"></i> <strong>{'Twoje podpisy'|translate}</strong></h2>
+                                    </div>
+
+                                    <div class="widget-content">
+                                        {if !empty($mySignatures)}
+                                        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-widget">
+                                            <thead class="ui-widget-header">
+                                            <tr>
+                                                <th width="25%" data-filter-type="date-range">{'Data'|translate}</th>
+                                                <th data-filter-type="string">{'Tytuł dokumentu'|translate}</th>
+                                                <th class="text-center min-width">{'Operacje'|translate}</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="ui-widget-content">
+                                            {foreach $mySignatures as $d}
+                                            <tr>
+                                                <td>{smart_date value=$d.sign_date}</td>
+                                                <td><a class="choose-from-dial" data-toggle="tooltip" title="{'Szczegóły'|translate}"
+                                                       data-dial-url="/signatures/preview-signature/id/{$d.id}">{if $d.document}{$d.document.template_name}{else}{$d.task_title}{/if}</a></td>
+                                                <td class="operations">
+                                                    <a class="choose-from-dial" data-toggle="tooltip" title="{'Szczegóły'|translate}" data-dial-url="/signatures/preview-signature/id/{$d.id}"><i class="fa fa-eye"></i></a>
+                                                </td>
+                                            </tr>
+                                            {/foreach}
+                                            </tbody>
+                                        </table>
+                                        {else}
+                                        <div class="empty-data">{'Aktualnie nie masz żadnych podpisów'|translate}</div>
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="widget">
+                                    <div class="widget-header">
+                                        <h2><i class="icon-book-open-1"></i> <strong>{'Twoje dokumenty'|translate}</strong></h2>
+                                    </div>
+
+                                    <div class="widget-content">
+                                        {if !empty($myDocuments)}
+                                        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-widget">
+                                            <thead class="ui-widget-header">
+                                            <tr>
+                                                <th width="25%" data-filter-type="string">{'Data'|translate}</th>
+                                                <th data-filter-type="date-range">{'Tytuł'|translate}</th>
+                                                <th data-filter-type="string">{'Nr'|translate}</th>
+                                                <th class="text-center min-width">{'Operacje'|translate}</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="ui-widget-content">
+                                            {foreach $myDocuments as $d}
+                                            <tr>
+                                                <td>{smart_date value=$d.created_at}</td>
+                                                <td><a class="choose-from-dial" data-toggle="tooltip" title="{'Podgląd'|translate}"
+                                                       data-dial-url="/home/preview-document/id/{$d.id}">{$d.template_name}</a></td>
+                                                <td>{$d.numbertxt}</td>
+                                                <td class="operations">
+                                                    <a class="choose-from-dial" data-toggle="tooltip" title="{'Podgląd'|translate}" data-dial-url="/home/preview-document/id/{$d.id}"><i class="fa fa-eye"></i></a>
+                                                </td>
+                                            </tr>
+                                            {/foreach}
+                                            </tbody>
+                                        </table>
+                                        {else}
+                                        <div class="empty-data">{'Aktualnie nie masz żadnych dokumentów'|translate}</div>
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="widget">
+                                    <div class="widget-header">
+                                        <h2><i class="icon-book-open-1"></i> <strong>{'Dokumentacja'|translate}</strong></h2>
+                                    </div>
+
+                                    <div class="widget-content">
+                                        {if !empty($documentsVersioned)}
+                                        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-widget">
+                                            <thead class="ui-widget-header">
+                                            <tr>
+                                                <th width="25%" data-filter-type="date-range">{'Data'|translate}</th>
+                                                <th data-filter-type="string">{'Nazwa'|translate}</th>
+                                                <th class="text-center min-width">{'Operacje'|translate}</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="ui-widget-content">
+                                            {foreach $documentsVersioned as $d}
+                                            <tr>
+                                                <td>{smart_date value=$d.date_from}</td>
+                                                <td>{$d.title|upper}</td>
+                                                <td class="operations">
+                                                    <a class="choose-from-dial" data-toggle="tooltip" title="{'Szczegóły'|translate}" data-dial-url="/documents-versioned/preview/id/{$d.version_id}"><i class="fa fa-eye"></i></a>
+                                                    <a class="choose-from-dial" data-toggle="tooltip" title="{'Zgłoś poprawkę'|translate}" data-dial-url="/tickets/ajax-create-documents-versioned-correction/id/{$d.id}"
+                                                       data-new-dialog="1"><i class="fa fa-warning"></i></a>
+                                                </td>
+                                            </tr>
+                                            {/foreach}
+                                            </tbody>
+                                        </table>
+                                        {else}
+                                        <div class="empty-data">{'Aktualnie nie masz żadnych podpisów'|translate}</div>
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        {if $displayVideo}
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12">
+                                <div class="widget-header transparent">
+                                </div>
+                                <div class="widget-content col-sm-12">
+                                    <div class="row">
+                                        <button id="showVideo" class="btn btn-primary btn-lg btn-block" type="button">Odtwórz prezentacje video</button>
+                                        <br/>
+                                    </div>
+                                </div>
+                                {if $auth->isGranted('node/registration-data/create')}
+                                <div class="widget-header transparent">
+                                </div>
+                                <div class="widget-content col-sm-12">
+                                    <div class="row">
+                                        <a href="registration-data/create" class="btn btn-primary btn-lg btn-block" type="button">Dodaj użytkownika demo</a>
+                                        <br/>
+                                    </div>
+                                </div>
+                                {/if}
+                            </div>
+                        </div>
+                        {/if}
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12">
+                                <div class="widget widget-calendar widget-calendar-home">
+                                    <div class="widget-header transparent">
+                                        <h2><strong>{'Kalendarz'|translate}</strong></h2>
+                                    </div>
+                                    <div class="widget-content col-sm-12">
+                                        <div class="row">
+                                            <h3 class="col-sm-12">
+                                                <span class="calendar-info-day">Sierpień rok 2016</span>
+                                                <span class="pull-right">
+                                    {element tag='span' route='messages/ajax-add-calendar-note' routeParams=[] attributes=[
+                                        'dialog' => true,
+                                        'class' => 'btn btn-info btn-xs',
+                                        'icon' => 'add',
+                                        'tooltip' => 'Dodaj nową notatkę'|translate,
+                                        'innerHtml' => 'Notatka'|translate,
+                                        'data' => [
+                                            'new-dialog' => 0
+                                        ]
+                                    ]}
+                                    {* element tag='span' route='tasks/mini-add-storage-task' routeParams=[] attributes=[
+                                        'dialog' => true,
+                                        'class' => 'btn btn-success btn-xs',
+                                        'icon' => 'add',
+                                        'tooltip' => 'Dodaj nowe zadanie',
+                                        'innerHtml' => 'Zadanie'
+                                    ]*}
+                                </span>
+                                            </h3>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12 text-right">
+                                                <div class="btn-group pull-left">
+                                                    <button class="btn btn-default" data-calendar-nav="prev"><i class="icon-left-open-1"></i></button>
+                                                    <button class="btn" data-calendar-nav="today">{'Dziś'|translate}</button>
+                                                    <button class="btn btn-default" data-calendar-nav="next"><i class="icon-right-open-1"></i></button>
+                                                </div>
+
+                                                <div class="btn-group">
+                                                    <button class="btn btn-warning" data-calendar-view="year">{'Rok'|translate}</button>
+                                                    <button class="btn btn-warning" data-calendar-view="month">{'Miesiąc'|translate}</button>
+                                                    <button class="btn btn-warning" data-calendar-view="week">{'Tydzień'|translate}</button>
+                                                    <button class="btn btn-warning active" data-calendar-view="day">{'Dzień'|translate}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="calendar-max"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-lg-12">
+                                <div id="notes-app" class="widget">
+                                    <div class="notes-line"></div>
+                                    <div class="widget-header centered transparent">
+                                        <div class="left-btn btn-group"><a class="btn btn-sm btn-primary add-note"><i class="fa fa-plus"></i></a>
+                                            <a class="btn btn-sm btn-primary back-note-list"><i class="icon-align-justify"></i></a>
+                                        </div>
+                                        <h2>{'Notes'|translate}</h2>
+                                    </div>
+                                    <div class="widget-content padding-sm">
+                                        <div id="notes-list">
+                                            <div class="scroller">
+                                                <ul class="list-unstyled">
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div id="note-data">
+                                            <form>
+                                                <textarea class="form-control" id="note-text" placeholder="{'Twoja notatka'|translate}..."></textarea>
+                                            </form>
+                                        </div>
+                                        <div class="status-indicator">{'Zapisano'|translate}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            {*
+                            <div class="col-sm-12 widget-notes">
+                                <div class="widget ">
+                                    <div class="widget-header centered ">
+                                        <div class="left-btn"><a class="btn btn-sm btn-default add-todo"><i class="fa fa-plus"></i></a></div>
+                                        <h2>Notes</h2>
+                                        <div class="additional-btn">
+                                            <a href="#" class="hidden reload"><i class="icon-ccw-1"></i></a>
+                                            <a href="#" class="widget-popout hidden tt" title="Pop Out/In"><i class="icon-publish"></i></a>
+                                            <a href="#" class="widget-maximize hidden"><i class="icon-resize-full-1"></i></a>
+                                            <a href="#" class="widget-toggle"><i class="icon-down-open-2"></i></a>
+                                            <a href="#" class="widget-close"><i class="icon-cancel-3"></i></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="widget-content">
+                                        <ul class="todo-list">
+                                            <li>
+                                                <span class="check-icon"><input type="checkbox"/></span>
+                                                <span class="todo-item">Generate monthly sales report for John</span>
+                                                <span class="todo-options pull-right">
+                            <a href="javascript:;" class="todo-delete"><i class="icon-cancel-3"></i></a>
+                        </span>
+                                                <span class="todo-tags pull-right">
+                            <div class="label label-success">New</div>
+                        </span>
+                                            </li>
+                                            <li class="high">
+                                                <span class="check-icon"><input type="checkbox"/></span>
+                                                <span class="todo-item">Mail those reports to John</span>
+                                                <span class="todo-options pull-right">
+                            <a href="javascript:;" class="todo-delete"><i class="icon-cancel-3"></i></a>
+                        </span>
+                                            </li>
+                                            <li>
+                                                <span class="check-icon"><input type="checkbox"/></span>
+                                                <span class="todo-item">Don't forget to send those reports to John</span>
+                                                <span class="todo-options pull-right">
+                            <a href="javascript:;" class="todo-delete"><i class="icon-cancel-3"></i></a>
+                        </span>
+                                            </li>
+                                            <li class="medium">
+                                                <span class="check-icon"><input type="checkbox"/></span>
+                                                <span class="todo-item">If you forgot, go back to office to pick them up</span>
+                                                <span class="todo-options pull-right">
+                                                    <a href="javascript:;" class="todo-delete"><i class="icon-cancel-3"></i></a>
+                                                </span>
+                                                <span class="todo-tags pull-right">
+                                                    <div class="label label-info">Today</div>
+                                                </span>
+                                            </li>
+                                            <li class="low">
+                                                <span class="check-icon"><input type="checkbox"/></span>
+                                                <span class="todo-item">Deliver reports by hand to John</span>
+                                                <span class="todo-options pull-right">
+                                                    <a href="javascript:;" class="todo-delete"><i class="icon-cancel-3"></i></a>
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span class="check-icon"><input type="checkbox"/></span>
+                                                <span class="todo-item">Say John that you are sorry</span>
+                                                <span class="todo-options pull-right">
+                                                    <a href="javascript:;" class="todo-delete"><i class="icon-cancel-3"></i></a>
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span class="check-icon"><input type="checkbox"/></span>
+                                                <span class="todo-item">Beg for your job...</span>
+                                                <span class="todo-options pull-right">
+                                                    <a href="javascript:;" class="todo-delete"><i class="icon-cancel-3"></i></a>
+                                                </span>
+                                                <span class="todo-tags pull-right">
+                                                    <div class="label label-danger">Important</div>
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span class="check-icon"><input type="checkbox"/></span>
+                                                <span class="todo-item">Look for a new job</span>
+                                                <span class="todo-options pull-right">
+                            <a href="javascript:;" class="todo-delete"><i class="icon-cancel-3"></i></a>
+                        </span>
+                                                <span class="todo-tags pull-right">
+                            <div class="label label-warning"><i class="icon-search"></i></div>
+                        </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>*}
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        var resizefunc = [];
+
+                    </script>
+                    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+                    <!--<script src="/assets/plugins/jquery/jquery-1.11.1.min.js"></script>
+<script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assets/plugins/jqueryui/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="/assets/plugins/jquery-ui-touch/jquery.ui.touch-punch.min.js"></script>
+<script src="/assets/plugins/jquery-detectmobile/detect.js"></script>
+<script src="/assets/plugins/jquery-animate-numbers/jquery.animateNumbers.js"></script>
+<script src="/assets/plugins/ios7-switch/ios7.switch.js"></script>
+<script src="/assets/plugins/fastclick/fastclick.js"></script>
+<script src="/assets/plugins/jquery-blockui/jquery.blockUI.js"></script>
+<script src="/assets/plugins/bootstrap-bootbox/bootbox.min.js"></script>
+<script src="/assets/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+<script src="/assets/plugins/jquery-sparkline/jquery-sparkline.js"></script>
+<script src="/assets/plugins/nifty-modal/js/classie.js"></script>
+<script src="/assets/plugins/nifty-modal/js/modalEffects.js"></script>
+<script src="/assets/plugins/sortable/sortable.min.js"></script>
+<script src="/assets/plugins/bootstrap-fileinput/bootstrap.file-input.js"></script>
+<script src="/assets/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+<script src="/assets/plugins/bootstrap-select2/select2.min.js"></script>
+<script src="/assets/plugins/magnific-popup/jquery.magnific-popup.min.js"></script>
+<script src="/assets/plugins/pace/pace.min.js"></script>
+<script src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+<script src="/assets/plugins/jquery-icheck/icheck.min.js"></script>-->
+
+                    <!-- Demo Specific JS Libraries -->
+                    <!--<script src="/assets/plugins/prettify/prettify.js"></script>
+
+<script src="_gfx/js/init.js"></script>-->
+                    <!-- Page Specific JS Libraries -->
+                    <!--<script src="/assets/plugins/apps/calculator.js"></script>
+<script src="/assets/plugins/d3/d3.v3.js"></script>
+<script src="/assets/plugins/rickshaw/rickshaw.min.js"></script>
+<script src="/assets/plugins/raphael/raphael-min.js"></script>
+<script src="/assets/plugins/morrischart/morris.min.js"></script>
+<script src="/assets/plugins/jquery-clock/clock.js"></script>
+<script src="/assets/plugins/jquery-easypiechart/jquery.easypiechart.min.js"></script>
+-->
+                    <script src="/assets/plugins/jquery-knob/jquery.knob.js"></script>
+                    <script src="/assets/plugins/jquery-jvectormap/js/jquery-jvectormap-1.2.2.min.js"></script>
+                    <script src="/assets/plugins/jquery-jvectormap/js/jquery-jvectormap-us-aea-en.js"></script>
+                    <script src="/assets/plugins/bootstrap-xeditable/js/bootstrap-editable.min.js"></script>
+                    <script src="/assets/plugins/js-cookie/js.cookie.js"></script>
+                    <script src="/assets/plugins/bootstrap-calendar/js/bic_calendar.min.js"></script>
+                    <script src="/assets/plugins/apps/todo.js"></script>
+                    <script src="/_gfx/js/pages/index.js"></script>
+                    <script src="/assets/plugins/notes.js"></script>
+
+                    {if $displayVideo}
+                    <script>
+                        var interval = null;
+                        if (Cookies.get('videowatched')== null) {
+                            $(document).ready(function () {
+                                modalShow();
+                            });
+                        }
+                        else
+                        { }
+
+                        $('#showVideo').click(function(){
+                            modalShow();
+                        });
+
+                        function modalShow(){
+                            $('#demo-modal').addClass("md-show");
+
+                            $('#demo-close').click(function () {
+                                Cookies.set('videowatched', '1', { expires: 30 });
+                                $('#demo-modal').removeClass("md-show");
+                                $('#showVideo').notify(
+                                    {
+                                        image: '<i class="fa fa-info"></i>',
+                                        title: 'Zobacz prezentację Kryptos24!',
+                                        text: 'Zawsze możesz zobaczyć prezentację programu Kryptos24 naciskając ten przycisk!'
+                                    },
+                                    {
+                                        style: 'metro',
+                                        className: 'cool',
+                                        clickTohide: true,
+                                        autoHide: false,
+                                        elementPosition: 'left',
+                                        arrowSize: 10,
+                                        gap: 3}
+                                )
+                            });
+                        }
+
+                        // 2. This code loads the IFrame Player API code asynchronously.
+                        var tag = document.createElement('script');
+
+                        tag.src = "https://www.youtube.com/iframe_api";
+                        var firstScriptTag = document.getElementsByTagName('script')[0];
+                        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+                        // 3. This function creates an <iframe> (and YouTube player)
+                        //    after the API code downloads.
+                        var player;
+                        function onYouTubeIframeAPIReady() {
+                            player = new YT.Player('player', {
+                                height: '480',
+                                width: '854',
+                                videoId: 'aKa5OZQT4BM',
+                                events: {
+                                    'onReady': onPlayerReady,
+                                    'onStateChange': onPlayerStateChange
+                                }
+                            });
+                        }
+
+                        // 4. The API will call this function when the video player is ready.
+                        function onPlayerReady(event) {
+
+                        }
+
+                        function markPlayed(){
+                             $.ajax('/registration-data/mark-video-as-played', {
+                                    success: function (data) {
+
+                                    },
+                                    error: function () {
+
+                                    }
+                                });
+                        }
+
+                        function startPlaying(){
+                        
+                            if (interval == null){
+                                interval = setInterval(markPlayed, 10000);
+                            }
+                        }
+
+                        function stopPlaying(){
+                            if (interval != null) {
+                                clearInterval(interval);    
+                            }
+                        }
+
+                        // 5. The API calls this function when the player's state changes.
+                        //    The function indicates that when playing a video (state=1),
+                        //    the player should play for six seconds and then stop.
+                        var done = false;
+                        function onPlayerStateChange(event) {
+                            console.log(event.data );
+                            if (event.data == YT.PlayerState.PLAYING) {
+                                 startPlaying();   
+                            }
+
+                            if ((event.data == 0) || (event.data == 2)) {
+                                 stopPlaying();   
+                            }
+                        }
+
+                        function stopVideo() {
+                            player.stopVideo();
+                        }
+
+                    </script>
+                    <div class="md-modal modal-dialog" id="demo-modal">
+                    <div class="md-content modal-lg">
+                        <h3>Prezentacja video</h3>
+                        <div class="">
+                            <p>Zapoznaj się proszę z filmem, który przygotowaliśmy dla Ciebie:</p>
+
+                            <div id="player"></div>
+
+                            <p><a target="_blank" href="https://www.youtube.com/embed/aKa5OZQT4BM?enablejsapi=1">Otwórz w nowym oknie</a></p>
+                            <p>
+                                <button id="demo-close" class="btn btn-success md-close">OK</button>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- End div .md-content -->
+                </div>
+                <!-- End div .md-modal .md-fade-in-scale-up -->
+                {/if}
+
+                {if $showTerms}
+                <script>
+                         $(document).ready(function () {
+                                termsModalShow();                     
+                            });
+                            
+                        function termsModalShow(){
+                            $('#terms-modal').addClass("md-show");
+
+                            $('#terms-close').click(function () {
+                                if($("#terms-ok").is(':checked')){
+                                 $.ajax('/home/terms-accepted', {
+                                    success: function (data) {
+
+                                    },
+                                    error: function () {
+
+                                    }
+                                });
+                                $('#terms-modal').removeClass("md-show");
+                                } else {
+                                    alert('Zapoznaj się z regulaminem, aby kontynuować');
+                                }
+                            });
+
+                        }
+
+                    </script>
+                    <div class="md-modal modal-dialog" id="terms-modal">
+                    <div class="md-content modal-lg">
+                        <h3>Regulamin Kryptos</h3>
+                        <div>
+                            <p>Aby kontynouwać zapoznaj się proszę z <a target="_blank" href="/assets/RegulaminKryptos2016.doc">regulaminem</a>:</p>
+                            <input type="checkbox" id="terms-ok" /> Zapoznałem się z <a target="_blank" href="/assets/RegulaminKryptos2016.doc">regulaminem</a>
+                            <p>
+                                <button id="terms-close" class="btn btn-success md-close">OK</button>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- End div .md-content -->
+                </div>
+                <!-- End div .md-modal .md-fade-in-scale-up -->
+                {/if}

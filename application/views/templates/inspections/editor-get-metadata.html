@@ -1,0 +1,27 @@
+<div style="text-align: left">
+    <table width="100%" class="inspections-metadata">
+        <tr>
+            <td width="50%">
+                Nazwisko i imię inspektora: {$inspection.author.nazwisko|upper} {$inspection.author.imie|upper}
+            </td>
+            <td colspan="3" rowspan="2">Nr. sprawozdania: {$inspection.id}</td>
+        </tr>
+        <tr>
+            <td>Data inspekcji: {$inspection.date}</td>
+        </tr>
+        <tr>
+            <td>Rodzaj inspekcji</td>
+            <td>Inne:<br>{if $inspection.type == 1}X{/if}</td>
+            <td>Zbiór:<br>{if $inspection.type == 2}X{/if}</td>
+            <td>Nazwa zbioru:<br>{if $inspection.type == 2}{$inspection.zbior.nazwa}{/if}</td>
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align: center">{$inspection.title}</td>
+        </tr>
+        {if $inspection.comment}
+            <tr>
+                <td colspan="4">Komentarz:<br>{$inspection.comment}</td>
+            </tr>
+        {/if}
+    </table>
+</div>

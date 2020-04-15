@@ -1,0 +1,33 @@
+<div class="widget transparent box-messages">
+    {include file='messages/_top.html'}
+    {include file='modals/modal.tpl' title='Wiadomości - co to jest?' content='Wiadomości to część modułu komunikacja, za pomocą której możesz wysyłać wiadomości do innych użytkowników systemu jak i możliwe jest również tworzenie grup dyskusyjnych.'}
+
+    <div class="row">
+        <div class="col-md-3">
+            {include file='messages/_menu.html'}
+        </div>
+
+        <div class="col-md-9">
+            <div class="widget">
+                <div class="widget-content padding">
+                    <form action="{$baseUrl}/save" method="post" class="form-horizontal" id="newMessageForm">
+                        {include file='messages/_new-message-form.html'}
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="submit" value="{'Wyślij wiadomość'|translate}" class="btn btn-info pull-right" />
+                            </div>
+                        </div>
+                    </form>
+
+                    {literal}
+                    <script>
+                        backendUtilities.addVatidationEngine("newMessageForm");
+                    </script>
+                    {/literal}
+
+                </div>
+            </div>
+        </div><!-- End div .col-md-10 -->
+    </div><!-- End div .row -->
+</div><!-- End div .box-info -->

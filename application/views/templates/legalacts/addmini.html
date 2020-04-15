@@ -1,0 +1,139 @@
+<h3 class="text-center" style="margin-top:0px;margin-bottom:10px;">Wybór dostępnych aktów prawnych</h3>
+<div class="modtop">
+    <form action="/legalacts/addmini" class="ajax-form" data-process-fn="" id="opts-search-form">
+        <div class="form-group row">
+            {*<label for="opts-search-form-type" class="col-sm-2">Rodzaj:</label>
+            <div class="col-sm-4"><select name="type" id="opts-search-form-type" class="form-control" onchange="if ( $(this).val() !== '' ) { $('#fieldscategory_id').val($(this).val()); } optsSearchRun();">
+                    <option value="">wszystkie</option>
+                    {foreach $types as $type}
+                        <option value="{$type}">{$type}</option>
+                    {/foreach}
+                </select></div>*}
+            <label for="opts-search-form-year" class="col-sm-2">Rok:</label>
+            <div class="col-sm-4"><input type="text" name="year" id="opts-search-form-year" value="" class="form-control" onkeyup="optsSearchRun()"/></div>
+            <label for="opts-search-form-is_obligatory" class="col-sm-2">Obowiązujące:</label>
+            <div class="col-sm-4">
+                <select name="is_obligatory" id="opts-search-form-is_obligatory" class="form-control" onchange="optsSearchRun()">
+                    <option value="">wszystkie</option>
+                    <option value="1" selected>tak</option>
+                    <option value="0">nie</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <input type="text" name="name" id="opts-search-form-name" class="form-control" placeholder="Wpisz szukaną frazę" onkeyup="optsSearchRun();"/>
+            </div>
+        </div>
+        <div class="form-group row" style="margin-bottom:0px;">
+            <div class="col-sm-1">
+                <div class="checknew">
+                    <input type="hidden" name="showchecked" value="0"/>
+                    <input type="checkbox" name="showchecked" id="showchecked" value="1" class="" onclick="optsSearchRun();">
+                    <label for="showchecked"></label>
+                </div>
+            </div>
+            <label for="categories" class="col-sm-11">Pokaż na liście tylko zaznaczone pozycje</label>
+        </div>
+    </form>
+</div>
+<div style="height:20px"></div>
+<div id="optsSearch">
+    <div class="alert alert-danger optsnodata"><i class="fa fa-4x fa-exclamation-triangle"></i>
+        <div class="floathead">
+            <div class="ins">Zmień kryteria wyszukiwania lub skorzystaj z formularza dodawania nowych rekordów znajdującego się poniżej.</div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    {foreach $t_data as $d}
+        <div class="selopt2bl" id="id{$d.id}" rel="category{$d.type}" title="{$d.name}"><span
+                    class="{$d.icon}"></span> <span class="selopt2blname">{$d.name}</span>
+            <span class="selopt2bltextarea" onclick="selopt2bltextareaClick(event)">
+                                     <div>
+                                         <label>Opis szczegółowy postawy prawnej:</label>
+                                         <textarea id="{$d.id}" class="form-control"></textarea>
+                                     </div>
+            </span>
+        </div>
+    {/foreach}
+</div>
+<div style="clear:both;"></div>
+<div class="modbottom">
+    <h3 style="margin-top:0px;">Dodawanie nowego aktu prawnego</h3>
+    <div class="row">
+        <div class="col-sm-4">
+            <label for="fieldscategory_id">Rodzaj</label>
+        </div>
+        <div class="col-sm-5">
+            <label>Nazwy aktów prawnych (rozdzielaj średnikami)</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <select name="fieldscategory_id" id="fieldscategory_id" class="form-control">
+                <option {if $categories === 'ustawa'}selected="selected"{/if} value="ustawa">ustawa</option>
+                <option {if $categories === 'rozporządzenie'}selected="selected"{/if} value="rozporządzenie">rozporządzenie</option>
+                <option {if $categories === 'inne'}selected="selected"{/if} value="inne">inne</option>
+            </select>
+        </div>
+        <div class="col-sm-5">
+            <input type="text" name="newname" id="newname" value="" class="form-control"/>
+        </div>
+        <div class="col-sm-3">
+            <button class="btn btn-default" id="addLegalact" type="button" style="width:100%;" onclick="addLegalacts();">Dodaj &nbsp;<i class="fa fa-plus"></i></button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    function addLegalacts() {
+        $.ajax({
+            dataType: 'html',
+            url: '/legalacts/savemini/?&categories=' + $('#fieldscategory_id').val(),
+            data: 'name=' + $('#newname').val() + '&fieldscategory_id=' + $('#fieldscategory_id').val(),
+            method: 'POST',
+            success: function (mess, textStatus, xhr) {
+                var txt = mess.split(';');
+                $.each(txt, function (k, v) {
+                    var txt2 = v.split(',');
+                    if (txt2['0'] * 1 > 0) {
+                        addlegalacts{$num}(txt2['0'], txt2['1'], $('#fieldscategory_id').val());
+                    }
+                });
+                setlegalacts{$num}Sel();
+                setlegalacts{$num}();
+                optsSearchRun();
+                showDial('/legalacts/addmini/?num={$num}', '', '');
+            },
+            error: function (xhr, textStatus, errorThrown) {
+            }
+        });
+    }
+    $('#newname').keypress(function (e) {
+        if (e.which == 13) {
+            $('#addLegalact').click();
+            return false;
+        }
+    });
+    setTimeout('$(\'#searcher\').focus()', 500);
+
+    {if $smarty.get.useProcess}
+        $('#optsSearch .selopt2bl').on('click', function() {
+            dial.lastDialProcessFn(this.id.replace('id',''));
+        });
+    {else}
+        timeouter.registerStorage('opts-search', true);
+        function optsSearchRun() {
+            timeouter.add('opts-search', 'whatever', function() {
+                runOptsSearchAjax(function() {
+                    runlegalacts{$num}Sel();
+                });
+            }, 500);
+        }
+
+        runlegalacts{$num}Sel();
+    {/if}
+    function selopt2bltextareaClick(event){
+        event.stopPropagation();
+    }
+</script>

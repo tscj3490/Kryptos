@@ -1,0 +1,28 @@
+{$message}
+<form id="f_profile" name="f_profile" action="/dokumenty/seriasave"
+	method="POST" class="form-horizontal" role="form">
+	<div class="form-group row">
+		<div class="col-sm-4">
+			<label for="seria" class="col-sm-2">Numbering Rule For:</label>
+		</div>
+		<div class="col-sm-4">{$mapping[{$data['type']}]}</div>
+
+		<div class="col-sm-4">
+			<input type="text" placeholder="Numbering Rule" name="numbering_rule"
+				class="form-control form-control-uppercase validate[required]"
+				value="{$data['numbering_rule']}">
+		</div>
+	</div>
+	<div class="">
+		<input type="submit" value="Zapisz" class="btn btn-info"> <input
+			type="hidden" name="id" id="id" value="{$data.id}" />
+	</div>
+</form>
+Legenda:
+<br />
+<ul>
+	<li>[LP] - liczba porządkowa</li>
+	<li>[RRRR] - rok</li>
+	<li>[MM] - miesiąć</li>
+	<li>[DD] - dzień</li>
+</ul>

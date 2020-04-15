@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>Drukuj</title>
+    <style type="text/css">
+        @page { margin:1cm 2cm 1cm 2cm!important;padding:0!important;line-height: 1; font-family: Arial; color: #000; background: none; font-size: 11pt; }
+        *{ line-height: 1; font-family: Arial; color: #000; background: none; font-size: 11pt; }
+        h1,h2,h3,h4,h5,h6 { page-break-after:avoid; }
+        h1{ font-size:19pt; }
+        h2{ font-size:17pt; }
+        h3{ font-size:15pt; }
+        h4,h5,h6{ font-size:14pt; }
+        .break{ page-break-after: always; }
+        p, h2, h3 { orphans: 3; widows: 3; }
+        code { font: 12pt Courier, monospace; }
+        blockquote { margin: 1.2em; padding: 1em; font-size: 12pt; }
+        hr { background-color: #ccc; }
+        img { float: left; margin: 1em 1.5em 1.5em 0; max-width: 100% !important; }
+        a img { border: none; }
+        a:link, a:visited { background: transparent; font-weight: 700; text-decoration: underline;color:#333; }
+        a:link[href^="http://"]:after, a[href^="http://"]:visited:after { content: " (" attr(href) ") "; font-size: 90%; }
+        abbr[title]:after { content: " (" attr(title) ")"; }
+        a[href^="http://"] { color:#000; }
+        a[href$=".jpg"]:after, a[href$=".jpeg"]:after, a[href$=".gif"]:after, a[href$=".png"]:after { content: " (" attr(href) ") "; display:none; }
+        a[href^="#"]:after, a[href^="javascript:"]:after { content: ""; }
+        table { width:100%; }
+        th { }
+        td { }
+        th,td { padding: 4px 10px 4px 0; }
+        tfoot { font-style: italic; }
+        caption { background: #fff; margin-bottom:2em; text-align:left; }
+        thead { display: table-header-group; }
+        img,tr { page-break-inside: avoid; }
+        .no-print { display:none }
+    </style>
+</head>
+<body onload="window.print()">
+    {$layout->content nofilter}
+</body>
+</html>

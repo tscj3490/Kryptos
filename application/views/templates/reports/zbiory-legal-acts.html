@@ -1,0 +1,21 @@
+<h1>Zbiory z podstawami prawnymi</h1>
+<table class="printable" cellspacing='1' cellpadding="5">
+    <thead>
+        <tr>
+            <th>Lp.</th>
+            <th>Nazwa zbioru</th>
+            <th>Data ostatniej edycji</th>
+            <th>Podstawy prawne</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach $model as $d}
+        <tr>
+            <td>{$d@iteration}</td>
+            <td>{$d.nazwa}</td>
+            <td>{$d.data_edycji}</td>
+            <td>    <table>{foreach $d.pp as $x}<tr><td>{$x}</td></tr>{/foreach}</table></td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>

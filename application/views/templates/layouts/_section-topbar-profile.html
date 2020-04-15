@@ -1,0 +1,29 @@
+
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+    <span class="pull-left">
+        {'Koniec sesji za'|translate}: <b id="time_session">50:00</b>
+        <script>time_session.innerHTML = getTimeFromLogoutDate()</script>
+    </span>
+    <span class="pull-left">
+        <span class="rounded-image topbar-profile-image">
+            <img src="/assets/img/users/user-35.jpg">
+        </span>
+    </span>
+    <span class="pull-left two-line">
+        <strong>{$user_session->user->login}</strong><br>
+        <span class="app-name">{$applicationName}</span>
+    </span>
+    <i class="fa fa-caret-down"></i>
+</a>
+<ul class="dropdown-menu">
+    <!--<li><a href="">Mój profil</a></li> -->
+    <!--<li><a href="">Zmień hasło</a></li> -->
+    <!--<li class="divider"></li>-->
+
+    <li><a href="/assets/Instrukcja_Kryptos.pdf"><i class="icon-help-2"></i> {'Pomoc'|translate}</a></li>
+    <li><a href="/home/zmianahasla"><i class="icon-user"></i> {'Zmiana hasła'|translate}</a></li>
+    {if $user_session->sharedConnections}
+    <li><a class="choose-from-dial" data-dial-url="/shared-users/switch-account" data-new-dialog="1"><i class="icon-switch"></i> {'Przełącz konto'|translate}</a></li>
+    {/if}
+    <li><a class="md-trigger" data-modal="logout-modal"><i class="icon-logout-1"></i> {'Wyloguj'|translate}</a></li>
+</ul>

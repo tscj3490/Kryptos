@@ -1,0 +1,70 @@
+<div class="row">
+    <div class="col-lg-6">
+        <form name="f_data" id="f_data" method="POST" action="{$baseUrl}/flow-events-assign-save" enctype="multipart/form-data">
+            <fieldset>
+                {if $flowid}
+                <input type="hidden" name="flow_id" value="{$flowid}"/>
+                {/if} 
+                {if $id}
+                <input type="hidden" name="id" value="{$id}"/>
+                {/if} 
+
+                {element tag="bs.typeahead" attributes=[
+                'name' => 'event_id',
+                'label' => 'Aktualne wydarzenie',
+                'model' => 'FlowsEvents',
+                'value' => $data.event_id
+                ]}  
+                {element tag="bs.typeahead" attributes=[
+                'name' => 'previous_event_id',
+                'label' => 'Poprzednie wydarzenie',
+                'model' => 'FlowsEvents',
+                'value' => $data.previous_event_id
+                ]}
+                <!--  {element tag="bs.typeahead" attributes=[
+                  'name' => 'next_event_id',
+                  'label' => 'Następne wydarzenie',
+                  'model' => 'FlowsEvents',
+                  'value' => $data.next_event_id
+                  ]}-->
+                 <div class="form-group row">
+                    <label for="description" class="col-sm-4">Etykieta:</label>
+                    <div class="col-sm-8">
+                        <input type="text" name="label" id="label" class="form-control" value="{$data.label}">
+                    </div>
+                </div>
+                                <div class="form-group row">
+                    <label for="description" class="col-sm-4">Opis:</label>
+                    <div class="col-sm-8">
+                        <textarea type="text" name="description" id="description" class="form-control">{$data.description}</textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="checkbox"> 
+                        <label class="col-sm-4">Dwukierunkowy:    </label>         
+                        <input class="form-control" type="checkbox" name="bidirectional" value="1" {if $data.bidirectional}checked{/if} />    
+
+                    </div>
+                </div>
+                <div>
+                    <a href="{$baseUrl}"><input type="button" value="Powrót" class="btn"></a>
+                    <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+                </div>
+            </fieldset>
+            <div class="hiddenElement">
+                <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-2">
+        <div class="row">
+            <span class="input-group-btn show-notify" data-notify-text="#notify_activate_before_days">
+                    <button class="btn btn-info" type="button">?</button>
+                </span><div id="notify_activate_before_days" class="notify-message">Wydarzenie – czynność stanowiąca element przepływu/obiegu. Przykładowe nazwy czynności to: Usuwanie, Digitalizacja, Pobieranie, Skanowanie, Wysyłanie. Możliwe jest również definiowanie wydarzeń bardziej opisowych np. „Wymiana danych pomiędzy tabelą Kontrahenci w bazie danych, a tabelą Kontakty w systemie CRM.</div> 
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+</script>

@@ -1,0 +1,757 @@
+<style>
+    .ui-autocomplete {
+        max-height: 100px;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: hidden;
+        font-size:11px;
+        width:170px;
+    }
+    /* IE 6 doesn't support max-height
+     * we use height instead, but this forces the menu to always be this tall
+     */
+    * html .ui-autocomplete {
+        height: 100px;
+    }
+
+    /*.form-group{*/
+    /*background-color: red;        */
+    /*}*/
+
+    /*.form-control {*/
+    	/*width: 300px;*/
+    /*}*/
+    #multiple-datasets .league-name {
+        margin: 0 20px 5px 20px;
+        padding: 3px 0;
+        border-bottom: 1px solid #ccc;
+    }
+</style>
+<link rel="stylesheet" href="/assets/plugins/typeahead/typeahead.css">
+<link rel="stylesheet" href="/assets/plugins/gritter/css/jquery.gritter.css">
+<script src="/assets/plugins/angular/angular.min.js" type="text/javascript"></script>
+<script src="/assets/plugins/angular/angular-route.min.js" type="text/javascript"></script>
+<script src="/assets/plugins/angular/angular-resource.min.js" type="text/javascript"></script>
+<script src="/assets/plugins/angular/angular-messages.min.js" type="text/javascript"></script>
+<script src="/assets/plugins/angular/i18n/angular-locale_pl-pl.js" type="text/javascript"></script>
+<script src="/assets/plugins/underscorejs/underscore-min.js" type="text/javascript"></script>
+<script src="/assets/plugins/gritter/js/jquery.gritter.min.js" type="text/javascript"></script>
+<script src="/_gfx/js/app/zbiory/app.js" type="text/javascript"></script>
+<script>
+
+	$(document).ready(function(){
+		$('#change_opcje').click(function(){
+			if(confirm('Czy na pewno chcesz zmienić?')) {
+				$('.opcje-pol-zbioru').each(function(){
+					var selectedOptions = $('#pola_opcje_all').val();
+					for(var i in selectedOptions) {
+						var optionVal = selectedOptions[i];
+						$(this).find("option[value="+optionVal+"]").prop("selected", "selected");
+					}
+				});
+			}
+		});
+
+		$('.chbx_pola').on('ifChanged', function(){
+			var key = $(this).attr('data-key');
+			if($(this).is(':checked')) {
+				$('.pola_opcje[data-key="' + key + '"]').removeAttr('disabled');
+			} else {
+				$('.pola_opcje[data-key="' + key + '"]').attr('disabled', true);
+			}
+		});
+	});
+
+    $('#myTab a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    })
+    var arr = $.parseJSON('{$json}');
+    var select = '<select class="osoby_select" name="osoby[]">';
+    for(var key in arr)
+    {
+        if(arr.hasOwnProperty(key))
+        {
+            select += '<option value="' + arr[key].id + '">' + arr[key].login_do_systemu + '</option>';
+        }
+    }
+    select += '</select>'
+    var szablony = [];
+    {foreach $szablony as $s}
+    szablony[{$s.id}] = $.parseJSON('{$s.szablon}');
+    {/foreach}
+    {literal}
+    function selectos_change()
+    {
+        $(this).parent().parent().children().find('input.czy').attr('name', 'czytanie['+ $(this).val() +']');
+        $(this).parent().parent().children().find('input.poz').attr('name', 'pozyskiwanie['+ $(this).val() +']');
+        $(this).parent().parent().children().find('input.wpr').attr('name', 'wprowadzanie['+ $(this).val() +']');
+        $(this).parent().parent().children().find('input.mod').attr('name', 'modyfikacja['+ $(this).val() +']');
+        $(this).parent().parent().children().find('input.usu').attr('name', 'usuwanie['+ $(this).val() +']');
+    }
+    $(function (){
+        $("#osoby_do_zbioru .dodaj_osobe").on('click', function(ev){
+            ev.preventDefault();
+            $("#osoby_do_zbioru table tbody tr").removeClass('new_os');
+            $("#osoby_do_zbioru table tbody").prepend('  <tr class="new_os">	<td>' + select +'</td>'
+                    +'		<td><input type="checkbox" class="czy" name="czytanie[]"></td>'
+                    +'		<td><input type="checkbox" class="poz" name="pozyskiwanie[]"></td>'
+                    +'		<td><input type="checkbox" class="wpr" name="wprowadzanie[]"></td>'
+                    +'		<td><input type="checkbox" class="mod" name="modyfikacja[]"></td>'
+                    +'		<td><input type="checkbox" class="usu" name="usuwanie[]"></td><td><a class="usun_osobe" href="#">X</a></td>'
+                    +' </tr>');
+            $("#osoby_do_zbioru table tbody tr.new_os td input").fancyfields();
+            $("#osoby_do_zbioru table tbody tr.new_os td select").fancyfields();
+            $("#osoby_do_zbioru table tbody tr.new_os td select.osoby_select").change(selectos_change);
+            $("#osoby_do_zbioru table tbody tr.new_os td select.osoby_select").change();
+            $(".usun_osobe").unbind('click');
+            $(".usun_osobe").click(function (){
+                $(this).parent().parent().remove();
+                return false;
+            });
+        });
+
+        //szablony
+//	$("#szablony").fancyfields("bind","onSelectChange", function (input,text,val){
+//    	var szablon = szablony[val];
+//        if ($('#desc_' + val)) {
+//            $('#opis_zbioru').val($('#desc_' + val).val());
+//        }
+//    	$.each(szablony[val], function(i, item){
+//			var pole = $("input[name='pola["+ item +"]']");
+//			//console.log(item);
+//			if(pole.length)
+//			{
+//				pole.fancyfields("checked");
+//			}
+//			else
+//			{
+//				$("#wlasne_pola").prepend('<input checked="true" type="checkbox" name="pola['+ item +']"><label>'+ item +'</label>');
+//			  	$("#wlasne_pola > input[type=checkbox]").fancyfields();
+//			}
+//        });
+//	});
+        {/literal}
+        //var aktywny_szablon = $.parseJSON('{$zbior.opis_pol_zbioru}');
+        {literal}
+        /*$.each(aktywny_szablon, function (i, item){
+            var pole = $("input[name='pola["+ item +"]']");
+            if(pole.length)
+            {
+                //pole.fancyfields("checked");
+				App.checkChbx(pole);
+            }
+            else
+            {
+                $("#wlasne_pola").prepend('<input checked="true" type="checkbox" name="pola['+ item +']"><label>'+ item +'</label>');
+                //$("#wlasne_pola > input[type=checkbox]").fancyfields();
+				App.checkChbx("#wlasne_pola > input[type=checkbox]");
+            }
+        });*/
+
+        /*$("#szukaj_osoby").keyup(function (){
+         var text = $(this).val();
+         $("#osoby_do_zbioru table tr").show();
+         $("#osoby_do_zbioru table tr td").filter(function (){
+         return text.match("/^" + text + ".*$/");
+         }).parent('tr').hide();
+
+         });*/
+
+        var $rows = $('#osoby_do_zbioru table tr');
+        $('#szukaj_osoby').keyup(function() {
+
+            var val = '^(?=.*\\b' + $.trim($(this).val()).split(/\s+/).join('\\b)(?=.*\\b') + ').*$',
+                    reg = RegExp(val, 'i'),
+                    text;
+
+            $rows.show().filter(function() {
+                text = $(this).text().replace(/\s+/g, ' ');
+                return !reg.test(text);
+            }).hide();
+        });
+
+		/*
+        var pola = $.ajax({ async: false,
+            url: '/zbiory/getpola',
+            type: "GET",
+            global: false,
+            dataType: "json",
+            success: function(res){
+                return res;
+            }
+        }).responseText;
+        pola = $.parseJSON(pola);
+        $( "#tags" ).autocomplete({
+            source: pola
+        });
+		*/
+    });
+    {/literal}
+</script>
+<div class="errors"></div>
+<div class="col-sm-1 col-sm-offset-3" style="margin-top: -45px;">
+<button class="btn btn-primary btn-xs js-search " data-url="/ustawy/get-all" data-toggle="modal" data-target="#searchModal"><i
+        class="glyphicon glyphicon-search"> Wyszukaj</i></button>
+</div>
+<!--<h1 class="page-header">Zbiory</h1>-->
+<form name="f_profile" id="f_profile" class="fancy dodajzbior form-horizontal" action="/zbiory/save" method="post">
+<div role="tabpanel">
+    <ul class="nav nav-tabs"  role="tablist">
+        <li role="presentation" class="active"><a href="#home" data-toggle="tab" aria-controls="home" role="tab">Ogolnie informacja o zbiorze</a></li>
+        <li role="presentation"><a href="#pola-zbioru" data-toggle="tab" aria-controls="home" role="tab">Pola zbioru</a></li>
+        <li role="presentation"><a href="#aplikacje" data-toggle="tab" aria-controls="home" role="tab">Aplikacje</a></li>
+		<li role="presentation"><a href="#zabezpieczenia" data-toggle="tab" aria-controls="home" role="tab">Zabezpieczenia</a></li>
+        <li role="presentation"><a href="#users" data-toggle="tab" aria-controls="home" role="tab">Uzytkownicy</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="home">
+            <div class="form-group">
+                <label for="nazwa" class="col-sm-1 control-label">Nazwa</label>
+                <div class="col-sm-3">
+                    <input class="form-control" type="text" id="nazwa" name="nazwa" value="{$zbior.nazwa}">
+                </div>
+            </div>
+			<div class="form-group">
+                <label for="nazwa" class="col-sm-1 control-label">Data utworzenia</label>
+                <div class="col-sm-3">
+                    <input class="form-control datepicker-input" type="text" id="data_stworzenia" name="data_stworzenia" value="{$zbior.data_stworzenia}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="forma" class="col-sm-1 control-label">Forma</label>
+                <div class="col-sm-3">
+                    <select class="form-control" id="forma" name="forma">
+                    <option  {if $zbior.formaGromadzeniaDanych == 'papierowa'}selected{/if} value="papierowa">papierowa</option>
+                    <option  {if $zbior.formaGromadzeniaDanych == 'elektroniczna'}selected{/if} value="elektroniczna">elektroniczna</option>
+                   </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="poziom_bezpieczenstwa" class="col-sm-1 control-label">Poziom bezpieczenstwa</label>
+                <div class="col-sm-3">
+                    <select class="form-control" id="poziom_bezpieczenstwa" name="poziomBezpieczenstwa">
+                    <option {if $zbior.poziomBezpieczenstwa == 'A'}selected{/if} value="A">A</option>
+                    <option {if $zbior.poziomBezpieczenstwa == 'B'}selected{/if} value="B">B</option>
+                    <option {if $zbior.poziomBezpieczenstwa == 'C'}selected{/if} value="C">C</option>
+                </select></div>
+            </div>
+			<div class="form-group">
+                <label for="pomieszczenia" class="col-sm-1 control-label">Pomieszczenia</label>
+                <div class="col-md-3 checkout-list">
+                    {foreach $pomieszczenia as $p}
+					<label>
+						<input class="form-control" type="checkbox" {if (is_array($pomieszczenia_zbioru) && in_array($p.p_id, $pomieszczenia_zbioru))}checked{/if} name="pomieszczenia[]" value="{$p.p_id}">{$p.nazwa_pomieszczenia}
+					</label>
+
+					{/foreach}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="giodo" class="col-sm-1 control-label">Czy do GIODO</label>
+                <div class="col-sm-3">
+                    <select class="form-control" id="giodo" name="status">
+                    <option {if $zbior.status == 'zgloszony'}selected{/if} value="zgloszony">zgłoszony</option>
+                    <option {if $zbior.status == 'niepodlega'}selected{/if} value="niepodlega">nie podlega</option>
+                    <option {if $zbior.status == 'podlega_niezgloszony'}selected{/if} value="podlega_niezgloszony">podlega, nie zgłoszony</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="pochodzenie" class="col-sm-1 control-label">Pochodzenie danych</label>
+                <div class="col-sm-3">
+                    <select class="form-control" id="pochodzenie" name="pochodzenie_danych">
+                    <option {if $zbior.pochodzenie_danych== 'od osob ktorych dotycza'}selected{/if} value="od osob ktorych dotycza">od osób, których dotycza</option>
+                    <option {if $zbior.pochodzenie_danych== 'z innych zrodel'}selected{/if} value="z innych zrodel">z innych źródeł</option>
+                </select>
+                </div>
+            </div>
+			<div class="form-group">
+                <label for="powierzenie_danych" class="col-sm-1 control-label">Powierzenie przetwarzania danych osobowych</label>
+                <div class="col-sm-3">
+                    <select class="form-control " id="powierzenie_danych" name="powierzenie_danych">
+                    <option {if $zbior.powierzenie_przetwarzania_status== 0}selected{/if} value="0">brak</option>
+                    <option {if $zbior.powierzenie_przetwarzania_status== 1}selected{/if} value="1">administrator danych powierzył dane</option>
+					<option {if $zbior.powierzenie_przetwarzania_status== 2}selected{/if} value="2">administrator danych zamierza powierzyć</option>
+                </select>
+                </div>
+            </div>
+			<div class="form-group">
+                <label for="podstawa_prawna" class="col-sm-1 control-label">Podstawa prawna przetwarzania danych wrażliwych</label><br/>
+                <div class="col-sm-3">
+                    <select style='height: 200px; overflow-x: auto;' class="form-control" id="podstawa_prawna" name="podstawa_prawna[]" multiple>
+                    <option {if in_array(1, (array)json_decode($zbior.giodo_10_value))}selected{/if} value="1">osoby, których dane dotyczą, będą wyrażać na to zgodę na piśmie</option>
+                    <option {if in_array(2, (array)json_decode($zbior.giodo_10_value))}selected{/if} value="2">przepis szczególny innej ustawy zezwala na przetwarzanie bez zgody osoby, której dane dotyczą, jej danych osobowych - w przypadku odpowiedzi twierdzącej, należy podać odniesienie do przepisu tej ustawy</option>
+					<option {if in_array(3, (array)json_decode($zbior.giodo_10_value))}selected{/if} value="3">przetwarzanie danych jest niezbędne do ochrony żywotnych interesów osoby, której dane dotyczą lub innej osoby, gdy osoba, której dane dotyczą, nie jest fizycznie lub prawnie zdolna do wyrażenia zgody, do czasu ustanowienia opiekuna prawnego lub kuratora</option>
+					<option {if in_array(4, (array)json_decode($zbior.giodo_10_value))}selected{/if} value="4">przetwarzanie jest niezbędne do wykonania statutowych zadań kościoła, innego związku wyznaniowego, stowarzyszenia, fundacji lub innej niezarobkowej organizacji lub instytucji o celach politycznych, naukowych, religijnych, filozoficznych lub związkowych, a przetwarzanie danych dotyczy wyłącznie członków tej organizacji lub instytucji albo osób utrzymujących z nią stałe kontakty w związku z jej działalnością i zapewnione są pełne gwarancje ochrony przetwarzanych danych - w przypadku odpowiedzi twierdzącej należy podać jakich</option>
+					<option {if in_array(5, (array)json_decode($zbior.giodo_10_value))}selected{/if} value="5">przetwarzanie dotyczy danych, które są niezbędne do dochodzenia praw przed sądem</option>
+					<option {if in_array(6, (array)json_decode($zbior.giodo_10_value))}selected{/if} value="6">przetwarzanie jest niezbędne do wykonania zadań administratora danych odnoszących się do zatrudnienia pracowników i innych osób, a zakres przetwarzanych danych jest określony w ustawie</option>
+					<option {if in_array(7, (array)json_decode($zbior.giodo_10_value))}selected{/if} value="7">przetwarzanie jest prowadzone w celu ochrony stanu zdrowia, świadczenia usług medycznych lub leczenia pacjentów przez osoby trudniące się zawodowo leczeniem lub świadczeniem innych usług medycznych, zarządzania udzielaniem usług medycznych i są stworzone pełne gwarancje ochrony danych osobowych</option>
+					<option {if in_array(8, (array)json_decode($zbior.giodo_10_value))}selected{/if} value="8">przetwarzanie dotyczy danych, które zostały podane do wiadomości publicznej przez osobę, której dane dotyczą</option>
+					<option {if in_array(9, (array)json_decode($zbior.giodo_10_value))}selected{/if} value="9">przetwarzanie jest niezbędne do prowadzenia badań naukowych, w tym do przygotowania rozprawy wymaganej do uzyskania dyplomu ukończenia szkoły wyższej lub stopnia naukowego, a publikowanie wyników badań naukowych uniemożliwia identyfikację osób, których dane zostały przetworzone</option>
+					<option {if in_array(10, (array)json_decode($zbior.giodo_10_value))}selected{/if} value="10">przetwarzanie danych jest prowadzone przez stronę w celu realizacji praw i obowiązków wynikających z orzeczenia wydanego w postępowaniu sądowym lub administracyjnym</option>
+                </select>
+                </div>
+            </div>
+			<div class="form-group" id="przepis_1_div">
+                <label for="podstawa_prawna_1" class="col-sm-1 control-label">Przepis szczególny innej ustawy zezwala na przetwarzanie bez zgody osoby, której dane dotyczą, jej danych osobowych - w przypadku odpowiedzi twierdzącej, należy podać odniesienie do przepisu tej ustawy:</label>
+                <div class="col-sm-3">
+                    <textarea class="form-control" name="podstawa_prawna_1" rows="6" cols="50" id="podstawa_prawna_1">{$zbior.giodo_10_1_desc}</textarea>
+                </div>
+            </div>
+			<div class="form-group" id="przepis_2_div">
+                <label for="podstawa_prawna_2" class="col-sm-1 control-label">Przetwarzanie jest niezbędne do wykonania statutowych zadań kościoła, innego związku wyznaniowego, stowarzyszenia, fundacji lub innej niezarobkowej organizacji lub instytucji o celach politycznych, naukowych, religijnych, filozoficznych lub związkowych, a przetwarzanie danych dotyczy wyłącznie członków tej organizacji lub instytucji albo osób utrzymujących z nią stałe kontakty w związku z jej działalnością i zapewnione są pełne gwarancje ochrony przetwarzanych danych - w przypadku odpowiedzi twierdzącej należy podać jakich:</label>
+                <div class="col-sm-3">
+                    <textarea class="form-control" name="podstawa_prawna_2" rows="16" cols="50" id="podstawa_prawna_2">{$zbior.giodo_10_2_desc}</textarea>
+                </div>
+            </div>
+			<div class="form-group">
+                <label for="cel_przetwarzania_danych" class="col-sm-1 control-label">Cel przetwarzania</label>
+                <div class="col-sm-3">
+                    <textarea class="form-control " name="cel_przetwarzania_danych" rows="5" cols="50" id="cel_przetwarzania_danych">{$zbior.cel_przetwarzania_danych}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="description" class="col-sm-1 control-label">Opis zbioru</label>
+                <div class="col-sm-3">
+                    <textarea class="form-control " name="description" rows="5" cols="50" id="description">{$zbior.opis_zbioru}</textarea>
+                </div>
+            </div>
+			<div class="form-group">
+                <label for="dane_zbierane" class="col-sm-1 control-label">Dane do zbioru będą zbierane</label>
+                <div class="col-sm-3">
+                    <select class="form-control " id="dane_zbierane" name="dane_zbierane[]" multiple>
+                    <option {if in_array(1, (array)json_decode($zbior.dane_do_zbioru_beda_zbierane_status))}selected{/if} value="1">od osób, których dotyczą</option>
+                    <option {if in_array(2, (array)json_decode($zbior.dane_do_zbioru_beda_zbierane_status))}selected{/if} value="2">z innych źródeł niż osoba, której dane dotyczą</option>
+                </select>
+                </div>
+            </div>
+			<div class="form-group">
+                <label for="dane_udostepniane" class="col-sm-1 control-label">Dane ze zbioru będą udostępniane</label>
+                <div class="col-sm-3">
+                    <select class="form-control " id="dane_udostepniane" name="dane_udostepniane">
+                    <option {if $zbior.dane_ze_zbioru_beda_udostepniane_status== 0}selected{/if} value="0">brak</option>
+                    <option {if $zbior.dane_ze_zbioru_beda_udostepniane_status== 1}selected{/if} value="1">podmiotom innym, niż upoważnione na podstawie przepisów prawa</option>
+                </select>
+                </div>
+            </div>
+			<div class="form-group">
+                <label for="odbiorcy" class="col-sm-1 control-label">Odbiorcy lub kategorie odbiorców, którym dane mogą być przekazywane - należy podać nazwę i adres siedziby lub nazwisko, imię i adres miejsca zamieszkania odbiorcy danych:</label>
+                <div class="col-sm-3">
+                    <textarea class="form-control " name="odbiorcy" rows="5" cols="50" id="odbiorcy">{$zbior.odbiorcy_danych}</textarea>
+                </div>
+            </div>
+			<div class="form-group">
+                <label for="nazwa_panstwa_3" class="col-sm-1 control-label"> Informacja dotycząca ewentualnego przekazywania danych do państwa trzeciego - należy podać nazwę państwa:</label>
+                <div class="col-sm-3">
+                    <textarea class="form-control " name="nazwa_panstwa_3" rows="5" cols="50" id="nazwa_panstwa_3">{$zbior.nazwa_panstwa_3}</textarea>
+                </div>
+            </div>
+			<div class="form-group">
+                <label for="prowadzenie_danych" class="col-sm-1 control-label">Zbiór danych osobowych prowadzony jest:</label><br/>
+                <div class="col-sm-3"><select style='height: 200px; overflow-x: auto;'  class="form-control " id="prowadzenie_danych" name="prowadzenie_danych[]" multiple>
+                    <option {if in_array(1, (array)json_decode($zbior.prowadzenie_danych))}selected{/if} value="1">a) centralnie</option>
+                    <option {if in_array(2, (array)json_decode($zbior.prowadzenie_danych))}selected{/if} value="2">b) w architekturze rozproszonej</option>
+					<option {if in_array(3, (array)json_decode($zbior.prowadzenie_danych))}selected{/if} value="3">a) wyłącznie w postaci papierowej</option>
+					<option {if in_array(4, (array)json_decode($zbior.prowadzenie_danych))}selected{/if} value="4">b) z użyciem systemu informatycznego</option>
+					<option {if in_array(5, (array)json_decode($zbior.prowadzenie_danych))}selected{/if} value="5">a) z użyciem co najmniej jednego urządzenia systemu informatycznego służącego do przetwarzania danych osobowych połączonego z siecią publiczną (np. Internetem)</option>
+					<option {if in_array(6, (array)json_decode($zbior.prowadzenie_danych))}selected{/if} value="6">b) bez użycia żadnego z urządzeń systemu informatycznego służącego do przetwarzania danych osobowych połączonego z siecią publiczną (np. Internetem)</option>
+                </select>
+                </div>
+            </div>
+			<div class="form-group">
+                <label for="podstawa_prawna_prowadzenie" class="col-sm-1 control-label">Podstawa prawna upoważniająca do prowadzenia zbioru danych:</label>
+                <div class="col-sm-3">
+                    <select style='height: 200px; overflow-x: auto;'  class="form-control " id="podstawa_prawna_prowadzenie" name="podstawa_prawna_prowadzenie[]" multiple><br/>
+                    <option {if in_array(1, (array)json_decode($zbior.podstawa_prawna_prowadzenie))}selected{/if} value="1">zgoda osoby, której dane dotyczą, na przetwarzanie danych jej dotyczących</option>
+                    <option {if in_array(2, (array)json_decode($zbior.podstawa_prawna_prowadzenie))}selected{/if} value="2">przetwarzanie jest niezbędne do zrealizowania uprawnienia lub spełnienia obowiązku wynikającego z przepisu prawa</option>
+					<option {if in_array(3, (array)json_decode($zbior.podstawa_prawna_prowadzenie))}selected{/if} value="3">przetwarzanie jest konieczne do realizacji umowy, gdy osoba, której dane dotyczą, jest jej stroną lub gdy jest to niezbędne do podjęcia działań przed zawarciem umowy na żądanie osoby, której dane dotyczą</option>
+					<option {if in_array(4, (array)json_decode($zbior.podstawa_prawna_prowadzenie))}selected{/if} value="4">przetwarzanie jest niezbędne do wykonania określonych prawem zadań realizowanych dla dobra publicznego - w przypadku odpowiedzi twierdzącej, należy opisać te zadania</option>
+					<option {if in_array(5, (array)json_decode($zbior.podstawa_prawna_prowadzenie))}selected{/if} value="5">przetwarzanie jest niezbędne do wypełnienia prawnie usprawiedliwionych celów realizowanych przez administratorów danych albo odbiorców danych, a przetwarzanie nie narusza praw i wolności osoby, której dane dotyczą</option>
+                </select>
+                </div>
+            </div>
+			<div class="form-group" id="podstawa_1_div">
+                <label for="podstawa_prawna_prowadzenie_opis_ustawy" class="col-sm-1 control-label">Przetwarzanie jest niezbędne do zrealizowania uprawnienia lub spełnienia obowiązku wynikającego z przepisu prawa:</label>
+                <div class="col-sm-3">
+                    <textarea class="form-control" name="podstawa_prawna_prowadzenie_opis_ustawy" rows="5" cols="50" id="podstawa_prawna_prowadzenie_opis_ustawy">{$zbior.podstawa_prawna_prowadzenie_opis_ustawy}</textarea>
+                </div>
+            </div>
+			<div class="form-group" id="podstawa_2_div">
+                <label for="podstawa_prawna_prowadzenie_zadania" class="col-sm-1 control-label">Przetwarzanie jest niezbędne do wykonania określonych prawem zadań realizowanych dla dobra publicznego - w przypadku odpowiedzi twierdzącej, należy opisać te zadania:</label>
+                <div class="col-sm-3">
+                    <textarea class="form-control" name="podstawa_prawna_prowadzenie_zadania" rows="5" cols="50" id="podstawa_prawna_prowadzenie_zadania">{$zbior.podstawa_prawna_prowadzenie_zadania}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="szablony" class="col-sm-1 control-label">Szablony pól</label>
+                <div class="col-sm-3">
+                    <select class="form-control" id="szablony" name="szablony">
+                    <option>wybierz</option>
+                    {foreach $szablony as $szablon}
+                    <option value='{$szablon.id}'>{$szablon.nazwa}</option>
+                    {/foreach}
+                </select>
+                </div>
+            </div>
+            {foreach $szablony as $szablon}
+            {if $szablon.description}
+            <input type="hidden" id="desc_{$szablon.id}" name="desc_{$szablon.id}" value="{$szablon.description}" />
+            {/if}
+            {/foreach}
+            <br />
+            <fieldset style="margin-left:0;">
+                <a href="#pola-zbioru" data-toggle="tab" class="btn btn-info">Dalej</a>
+            </fieldset>
+        </div>
+
+        <div class="tab-pane" id="pola-zbioru" ng-app ="app">
+            <div ng-controller="IndexCtrl">
+                <div ng-include="'/_gfx/js/app/zbiory/views/partials/personModal.html'"></div>
+                <span ng-if="dFields">
+                 <div ng-include="'/_gfx/js/app/zbiory/views/partials/typeModal.html'"></div>
+                </span>
+                 <span ng-if="dFields">
+                 <div ng-include="'/_gfx/js/app/zbiory/views/partials/fieldModal.html'"></div>
+                 </span>
+                <br />
+                <br/>
+                <div>
+                    <ul class="nav nav-tabs js-ang-ul" role="tablist">
+                        <li role="presentation" ng-repeat="(pk,pv) in form.person"><a href="#<%pk%>" aria-controls="home" role="tab" data-toggle="tab"><%pk%></a></li>
+                        <li role="presentation"><button class="btn btn-primary btn" type="button" data-toggle="modal" data-target="#personModal"><i class="glyphicon glyphicon-plus"></i></button></li>
+                    </ul>
+                    <div class="tab-content js-ang-tab">
+                        <div role="tabpanel" class="tab-pane" ng-repeat="(pk,pv) in form.person" id="<%pk%>">
+                            <button class="btn btn-primary btn-xs" type="button" ng-click="setTypes('#typeModal', pk)"><i class="glyphicon glyphicon-plus"> Dodaj</i></button>
+                              <fieldset ng-repeat="(tk,tv) in form.type[pk]">
+                                 <legend><button class="btn btn-primary btn-xs" type="button" ng-click="setFields(tv, '#fieldModal', pk,tk)"><i class="glyphicon glyphicon-plus"></i></button> <%tk%></legend>
+                                <div class="container-fluid col-md-3">
+                                    <div class="checkbox" >
+                                    <label class="col-md-3" ng-repeat="(fk,fv) in form.field[pk][tk]">
+                                        <input type="checkbox" class="angular" ng-model="form.details[pk][tk][fk]"><%fk%>
+                                    </label>
+                                </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-xs col-md-offset-3" type="button" ng-click="save()"><i class="glyphicon glyphicon-plus"> Zapisz</i></button>
+            </div>
+            <br />
+            <fieldset style="margin-left:0;">
+                <a href="#aplikacje" data-toggle="tab" class="btn btn-info js-next">Dalej</a>
+            </fieldset>
+        </div>
+
+        <div class="tab-pane" id="aplikacje">
+            <table id="app_tab" class="table" style="max-width:35% !important; overflow-x: auto;">
+                <thead>
+                <tr>
+                    <th>nazwa</th>
+                    <th>wersja</th>
+                    <th>zaznacz</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $apps as $a}
+                <tr>
+                    <td>{$a.nazwa|ucfirst}</td>
+                    <td>{$a.wersja}</td>
+                    <td><input type="checkbox" {if array_key_exists('assigned',$a)}checked="true"{/if} name="apps[]" value="{$a.id}"></td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+            <br />
+            <fieldset style="margin-left:0;">
+                <a href="#zabezpieczenia" data-toggle="tab" class="btn btn-info">Dalej</a>
+            </fieldset>
+        </div>
+		<div class="tab-pane" id="zabezpieczenia">
+            <table id="zabezpieczenia_tab" class="table" style="max-width:35% !important; overflow-x: auto;">
+                <thead>
+                <tr>
+					<th>zaznacz</th>
+                    <th>nazwa</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $zabezpieczenia as $z}
+                <tr>
+                    <td><input type="checkbox" {if in_array($z.id, (array)json_decode($zbior.zabezpieczenia))}checked="true"{/if} name="zabezpieczenia[]" value="{$z.id}"></td>
+					<td>{$z.nazwa}</td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+            <br />
+            <fieldset style="margin-left:0;">
+                <a href="#users" data-toggle="tab" class="btn btn-info">Dalej</a>
+            </fieldset>
+        </div>
+        <div class="tab-pane" id="users" style="max-width:35% !important;">
+            <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+                <thead>
+                <tr>
+                    <th>identyfikator</th>
+                    <th>czytanie</th>
+                    <th>pozyskiwanie</th>
+                    <th>wprowadzanie</th>
+                    <th>modyfikacja</th>
+                    <th>usuwanie</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $osoby as $o}
+                <tr class="new_os">
+                    <td>
+                        {$o.imie} {$o.nazwisko}
+                    </td>
+                    <td><input disabled {if array_key_exists('czytanie',$o.upowaznienia) && $o.upowaznienia.czytanie}checked="true"{/if} type="checkbox" class="czy readonly" name="u_{$o.id}[czytanie]"></td>
+                    <td><input disabled {if array_key_exists('pozyskiwanie',$o.upowaznienia) && $o.upowaznienia.pozyskiwanie}checked="true"{/if} type="checkbox" class="poz readonly" name="u_{$o.id}[pozyskiwanie]"></td>
+                    <td><input disabled {if array_key_exists('wprowadzanie',$o.upowaznienia) && $o.upowaznienia.wprowadzanie}checked="true"{/if}  type="checkbox" class="wpr readonly" name="u_{$o.id}[wprowadzanie]"></td>
+                    <td><input disabled {if array_key_exists('modyfikacja',$o.upowaznienia)  && $o.upowaznienia.modyfikacja}checked="true"{/if}  type="checkbox" class="mod readonly" name="u_{$o.id}[modyfikacja]"></td>
+                    <td><input disabled {if array_key_exists('usuwanie',$o.upowaznienia) && $o.upowaznienia.usuwanie}checked="true"{/if}  type="checkbox" class="usu readonly" name="u_{$o.id}[usuwanie]"></td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+            <br/>
+            <fieldset style="margin-left:0;">
+                <input type="hidden" name="id" value="{$id}" id="formId">
+                <input type="submit" class="btn btn-info" value="Zapisz" />
+            </fieldset>
+        </div>
+    </div>
+
+
+
+    {*
+    <fieldset id="osoby_do_zbioru">
+        <legend>Osoby upoważnione do zbioru</legend>
+
+        <input style="float:left; clear:both;" type="button" class="dodaj_osobe" value="dodaj osobę" >
+    </fieldset>
+    *}
+
+    </div>
+</form>
+<style>
+    #searchModal .tab-content{
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    #searchModal .modal-footer label{
+        float: left;
+    }
+</style>
+<div class="modal fade bs-example-modal-lg" id="searchModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div id="messages"></div>
+                <br/>
+
+                <div id="the-basics">
+                    <input class="typeahead" type="text" id="typeahead" data-provide="typeahead"
+                           style="background-color: none;">
+                </div>
+            </div>
+            <div class="modal-body">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#us" aria-controls="us" role="tab"
+                                                                  data-toggle="tab">Ustawy</a></li>
+                        <li role="presentation"><a href="#ro" aria-controls="ro" role="tab" data-toggle="tab">Rozporządzenia</a>
+                        </li>
+                        <li role="presentation"><a href="#in" aria-controls="in" role="tab" data-toggle="tab">Inne</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="us"></div>
+                        <div role="tabpanel" class="tab-pane" id="ro"></div>
+                        <div role="tabpanel" class="tab-pane" id="in"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-horizontal col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="type">Typ:</label>
+                                    <select class="form-control" id="type">
+                                        <option value="1">Ustawa</option>
+                                        <option value="2">Rozporządzenia</option>
+                                        <option value="3">Inne</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-md-offset-1">
+                                <div class="form-group">
+                                    <label for="signature">Sygnatura:</label>
+                                    <input type="text" id="signature" name="signature" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="content">Treść:</label>
+                                    <textarea id="content" class="form-control" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-default" id="rdo-button">Dodaj</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade bs-example-modal-lg" id="polaModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Wybierz</h4>
+                <br/>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal col-md-12">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="type">Usaw Typ:</label>
+                                <select class="form-control" multiple>
+                                    {foreach $opcje_pol as $opcja}
+                                    <option value="{$opcja}">{$opcja}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <button type="button" class="btn btn-default" style="margin-top: 25px;"><i class="glyphicon glyphicon-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <form class="form-inline" action="/zbiory/add-type">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <p class="form-control-static">Dodaj Typ pola</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="sr-only">Typ pola</label>
+                                <input type="text" class="form-control" name="nazwa" placeholder="Typ pola">
+                            </div>
+                            <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i></button>
+                        </div>
+                    </form>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <form class=" form-inline" action="/zbiory/add-fields">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <p class="form-control-static">Dodaj pole</p>
+                            </div>
+                            <div class="form-group" style="margin-left: 15px;">
+                                <label class="sr-only">Nazwa</label>
+                                <input type="text" class="form-control" placeholder="Nazwa" name="nazwa">
+                            </div>
+                            <div class="form-group">
+                                <label class="sr-only">Typ</label>
+                                <select class="form-control" placeholder="Typ" name="s_zbiory_pola_typ_id">
+                                    {foreach $typ as $opcja}
+                                    <option value="{$opcja.id}">{$opcja.nazwa}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-default" style="margin-left: 10px;"><i class="glyphicon glyphicon-plus"></i></button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+	backendUtilities.addVatidationEngine("f_profile");
+	$('.content-page').css('min-width', '3500px');
+
+
+	if($('#podstawa_prawna option[value="2"]').is(':selected')) {
+		$('#przepis_1_div').css('display', 'block');
+	} else {
+		$('#przepis_1_div').css('display', 'none');
+	}
+	if($('#podstawa_prawna option[value="4"]').is(':selected')) {
+		$('#przepis_2_div').css('display', 'block');
+	} else {
+		$('#przepis_2_div').css('display', 'none');
+	}
+	$('#podstawa_prawna').change(function(){
+		if($('#podstawa_prawna option[value="2"]').is(':selected')) {
+			$('#przepis_1_div').css('display', 'block');
+		} else {
+			$('#przepis_1_div').css('display', 'none');
+		}
+		if($('#podstawa_prawna option[value="4"]').is(':selected')) {
+			$('#przepis_2_div').css('display', 'block');
+		} else {
+			$('#przepis_2_div').css('display', 'none');
+		}
+	});
+
+
+	if($('#podstawa_prawna_prowadzenie option[value="2"]').is(':selected')) {
+		$('#podstawa_1_div').css('display', 'block');
+	} else {
+		$('#podstawa_1_div').css('display', 'none');
+	}
+	if($('#podstawa_prawna_prowadzenie option[value="4"]').is(':selected')) {
+		$('#podstawa_2_div').css('display', 'block');
+	} else {
+		$('#podstawa_2_div').css('display', 'none');
+	}
+	$('#podstawa_prawna_prowadzenie').change(function(){
+		if($('#podstawa_prawna_prowadzenie option[value="2"]').is(':selected')) {
+			$('#podstawa_1_div').css('display', 'block');
+		} else {
+			$('#podstawa_1_div').css('display', 'none');
+		}
+		if($('#podstawa_prawna_prowadzenie option[value="4"]').is(':selected')) {
+			$('#podstawa_2_div').css('display', 'block');
+		} else {
+			$('#podstawa_2_div').css('display', 'none');
+		}
+	});
+});
+</script>
+<script src="/_gfx/js/controllers/zbiory/ui-rejestrZbiorow.js"></script>
+<script src="/_gfx/js/controllers/zbiory/ui-search.js"></script>
+<script src="/assets/plugins/mustache/mustache.min.js"></script>
+<script src="/assets/plugins/typeahead/typeahead.bundle.min.js"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        UIZbioryRejestr.init();
+        UISearch.init();
+    });
+</script>

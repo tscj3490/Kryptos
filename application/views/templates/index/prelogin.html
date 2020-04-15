@@ -1,0 +1,45 @@
+<div id="logging">
+    <div class="login-widget">
+        <div class="logo">
+            <img src="/assets/images/kryptos.jpg">
+        </div>
+        <div class="infoText">
+            <h1>LOGOWANIE</h1>
+        </div>
+        <div class="section">
+            {if $message}
+                <div class="errorMessage">
+                    <span>{$message}</span>
+                </div>
+            {/if}
+            <div class="loginBox">
+                <form method="post" action="/index/login" id="loginForm">
+                    <input type="text" style="display:none">
+                    <input type="password" style="display:none">
+                    <div class="form-group login">
+                        <i class="fa fa-user overlay"></i>
+                        <input type="text" name="login_pre" value="{$login}" disabled>
+                    </div>
+                    <div class="form-group password">{*
+                        *}{math equation="floor(418/x-5)" x=$length assign=width}{*
+                        *}{for $i = 0, $empty = 0; $i < $length; $i++}{$j = $i+1}{*
+                            *}<div style="width:{$width}px">
+                                <input type="password" name="password[{$i}]" class="password" maxlength="1" {if $gwiazdki[$i]} value="0" disabled{else}data-key="{$empty++}"{/if} maxlength="1">
+                                <span>{$j}</span>
+                            </div>{*
+                        *}{/for}{*
+                    *}</div>
+                    <div class="form-group submit">
+                        <a href="/" class="btn btn-back">Anuluj</a>
+                        <input type="submit" name="submit" class="btn btn-submit" value="Zaloguj">
+                    </div>
+
+                    <input type="hidden" name="login" id="login" value="{$login}"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{include file="index/_login-script.html"}
+

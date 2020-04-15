@@ -1,0 +1,38 @@
+{$message}
+<form name="f_data" id="f_data" method="POST" action="/numberingschemes/save" id="dataform-add">
+    <fieldset>
+        <div class="form-group row">
+            <label for="name" class="col-sm-2">Nazwa:</label>
+            <div class="col-sm-4"><input type="text" name="name" id="name"  class="form-control validate[required]" value="{$data.name}"></div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-sm-2">Schemat:</label>
+            <div class="col-sm-4">
+               <input type="text" name="scheme" id="scheme"  class="form-control validate[required]" value="{$data.scheme}" style="text-transform:none;" />
+               <div style="height:10px;"></div>
+               [nr] - nr porządkowy; [dd] - dzień; [mm] - miesiąc; [kw] - kwartał; [yyyy] - rok
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-sm-2">Rodzaj numeracji:</label>
+            <div class="col-sm-4"><select name="type" id="type" class="form-control validate[required]">
+               <option value="1" {if $data.type == 1}selected="selected"{/if}>dzienna</option>
+               <option value="2" {if $data.type == 2}selected="selected"{/if}>miesięczna</option>
+               <option value="3" {if $data.type == 3}selected="selected"{/if}>kwartalna</option>
+               <option value="4" {if $data.type == 4}selected="selected"{/if}>roczna</option>
+            </select></div>
+        </div>
+        <div class="">
+            <a href="/numberingschemes/"><input type="button" value="Powrót"  class="btn"  ></a>
+            <input type="button" value="Zapisz"  class="btn btn-info" onclick="{if $i_docs > 0}bootbox.confirm('<h3>Ważna informacja</h3>W systemie istnieje co najmniej jeden dokument korzystający z tego schematu numeracji. Modyfikacja tego schematu numeracji spowoduje przeniesienie powiązanych z nim dokumentów do archiwum.<br /><br />Czy na pewno chcesz wykonać operację?',function(result){ if ( result == true ) { $('#formsubbmit').click(); } });{else}$('#formsubbmit').click();{/if}" >
+            <div style="width:0px;height:0px;overflow:hidden;">
+               <input id="formsubbmit" type="submit" value="Zapisz"  class="btn btn-info" >
+            </div>
+            <input type="hidden" name="id" id="id" value="{$data.id}" />
+        </div>
+    </fieldset>
+</form>
+
+<script type="text/javascript">
+	backendUtilities.addVatidationEngine("f_data");
+</script>

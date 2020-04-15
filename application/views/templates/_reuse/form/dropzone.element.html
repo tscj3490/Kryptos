@@ -1,0 +1,73 @@
+{assign var="sectionId" value="ta"|set_id}
+{if empty($params.attributes.id)}
+    {assign var="id" value=$params.attributes.name|set_id}
+{else}
+    {assign var="id" value=$params.attributes.id}
+{/if}
+
+<div class="form-group row">
+    <label for="{$id}" class="col-sm-4">{$params.attributes.label}:</label>
+    <div class="col-sm-8">
+        <input type="hidden" name="{$params.attributes.name}_uploaded" value="" class="uploaded-files-input">
+        <div class="row">
+            <div class="col-sm-12 portlets ui-sortable">
+                <!-- Your awesome content goes here -->
+                <div class="widget messages-dropzone">
+                    <div id="attachments-dropzone-{$sectionId}" class="dropzone">
+                        <div class="dz-default dz-message"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="gallery-wrap">
+            {if $attributes.multiple}
+
+            {elseif $params.attributes.current_files}
+                <div class="column">
+                    <div class="inner">
+                        <a title="{$params.attributes.current_files[0].name}" href="/files/download/t/{$params.attributes.current_files[0].token}" target="_blank">
+                            <div class="img-wrap">
+                                <img class="mfp-fade" title="{$params.attributes.current_files[0].name}" src="/files/thumbnail/t/{$params.attributes.current_files[0].token}">
+                            </div>
+                            <div class="caption-static">
+                                {$params.attributes.current_files[0].name} ({$params.attributes.current_files[0].size|filesize})
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            {/if}
+        </div>
+    </div>
+</div>
+
+{literal}
+<script>
+    (function() {
+        var dropzoneId = '#attachments-dropzone-{/literal}{$sectionId}{literal}';
+        documentDropzone = enableDropzoneWidget(dropzoneId, {
+            url: '/upload.php',
+            params: {
+                dirname: 'default'
+            }
+        });
+
+        var row = $(dropzoneId).closest('.form-group'),
+            form = $(dropzoneId).closest('form');
+
+        form.on('submit', function() {
+            var uploadedFiles = documentDropzone.getAcceptedFiles(),
+                filesData = [];
+
+            $.each(uploadedFiles, function() {
+                filesData.push({
+                    name: this.name,
+                    uploadedUri: this.xhr.response
+                });
+            });
+
+            row.find('.uploaded-files-input').val(JSON.stringify(filesData));
+        });
+    })();
+</script>
+{/literal}

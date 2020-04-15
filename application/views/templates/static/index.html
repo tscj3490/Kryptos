@@ -1,0 +1,33 @@
+{if $lang == 'pl'}
+	{if $page.content}
+		{$page.content}
+	{else}
+		Brak zawartości strony
+	{/if}
+{elseif $lang =='en'}
+	{if $page.content_en}
+		{$page.content_en}
+	{else}
+        <section class="contact-page clearfix" id="main">
+        <article class="block">
+        <h1>Unavaiable content</h1>
+        <p>
+		There is no available content for this site in English.
+        </p>
+        </article>
+        </section>
+	{/if}	
+{elseif $lang =='de'}
+	{if $page.content_de}
+		{$page.content_de}
+	{else}
+       <section class="contact-page clearfix" id="main">
+        <article class="block">
+        <h1>Unavaiable content</h1>
+        <p>
+		Es gibt keine verfügbaren Inhalte für diese Webseite in deutscher Sprache..
+        </p>
+        </article>
+        </section>
+	{/if}	
+{/if}

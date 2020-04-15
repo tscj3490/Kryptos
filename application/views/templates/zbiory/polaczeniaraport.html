@@ -1,0 +1,24 @@
+
+{foreach from=$polaczenia key=zbior item=polaczoneZbiory}
+<div style="text-align: left">
+    <hr>
+    <h1 style="padding-bottom:10px">Zbiór: {$zbiory[$zbior]}</h1>
+    <ul>
+        {foreach from=$polaczoneZbiory key=polaczonyZbior item=polaczoneOsoby}
+        <li style="margin-bottom:5px">
+            <span style="font-size:14px">ma połączenia ze zbiorem <b>{$zbiory[$polaczonyZbior]}</b>:</span>
+            <ul style="padding-left:20px">
+                {foreach from=$polaczoneOsoby key=osoba item=polaczonePola}
+                <li><b>{$osoby[$osoba]}: </b>
+                    {foreach from=$polaczonePola item=pole}
+                    {if $pole@iteration > 1}, {/if}{$pole}
+                    {/foreach}
+                </li>
+                {/foreach}
+            </ul>
+        </li>
+        <span style="font-size:2px">&nbsp;</span>
+        {/foreach}
+    </ul>
+</div>
+{/foreach}

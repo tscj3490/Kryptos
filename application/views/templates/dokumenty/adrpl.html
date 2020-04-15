@@ -1,0 +1,87 @@
+{$message}
+
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#adr" data-toggle="tab">Adresaci</a></li>
+    <li><a href="#odb" data-toggle="tab">Odbiorcy</a></li>
+</ul>
+<div class="tab-content">
+    <div class="tab-pane active form-horizontal" id="adr" style="padding:15px 5px">
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Termin zapoznania</label>
+            <div class="col-sm-3">
+                <form id="forall" name="forall" action="/dokumenty/forall" method="POST" class="form-horizontal" role="form">
+                    <input id="data_zap" name="data_zap" type="text" class="form-control datepicker-input" >
+                    <input type="hidden" name="plid" id="id" value="{$plikid}" />
+                </form>
+            </div>
+            <input type="submit" value="Wyślij do wszystkich"  class="btn btn-info" form="forall" >
+            <input type="submit" value="Wyślij do wybranych"  class="btn btn-info" onclick="getValue()"  form="forany">
+        </div>
+        <form  id="forany" action="/dokumenty/saveadrpl" method="POST" class="form-horizontal" role="form">
+            <table id="adres" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example"  >
+                <thead>
+                    <tr>
+                        <td>Imię i nazwisko</td>
+                        <td>Dział</td>
+                        <td>Login</td>
+                        <td style="width: 50px">Akcja</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach $adresaci as $a}
+                    <tr>
+                        <td>{$a.imie} {$a.nazwisko}</td>
+                        <td>{$a.dzial}</td>
+                        <td>{$a.login_do_systemu}</td>
+                        <td>
+
+                            <input type="checkbox" name="{$a.id}" id="dat{$a.id}" value="send"/>
+
+                        </td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+            </table>
+            
+            <input type="hidden" name="plid" id="id" value="{$plikid}" />
+            <input type="hidden" name="data" id="data" />
+        </form>
+    </div>
+
+
+    <div class="tab-pane" id="odb" style="padding:15px 5px">
+        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example" >
+            <thead>
+                <tr>
+                    <td>Imię i nazwisko</td>
+                    <td> Przeczytane</td>
+                    <td style="width: 50px">Akcja</td>
+                </tr>
+            </thead>
+            <tbody>
+                {foreach $odbiorcy as $a}
+                <tr>
+                    <td>{$a.imie} {$a.nazwisko}</td>
+
+                    <td> {if $a.status==0}nie{else}tak{/if}</td>
+
+                    <td>
+                        <a class="glyphicon glyphicon-trash" title="usuń" href="/dokumenty/adresacius/idodb/{$a.osoba_id}/idplik/{$plikid}"></a>
+                    </td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+        Przeczytanych {$prz} z {$sum}
+    </div>
+</div>
+
+<script>
+    function getValue()
+    {
+        var d1 = document.getElementById("data_zap");
+        var d2 = document.getElementById("data");
+        d2.value = d1.value;
+    }
+</script>

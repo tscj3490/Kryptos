@@ -1,0 +1,37 @@
+{include file='modals/modal.tpl' title='Przepływy - co to jest?' content='Funkcja ta pozwala zrealizować nie tylko jedno z podstawowych i jasno określonych wymagań Ustawy o ochronie danych osobowych, ale również zobrazować mnóstwo innych procedur i procesów. Zacznijmy jednak od opisu czym są przepływy. Co to jest? Schemat przepływu obrazuje w jaki sposób krążą informacje lub dane osobowe w organizacji. Rozpatrzmy przypadek przepływu wniosku o wydanie zaświadczenia o zatrudnieniu. Zacznijmy od zdefiniowania wydarzeń czyli akcji, jakie występują podczas procedury wydawania zaświadczenia. Pierwsza akcja to złożenie wniosku o wydanie zaświadczenia, nazwijmy to wydarzenie „PRZYJĘCIE”, drugie wydarzenie to weryfikacja wniosku, nazwijmy ją „WERYFIKACJA”, trzecie wydarzenie to opracowanie zaświadczenia, nazwijmy je „OPRACOWANIE” i ostatnia akcja czyli wydanie zaświadczenia i wpisanie tego faktu do ewidencji, nazwijmy ją „PRZEKAZANIE i ZAREJESTROWANIE”. Czyli najpierw przyjmujemy, sprawdzamy, potem wypisujemy zaświadczenie i przekazujemy je wnioskodawcy. Z punktu widzenia ochrony danych osobowych, opisujemy przepływ pomiędzy zbiorem „Rejestr wydanych zaświadczeń”, a zbiorem Danych Kadrowych, a dokładnie dla elementu „Wniosek o wydanie zaświadczenia” oraz „Zaświadczenie”, uwzględniając pola danych osobowych i kategorie osób. Brzmi to nieco skomplikowanie, prawda? Po to został stworzony Kryptos24, by uprościć nam życie.'}
+<div class="table-operations-header">
+    {if $auth->isGranted('node/flows/update')}
+    <a class="btn btn-success" href="{$baseUrl}/update" data-title="Dodaj obieg" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj przepływ</a>
+    {/if}
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+        <tr>
+            <th data-filter-type="string">Nazwa</th>
+            <th data-filter-type="date-range">Data dodania</th>
+            <th data-filter-type="date-range">Data edycji</th>
+
+            <th>Operacje</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach $paginator as $d}
+        <tr>
+            <td>{$d.name}</td>
+            <td>{smart_date value=$d.date_added}</td>
+            <td>{smart_date value=$d.date_edited}</td>
+            <td class="operations">
+                <a class="glyphicon glyphicon-eye-open" href="/flows/events-details/flowid/{$d.id}" data-toggle="tooltip" title="Szczegóły"></a>
+                {if $auth->isGranted('node/flows/update', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-pencil" href="/flows/update/flowid/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                {/if}
+                {if $auth->isGranted('node/flows/del', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="/flows/del/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>
+

@@ -1,0 +1,41 @@
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead class="ui-widget-header">
+    <tr>
+        <th>nr</th>
+        <th>typ</th>
+        <th>rodzaj osoby</th>
+        <th>firma</th>
+        <th>osoba</th>
+        <th>rodzaj samochodu</th>
+        <th>samochód</th>
+        <th>data</th>
+        <th>godzina</th>
+        <th>uwagi</th>
+        <th>cel</th>
+        <th>ilość serwatki</th>
+    </tr>
+    </thead>
+    <tbody class="ui-widget-content">
+    {foreach $paginator as $d}
+    <tr>
+        <td>{$d@iteration}</td>
+        <td>{if $d.type == 1}WJAZD{/if}{if $d.type == 2}WYJAZD{/if}{if $d.type == 3}WEJŚCIE{/if}{if $d.type == 4}WYJŚCIE{/if}</td>
+        <td>{$d.eventspersonstype.name}</td>
+        <td>{$d.eventscompany.name}</td>
+        <td>{$d.eventsperson.name} {$d.eventsperson.lastname}</td>
+        <td>{$eventscarstypesArray[$d.eventscar.type]|upper}</td>
+        <td>{$d.eventscar.name}</td>
+        <td>{smart_date value=$d.date}</td>
+        <td>{$d.hour}</td>
+        <td>{$d.info}</td>
+        <td>{if $d.purpose_id}{$d.room_name}{if $d.room_no}, pok. {$d.room_no}{/if}, {$d.building_name}{/if}</td>
+        <td>{$d.ilosc_serwatki}</td>
+    </tr>
+    {foreachelse}
+    <tr>
+        <td colspan="100%">Brak elementów w widoku</td>
+    </tr>
+    {/foreach}
+    </tbody>
+
+</table>

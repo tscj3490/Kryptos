@@ -1,0 +1,590 @@
+{include file="layouts/_section-title.html"}
+
+<div class="row section-edit-ticket" data-id="{$ticket.id}">
+    <div class="col-sm-12 col-md-6">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="widget">
+                    <div class="widget-header transparent">
+                        <h2>Dane zgłoszenia</h2>
+                        <div class="additional-btn">
+                            <a href="#" class="widget-toggle"><i class="icon-down-open-2"></i></a>
+                        </div>
+                    </div>
+                    <div class="widget-content">
+                        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-widget">
+                            <tbody class="ui-widget-content">
+                            <tr>
+                                <td>Typ: </td>
+                                <td>
+                                    {$ticket.type.name}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Status:</td>
+                                <td>
+                                    {$ticket.status.name}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Temat: </td>
+                                <td>{$ticket.topic}</td>
+                            </tr>
+                            {if $ticket.content}
+                            <tr>
+                                <td>Treść: </td>
+                                <td>{$ticket.content nofilter}</td>
+                            </tr>
+                            {/if}
+                            <tr>
+                                <td>Data zgłoszenia: </td>
+                                <td>{$ticket.created_at}</td>
+                            </tr>
+                          
+                            <tr>
+                                <td>Termin: </td>
+                                <td>{smart_date value=$ticket.deadline_date}</td>
+                            </tr>
+                            {if $setVerifications}
+                            <tr>
+                                <td>Dotyczy sprawdzenia:</td>
+                                <td>{$verificationName}</td>
+                            </tr>
+                            {/if}
+                            <tr>
+                                <td colspan="2">
+                                    {element tag='a' route='tickets/change' routeParams=['id' => $ticket.id] attributes=[
+                                    'class' => 'btn btn-xs btn-info',
+                                    'title' => 'zmień',
+                                    'innerHtml' => 'Zmień'
+                                    ]}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {if $nonCompilance}
+            <div class="col-sm-12">
+                <div class="widget">
+                    <div class="widget-header transparent">
+                        <h2>Dane incydentu</h2>
+                        <div class="additional-btn">
+                            <a href="#" class="widget-toggle"><i class="icon-down-open-2"></i></a>
+                        </div>
+                    </div>
+                    <div class="widget-content" style="display:none">
+                        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-widget">
+                            <tbody class="ui-widget-content">
+                            <tr>
+                                <td>Nazwa problemu:</td>
+                                <td>
+                                    {$nonCompilance.title}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Typ:</td>
+                                <td>
+                                    {$nonCompilance.type}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Data zgłoszenia:</td>
+                                <td>
+                                    {$nonCompilance.notification_date}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Data rejestracji:</td>
+                                <td>{$nonCompilance.registration_date}</td>
+                            </tr>
+                            <tr>
+                                <td>Lokalizacja: </td>
+                                <td>{if $nonCompilance.location_type != 2}{$nonCompilance.location_pomieszczenie}{else}{$nonCompilance.location_other}{/if}</td>
+                            </tr>
+                            <tr>
+                                <td>Data zgłoszenia: </td>
+                                <td>{$ticket.created_at}</td>
+                            </tr>
+                            <tr>
+                                <td>Data realizacji: </td>
+                                <td>{$nonCompilance.realisation_date}</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {element tag='a' route='inspections/mini-update-non-compilance' routeParams=['id' => $nonCompilance.id] attributes=[
+                                        'class' => 'btn btn-xs btn-info',
+                                        'dialog' => [
+                                            'new-dialog' => '1',
+                                            'process' => 'formProcessLocationReload'
+                                        ],
+                                        'tooltip' => 'zmień',
+                                        'innerHtml' => 'Zmień'
+                                    ]}
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {/if}
+            <div class="col-sm-12">
+                <div class="widget">
+                    <div class="widget-header transparent">
+                        <h2>Wiadomości</h2>
+                        <div class="additional-btn">
+                            <a href="#" class="widget-toggle"><i class="icon-down-open-2"></i></a>
+                        </div>
+                    </div>
+                    <div class="widget-content padding">
+                        {include file='messages/_element-conversation.html'}
+                        {if $auth->isGranted('node/tickets/saveanswer', ['ticket_id' => $ticket.id])}
+                            <hr>
+                            <div>
+                                <input type="button" value="Dodaj wiadomość" class="btn btn-info choose-from-dial" data-dial-url="/tickets/ajax-respond/id/{$firstMessage.id}" data-new-dialog="1"/>
+                            </div>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-6">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="widget">
+                    <div class="widget-header transparent">
+                        <h2>
+                            Przypisane osoby
+                            {element tag='a' route='tickets/mini-add-assignee' routeParams=['id' => $ticket.id] attributes=[
+                                'href' => '',
+                                'class' => 'btn btn-xs btn-success choose-from-dial',
+                                'title' => 'Dodaj',
+                                'extra' => ['tooltip'],
+                                'data' => [
+                                    'dial-url' => '/osoby/addmini/?useProcess=1',
+                                    'dial-ready-fn' => 'filterAssigneePopup',
+                                    'dial-process-fn' => 'addAssignee'
+                                ],
+                                'innerHtml' => '<i class="fa fa-plus-circle"></i> Dodaj'
+                            ]}
+                        </h2>
+                        <div class="additional-btn">
+                            <a href="#" class="widget-toggle"><i class="icon-down-open-2"></i></a>
+                        </div>
+                    </div>
+                    <div class="widget-content">
+                        <table class="table table-striped table-widget">
+                            <thead>
+                            <tr>
+                                <th>Nazwisko i imię</th>
+                                <th>Rola</th>
+                                <th>Operacje</th>
+                            </tr>
+                            </thead>
+                            <tbody id="assignee-list">
+                            {foreach $assignees as $assignee}
+                                <tr data-id="{$assignee.id}" data-user-id="{$assignee.user.id}">
+                                    <td>{$assignee.user.display_name nofilter}</td>
+                                    <td>{$assignee.role.name}</td>
+                                    <td>
+                                        {element tag='a' route='tickets/remove-assignee' routeParams=['id' => $ticket.id, 'assignee_id' => $assignee.id] attributes=[
+                                            'route-attribute' => 'data-href',
+                                            'class' => 'glyphicon glyphicon-trash modal-confirm',
+                                            'title' => 'Usuń',
+                                            'extra' => ['tooltip'],
+                                            'data' => [
+                                                'ajax' => '1',
+                                                'confirmation-class' => 'singleDelete',
+                                                'process-more' => 'removeAssignee'
+                                            ]
+                                        ]}
+                                    </td>
+                                </tr>
+                            {foreachelse}
+                                <tr><td colspan="3">Brak przypisanych osób</td></tr>
+                            {/foreach}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {if 0 && $proposalItems}
+            <div class="col-sm-12">
+                <div class="widget">
+                    <div class="widget-header transparent">
+                        <h2>Wnioski</h2>
+                        <div class="additional-btn">
+                            <a href="#" class="widget-toggle"><i class="icon-down-open-2"></i></a>
+                        </div>
+                    </div>
+                    <div class="widget-content">
+                        <table class="table table-striped table-widget">
+                            <thead>
+                            <tr>
+                                <th>Nazwa</th>
+                                <th>Data</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {foreach $proposalItems as $proposalItem}
+                                <tr>
+                                    <td>{$proposalItem.author.display_name}</td>
+                                    <td>{$proposalItem.created_at}</td>
+                                    <td>
+
+                                        {element tag='a' route='osoby/proposal' routeParams=['id' => $proposalItem.object_id] attributes=[
+                                            'icon' => 'view',
+                                            'title' => 'Podgląd',
+                                            'extra' => ['tooltip']
+                                        ]}
+
+                                        {element tag='a' route='files/preview' routeParams=['t' => $attachment.token] attributes=[
+                                        'route-attribute' => 'data-dial-url',
+                                        'class' => 'glyphicon glyphicon-eye-open choose-from-dial',
+                                        'title' => 'Podgląd',
+                                        'extra' => ['tooltip'],
+                                        'data' => [
+                                        'new-dialog' => '1'
+                                        ]
+                                        ]}
+
+                                        {if !$attachment.status}
+                                            {element tag='a' route='tickets/confirm-file' routeParams=['t' => $attachment.token] attributes=[
+                                            'route-attribute' => 'data-dial-url',
+                                            'class' => 'glyphicon glyphicon-ok choose-from-dial',
+                                            'title' => 'Zaakceptuj',
+                                            'extra' => ['tooltip'],
+                                            'data' => [
+                                            'new-dialog' => '1'
+                                            ]
+                                            ]}
+                                        {else}
+                                            {element tag='a' route='tickets/undo-confirm-file-save' routeParams=['id' => $attachment.id] attributes=[
+                                            'route-attribute' => 'data-href',
+                                            'class' => 'glyphicon glyphicon-remove modal-confirm',
+                                            'title' => 'Cofnij akceptacje',
+                                            'extra' => ['tooltip'],
+                                            'data' => [
+                                            'ajax' => '1',
+                                            'confirmation-text' => 'Czy na pewno chcesz cofnąć akceptację?'
+                                            ]
+                                            ]}
+                                        {/if}
+
+                                    </td>
+                                </tr>
+                                {foreachelse}
+                                <tr><td colspan="2">Brak załączników</td></tr>
+                            {/foreach}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {/if}
+            {if $setVerifications}
+                        <div class="col-sm-12">
+                <div class="widget">
+                    <div class="widget-header transparent">
+                        <h2>Zbiory do sprawdzenia</h2>
+                        <div class="additional-btn">
+                            <a href="#" class="widget-toggle"><i class="icon-down-open-2"></i></a>
+                        </div>
+                    </div>
+                    <div class="widget-content">
+                        <table class="table table-striped table-widget">
+                            <thead>
+                            <tr>
+                                <th class="col-sm-6">Nazwa</th>
+                                <th class="col-sm-2">Status</th>
+                                <th class="col-sm-4">Akcje</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {foreach $setVerifications as $sv}
+                                <tr>
+                                    <td>{$sv.set.nazwa}</td>
+                                    <td>{$verificationStatuses[$sv.status].label}</td>
+                                    <td>
+                                        {if $canViewVerificationActions}
+                                        <a href="/verifications/approve/id/{$sv.id}/ticket/{$ticket.id}" class="btn btn-xs btn-success btn-approve" data-vid="{$sv.id}" data-tid="{$ticket.id}"><i class="fa fa-check"></i> Zatwierdź</a>
+                                        <a href="/verifications/verify-again/id/{$sv.id}/ticket/{$ticket.id}" class="btn btn-xs btn-success"><i class="fa fa-question"></i> Do weryfikacji</a>
+                                        <a href="/verifications/reject/id/{$sv.id}/ticket/{$ticket.id}" class="btn btn-xs btn-danger"><i class="fa fa-remove"></i> Odrzuć</a>
+                                        {/if}
+                                    </td>
+                                </tr>   
+                            {foreachelse}
+                                <tr><td colspan="2">Brak zbiorów do sprawdzenia</td></tr>
+                            {/foreach}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {/if}
+            <div class="col-sm-12">
+                <div class="widget">
+                    <div class="widget-header transparent">
+                        <h2>Załączniki</h2>
+                        <div class="additional-btn">
+                            <a href="#" class="widget-toggle"><i class="icon-down-open-2"></i></a>
+                        </div>
+                    </div>
+                    <div class="widget-content">
+                        <table class="table table-striped table-widget">
+                            <thead>
+                            <tr>
+                                <th>Nazwa</th>
+                                <th>Data</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {foreach $attachments as $attachment}
+                                <tr>
+                                    <td>{$attachment.icon nofilter} {$attachment.name}</td>
+                                    <td>{$attachment.created_at}</td>
+                                    <td>
+
+                                        {element tag='a' route='files/download' routeParams=['t' => $attachment.token] attributes=[
+                                            'class' => 'glyphicon glyphicon-download-alt',
+                                            'title' => 'Pobierz',
+                                            'extra' => ['tooltip']
+                                        ]}
+
+                                        {element tag='a' route='files/preview' routeParams=['t' => $attachment.token] attributes=[
+                                            'route-attribute' => 'data-dial-url',
+                                            'class' => 'glyphicon glyphicon-eye-open choose-from-dial',
+                                            'title' => 'Podgląd',
+                                            'extra' => ['tooltip'],
+                                            'data' => [
+                                                'new-dialog' => '1'
+                                            ]
+                                        ]}
+
+                                        {if !$attachment.status}
+                                            {element tag='a' route='tickets/confirm-file' routeParams=['t' => $attachment.token] attributes=[
+                                                'route-attribute' => 'data-dial-url',
+                                                'class' => 'glyphicon glyphicon-ok choose-from-dial',
+                                                'title' => 'Zaakceptuj',
+                                                'extra' => ['tooltip'],
+                                                'data' => [
+                                                    'new-dialog' => '1'
+                                                ]
+                                            ]}
+                                        {else}
+                                            {element tag='a' route='tickets/undo-confirm-file-save' routeParams=['id' => $attachment.id] attributes=[
+                                                'route-attribute' => 'data-href',
+                                                'class' => 'glyphicon glyphicon-remove modal-confirm',
+                                                'title' => 'Cofnij akceptacje',
+                                                'extra' => ['tooltip'],
+                                                'data' => [
+                                                    'ajax' => '1',
+                                                    'confirmation-text' => 'Czy na pewno chcesz cofnąć akceptację?'
+                                                ]
+                                            ]}
+                                        {/if}
+
+                                    </td>
+                                </tr>
+                            {foreachelse}
+                                <tr><td colspan="2">Brak załączników</td></tr>
+                            {/foreach}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{if $setVerifications}
+    
+<form name="f_accept" id="f_accept" class="form-horizontal" role="form">
+        <span class="md-trigger hidden trigger-confirmation" data-modal="confirmation-modal"></span>
+        <input type="hidden" name="vid" id="vid" value=""/>
+</form>
+
+<div class="md-modal md-just-me modal-signature" id="confirmation-modal">
+    <div class="md-content">
+        <div>
+            <div>
+                <h2><strong>{'ELEKTRONICZNY PODPIS'|translate}</strong></h2>
+                <div>
+                    <p class="text-center">{'By podpisać weryfikacje przy pomocy podpisu elektronicznego KRYPTOS, zgodnie z Dyrektywą o Wspólnotowej Infrastrukturze Podpisów Elektronicznych (1999/93/EC), zaloguj się ponownie.'|translate}</p>
+
+                    <div class="alert alert-danger hidden">{'Nieprawidłowe hasło'|translate}</div>
+
+                    <div class="password-confirmation">
+                        <form>
+                            <input type="hidden" name="taskId" id="confirmationTaskId" value="{$storageTask.id}"/>
+                            {for $i = 0, $empty = 0; $i < $length; $i++}
+                                {$j = $i+1}
+                                <div class="password-char confirmationPassword">
+                                    <input type="password" class="password" maxlength="1" {if $gwiazdki[$i]} placeholder="*" disabled{else}data-key="{$empty++}" name="password[{$i}]"{/if} value>
+                                    <div>{$j}</div>
+                                </div>
+                            {/for}
+                        </form>
+                    </div>
+                    <div class="footer-buttons">
+                        <button class="btn btn-danger md-close">{'ANULUJ!'|translate}</button>
+                        <button class="btn btn-success pull-right"><i id="modalSpinner" class="fa fa-spinner fa-spin" aria-hidden="true"></i> {'PODPISZ SIĘ'|translate}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#f_accept').validationEngine('attach', {
+            onValidationComplete: function (form, status) {
+                if (status) {
+                    $('.trigger-confirmation').click();
+                }
+                return false;
+            }
+        });
+
+        if (document.location.href.toString().match('complete=1')) {
+            
+        }
+    });
+
+    $(function () {
+        var modal = $('#confirmation-modal');
+         modal.find('#modalSpinner').hide();
+        modal.insertBefore($('.md-overlay'));
+
+        modal.on('md-modal-show', function (e, params) {
+            var tg = $(this),
+                callerButton = $(params.callerButtonEvent.target);
+
+            tg.attr('data-confirmation-process', callerButton.attr('data-confirmation-process'));
+
+            setTimeout(function () {
+                tg.find('input[type=password]').not(':disabled').eq(0).focus();
+            }, 400);
+        });
+
+        modal.find("input[type='password']").keyup(function (event) {
+            if (event.keyCode == 18 || event.keyCode == 17 || event.keyCode == 16 || event.keyCode == 20) {
+                return;
+            }
+
+            var position = $(this).attr('data-key');
+            position = parseInt(position);
+
+            if (event.keyCode == 8) {
+                if (modal.find('.password[data-key="' + (position - 1) + '"]').length) {
+                    $('.password[data-key="' + (position - 1) + '"]').focus();
+                }
+            } else {
+                if (modal.find('.password[data-key="' + (position + 1) + '"]').length) {
+                    modal.find('.password[data-key="' + (position + 1) + '"]').focus();
+                }
+            }
+        });
+        
+        $('.btn-approve').click(function(e){
+            $('#vid').val($(this).data("vid"));
+            e.preventDefault();
+            $('.trigger-confirmation').click();
+        });
+
+        modal.find('.footer-buttons .btn-success').on('click', function () {
+
+            var submitData = { password: []};
+
+            $.each($('.confirmationPassword').find('input'), function (index, input) {
+                if ($(input).val() !== '') {
+                    submitData.password[index] = $(input).val();
+                }
+            });
+            modal.find('#modalSpinner').show();
+            $.ajax({
+                method: "POST",
+                url: '/index/ajax-password-prompt',
+                data: submitData,
+                success: function (result) {
+                    if (result === '1') {
+                        $.ajax({
+                            method: "GET",
+                            url: '/verifications/approve/id/'+$('#vid').val(),
+                            data: submitData,
+                            success: function (result) {
+                                //if (result === '1') {
+                                //    var passwordConfirmedProcessFn = modal.attr('data-confirmation-process');
+                                //
+                                //    if (passwordConfirmedProcessFn) {
+                                //        window[passwordConfirmedProcessFn](modal, submitData);
+                                //    } else {
+                                //        document.location.href = '/tasks-my';
+                                //    }
+                                //
+                                location.reload();
+                            }
+                        });
+                    } else {
+                         modal.find('#modalSpinner').hide();
+                        modal.find('.password-confirmation input[name*=password]').val('');
+                        modal.find('.alert-danger').removeClass('hidden');
+                    }
+                }
+            });
+        });
+    });
+</script>
+{/if}
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_profile");
+
+    var assigneeList = $('#assignee-list'),
+        ticketId = $('.section-edit-ticket').attr('data-id');
+
+    filterAssigneePopup = function() {
+        assigneeList.children().each(function () {
+            $('#optsSearch').find('#id' + this.getAttribute('data-user-id')).addClass('locked');
+        });
+    };
+
+    addAssignee = function(id, object, status) {
+        $('.modal.in').modal('hide');
+        $.ajax({
+            dataType: 'html',
+            url: '/tickets/mini-add-assignee/id/'+ ticketId +'/user_id/' + id,
+            method: 'POST',
+            success: newDialogSuccess
+        });
+    };
+
+    processAddAssignee = function(result) {
+        var element = $('<tr>');
+        element.attr('data-id', result.object.id);
+        element.attr('data-user-id', result.object.user.id);
+        element.append($('<td>').text(result.object.user.display_name));
+        element.append($('<td>').text(result.object.role.name));
+
+        var operationsRow = $('<td>');
+        if (result.can_remove) {
+            operationsRow.append($('<a class="glyphicon glyphicon-trash modal-confirm" data-ajax="1" data-href="/tickets/remove-assignee/id/'+ticketId+'/assignee_id/'+result.object.id+'" data-toggle="tooltip" title="Usuń" data-confirmation-class="singleDelete" data-process-more="removeAssignee"></a>'));
+        }
+        element.append(operationsRow);
+
+        assigneeList.append(element);
+
+        systemAssignHandlers();
+        $('.modal.in').modal('hide');
+    };
+
+    removeAssignee = function(result) {
+        removeWithEffect(assigneeList.children().filter('[data-id='+result.removedObject.id+']'));
+    };
+</script>

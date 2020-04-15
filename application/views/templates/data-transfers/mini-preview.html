@@ -1,0 +1,51 @@
+{$message}
+<table class="table">
+    <tbody>
+    <tr>
+        <th style="width:30%">Typ transferu:</th>
+        <td>{$transferTypes[$data.type].name}</td>
+    </tr>
+    <tr>
+        <th>Źródło transferu - podmiot:</th>
+        <td>{$data.source_company.name}</td>
+    </tr>
+    <tr>
+        <th>Źródło transferu - osoba:</th>
+        <td>{$data.source_employee.last_name} {$data.source_employee.first_name}</td>
+    </tr>
+    <tr>
+        <th>Cel transferu - pokój:</th>
+        <td>{$data.room_name}</td>
+    </tr>
+    <tr>
+        <th>Cel transferu - podstawa prawna:</th>
+        <td>{$data.transfer_legal_basics.name}</td>
+    </tr>
+    <tr>
+        <th>Zbiory:</th>
+        <td>
+            {if !empty($data.zbiory)}
+                {foreach $data.zbiory as $zbior}
+                    {$zbior.nazwa}
+                {/foreach}
+            {/if}
+        </td>
+    </tr>
+    <tr>
+        <th>Powód transferu:</th>
+        <td>{$data.transfer_purpose}</td>
+    </tr>
+    <tr>
+        <th>Komentarz:</th>
+        <td>{$data.transfer_comment}</td>
+    </tr>
+    <tr>
+        <th>Data transferu:</th>
+        <td>{smart_date value=$data.transfer_date}</td>
+    </tr>
+    <tr>
+        <th>Data transferu - do kiedy:</th>
+        <td>{smart_date value=$data.transfer_deadline_date}</td>
+    </tr>
+    </tbody>
+</table>

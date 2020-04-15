@@ -1,0 +1,25 @@
+<h1>{$dialogTitle}</h1>
+
+<div class="row">
+    <div class="col-sm-12">
+        <form name="f_profile" id="f_profile" action="/registry-entries/ajax-save-create-document" class="ajax-form form-horizontal" role="form" data-process-fn="formProcessDialModal">
+            <input type="hidden" name="document[entry_id]" value="{$entry.id}"/>
+            <input type="hidden" name="document[registry_id]" value="{$registry.id}"/>
+
+            <div class="form-group">
+                <label class="col-sm-4" for="document_template_id">Szablon</label>
+                <div class="col-sm-8">
+                    <select name="document[document_template_id]" id="document_template_id" class="form-control">
+                        {foreach $registry.documents_templates as $template}
+                            <option value="{$template.id}">{$template.title}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="footer-actions">
+    <a class="btn btn-success pull-right dialog-form-submit">Zapisz</a>
+</div>

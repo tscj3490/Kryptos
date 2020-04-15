@@ -1,0 +1,32 @@
+{$message}
+<div class="body-action">
+    <a class="btn btn-info" href="/dokumentyzszablonu/szablonnowy">Nowy</a>
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+            	<thead>
+                	<tr>
+                        <th>nazwa</th>  
+                        <th>aktywny</th> 
+                        <th>numbering_rule</th> 
+                        <!--th>ikona</th--> 
+                        <th width="150px"></th>
+                    </tr>
+                </thead>
+                <tbody >
+                	{foreach $szablony as $sz}
+                	<tr>                        
+                        <td>{$d.nazwa}</td>
+                        <td>{if $d.aktywny}Tak{/if}</td>
+                         <td>{$d.numbering_rule}</td>
+                        <!--td>{if $d.icon}<img src="{$d.icon}"/>{/if}</td-->
+                        <td>							
+                            <a class="glyphicon glyphicon-pencil" title="edycja" href="/dokumentyzszablonu/szablonnowy/id/{$sz.id}"></a>
+                            
+                        <a class="glyphicon glyphicon-trash" onclick="if (confirm('Usunąć?'))
+                                    window.location.href = '/dokumentyzszablonu/szablonus/id/{$sz.id}'" href="javascript:;"></a>
+                            <a class="glyphicon glyphicon-user" href="/dokumentyzszablonu/adresaci/idsz/{$sz.id}"></a>
+                    </tr>
+                    {/foreach}
+                </tbody>
+</table>

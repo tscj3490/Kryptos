@@ -1,0 +1,34 @@
+<div class="row">
+    <div class="col-sm-12">
+        <form name="form_tickets_ajax_create" id="form_tickets_ajax_create" action="/messages/ajax-save-calendar-note" method="post" class="form-horizontal ajax-form" role="form" data-process-fn="formProcessCloseModal">
+            {if $data.topic}
+                <input type="hidden" id="topic" name="topic" value="{$data.topic}">
+            {else}
+                <div class="form-group">
+                    <label class="col-sm-2" for="topic">{Application_Service_MessagesConst::getConfig($data.type, 'title.label.title')|translate}:</label>
+                    <div class="col-sm-4">
+                        <input type="text" id="topic" name="topic" placeholder="{Application_Service_MessagesConst::getConfig($data.type, 'title.label.placeholder')|translate}" value="{$data.topic}" class="form-control validate[required] allow-lowercase" />
+                    </div>
+                </div>
+            {/if}
+            
+            <div class="form-group row">
+                <label for="date_start" class="col-sm-2">{'Data od'|translate}:</label>
+                <div class="col-sm-4"><input type="text" name="date_start" id="date_start" class="form-control datetimepicker-input" value="{$data.date_start}" placeholder="{'Data od'|translate}"></div>
+            </div>
+
+            <div class="form-group row">
+                <label for="date_end" class="col-sm-2">{'Data do'|translate}:</label>
+                <div class="col-sm-4"><input type="text" name="date_end" id="date_end" class="form-control datetimepicker-input" value="{$data.date_end}" placeholder="{'Data do'|translate}"></div>
+            </div>
+
+            {include file='messages/_element-content.html'}
+            <hr>
+            {include file='messages/_element-attachments.html'}
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("form_tickets_ajax_create");
+</script>

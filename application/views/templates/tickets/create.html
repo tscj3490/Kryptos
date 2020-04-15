@@ -1,0 +1,16 @@
+<div class="row">
+    <div class="col-sm-12 col-md-6">
+        <form name="f_profile" id="f_profile" action="{$baseUrl}/save" method="post" class="form-horizontal" role="form">
+            {include file='tickets/_new-ticket-form.html'}
+
+            <hr>
+            <div>
+                <input type="submit" value="Wyślij" class="btn btn-info"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_profile");
+</script>

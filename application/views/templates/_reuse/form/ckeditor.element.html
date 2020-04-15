@@ -1,0 +1,13 @@
+{if empty($id)}
+    {assign var="id" value=$name}
+{/if}
+
+<div class="form-group row">
+    <label for="{$id}" class="col-sm-4">{$params.attributes.label}:</label>
+    <div class="col-sm-8">
+        <textarea name="{$params.attributes.name}"
+                  id="{$id}"
+                  class="form-control {if !empty($params.attributes.ckeditor_class)}{$params.attributes.ckeditor_class}{else}ckeditor-default{/if} {$class}"
+        >{$params.attributes.value}</textarea>
+    </div>
+</div>

@@ -1,0 +1,19 @@
+            <form name="rola" id="rola" action="/config/saverolekom" method="post" class="form-horizontal" role="form" >
+                <div class="body-action">
+                    <input type="submit" value="Zapisz prawa" class="btn btn-info" />
+                </div>
+
+                <div class="form-group row">
+                    <label for="data" class="col-sm-2">Role do obsługi:</label>
+                    <div class="col-md-8 checkout-list">
+                        {foreach $roles as $r}
+
+                        <label class="col-sm-12" style="width: ">
+                            <input type="checkbox" {if $r.rolatak}checked{/if}  name="role[]" value="{$r.id}">{$r.nazwa} ({$r.opis})
+                        </label>
+
+                        {/foreach}
+
+                    </div>
+                </div>
+            </form>

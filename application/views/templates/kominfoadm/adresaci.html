@@ -1,0 +1,66 @@
+{$message}
+
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#odb" data-toggle="tab">Adresaci</a></li>
+    <li><a href="#adr" data-toggle="tab">Wyślij</a></li>
+
+</ul>
+<div class="tab-content">
+    <div class="tab-pane active" id="odb">
+        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+            <thead>
+            <tr>
+                <th data-filter-type="string">Imię i nazwisko</th>
+                <th data-filter-type="string">Przeczytane</th>
+                <th>Operacje</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $adresaci as $a}
+                <tr>
+                    <td>{$a.imie} {$a.nazwisko}</td>
+
+                    <td> {if $a.read_status==0}nie{else}tak{/if}</td>
+
+                    <td>
+                        {element tag='a' route='kominfoadm/recipient-remove' routeParams=['id' => $komunikatId, 'recipient_id' => $a.recipient_id] attributes=[
+                            'route-attribute' => 'data-href',
+                            'class' => 'glyphicon glyphicon-trash modal-confirm',
+                            'title' => 'Usuń',
+                            'extra' => ['tooltip'],
+                            'data' => [
+                                'confirmation-class' => 'singleDelete'
+                            ]
+                        ]}
+                    </td>
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane form-horizontal" id="adr">
+        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+            <thead>
+            <tr>
+                <th data-filter-type="string">Imię i nazwisko</th>
+                <th>Do wysłania</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $users as $a}
+                <tr>
+                    <td>{$a.nazwisko} {$a.imie}</td>
+                    <td>
+                        {element tag='a' route='kominfoadm/recipient-add' routeParams=['id' => $komunikatId, 'recipient_id' => $a.id] attributes=[
+                            'icon' => 'send',
+                            'title' => 'Wyślij',
+                            'extra' => ['tooltip']
+                        ]}
+                    </td>
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    </div>
+
+</div>

@@ -1,0 +1,25 @@
+@CHARSET "UTF-8";
+body{widows:4;}
+body h1{font-size:18px; clear:both; margin-top:10px;}
+@page { margin: 0; }
+@media print {
+  @page { margin: 0.5cm; }
+  body { font-size:10px;  }
+  body h1{font-size:14px; clear:both;}
+  header{display:none !important;}
+}
+table{
+    width:100%;
+    border: none;
+    text-align:center;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+table th  {
+    text-transform: uppercase;
+    text-align: center;
+    padding: 0 10px;
+}
+table tr td,table tr th{border: 1px solid black; padding:5px 10px;}
+table.inside tr td{border:none !important;}
+.no-print { display:none }

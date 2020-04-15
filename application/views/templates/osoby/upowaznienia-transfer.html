@@ -1,0 +1,87 @@
+<div class="widget">
+    <form name="f_data" id="f_data" method="POST" action="{$baseUrl}/upowaznienia-transfer-go" class="form-horizontal">
+        <div class="form-group row" {if $data.type === '2'}style="display:none"{/if}>
+            <label for="source_company_id" class="col-sm-2">Źródło transferu - osoba:</label>
+            <div class="col-sm-4">
+                <input type="hidden" name="osoba_id" id="osoba_id" value="{$data.osoba_id}"/>
+                <div class="input-group">
+                    <input type="text" id="osoba_typeahead" class="form-control typeaheadElement" data-source-function="getOsoby" data-target-element="#osoba_id"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default choose-from-dial" data-dial-url="/osoby/addmini/?useProcess=true" data-dial-process-fn="processAddOsoba" type="button">Dodaj</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-12">
+                <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example" id="task-employees">
+                    <thead class="ui-widget-header">
+                    <tr>
+                        <th></th>
+                        <th data-filter-type="string">Imię</th>
+                        <th data-filter-type="string">Nazwisko</th>
+                        <th data-filter-type="string">Login</th>
+                    </tr>
+                    </thead>
+                    <tbody class="ui-widget-content">
+                    {foreach $osobyList as $osoba}
+                        <tr>
+                            <td style="width:22px">
+                                <div class="icheckbox_square-aero js-checkbox" aria-checked="false" aria-disabled="false" data-target-id="users[{$osoba.id}]">
+                                    <ins class="iCheck-helper"></ins>
+                                    <span class="hidden text-indicator"></span>
+                                </div>
+                            </td>
+                            <td>{$osoba.imie}</td>
+                            <td>{$osoba.nazwisko}</td>
+                            <td>{$osoba.login_do_systemu}</td>
+                        </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2">Typ transferu:</label>
+            <div class="col-sm-4">
+                <input type="hidden" id="type" name="type" value="{$data.type}"/>
+                <div class="form-inline">
+                    <div class="radio iradio">
+                        <label>
+                            <input type="radio" data-value="1" name="radio_company_type" data-target="#type" class="transfer-value" {if $data.type !== '2'}checked{/if}>
+                            Dodaj
+                        </label>
+                    </div>
+                    <div class="radio iradio">
+                        <label>
+                            <input type="radio" data-value="2" name="radio_company_type" data-target="#type" class="transfer-value" {if $data.type === '2'}checked{/if}>
+                            Dodaj i usuń
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hiddenElement">
+            <div id="employees-form-data">
+                {foreach $osobyList as $osoba}
+                    <input value="{if isset($data.task_users[$osoba.id])}1{else}0{/if}" type="hidden" data-id="users[{$osoba.id}]" name="users[{$osoba.id}]">
+                {/foreach}
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <input type="submit" value="Transferuj upoważnienia" class="btn btn-info" />
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    var osoby = {$osobySelect|json_encode nofilter};
+    function getOsoby() {
+        return osoby;
+    }
+    function processAddOsoba(id) {
+        $('#osoba_id').val(id).change();
+        $('#ajaxDial').modal('hide');
+    }
+</script>

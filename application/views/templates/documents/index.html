@@ -1,0 +1,98 @@
+    {include file='modals/modal.tpl' title='Dokumenty - co to jest?' content='Jedną z najważniejszych rzeczy w systemie ochrony danych osobowych jest dokumentacja procesu przetwarzania danych osobowych. W skład takiej dokumentacji wchodzą zarówno Polityka Bezpieczeństwa Informacji, Instrukcja Zarządzania Systemem Informatycznym jak i różne oświadczenia, upoważnienia do przetwarzania danych, czy upoważnienia do dostępu do pomieszczeń w których są przetwarzane dane osobowe. Na wstępie należy zaznaczyć, że dokumenty tworzone w systemie Kryptos24 mogą być podpisywane elektronicznie, jak również istnieje możliwość wydrukowania wygenerowanych dokumentów. System pozwala na wygenerowanie oświadczeń, upoważnień czy innych dokumentów używanych w podmiocie. Zakładka Dokumentacja Osobowa służy właśnie do generowania, usuwania dokumentacji, podglądu aktualnych dokumentów dla pracowników czy generowaniu raportów dokumentacji osobowej.'}
+<form method="post" action="/documents/bulk-operations">
+    <input type="hidden" name="redirect" value="/documents"/>
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead class="ui-widget-header">
+        <tr>
+            <th></th>
+            <th data-filter-type="string" class="defaultSort">nazwisko</th>
+            <th data-filter-type="string">imię</th>
+            <th data-filter-type="select">stanowisko</th>
+            <th class="text-center">archiwum</th>
+            <th data-filter-type="string">dokumenty</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content js-checkbox-container">
+        {foreach $paginator as $d}
+            <tr{if $d@iteration > 10} style="display:none"{/if}>
+                <td>
+                    <div class="icheckbox_square-aero js-checkbox-from-container" data-target-id="id[{$d.id}]">
+                        <ins class="iCheck-helper"></ins>
+                        <span class="hidden text-indicator"></span>
+                    </div>
+                </td>
+                <td>{$d.nazwisko} <span class="hiddenElement">{$d.imie|ucfirst}</span></td>
+                <td>{$d.imie}</td>
+                <td>{$d.stanowisko}</td>
+                <td class="text-center">
+                    {if $d.has_archive}
+                    <a href="/documents/user-archive/id/{$d.id}" title="Pokaż archiwum dokumentów"><i class="fa fa-eye"></i></a>
+                    {else}
+                    BRAK
+                    {/if}
+                </td>
+                <td class="operations">{*
+                    *}{foreach $d.t_documents as $document}{assign var="id" value=$document.documenttemplate_id}{*
+                    *}{if $auth->isGranted('node/documents/get-choice', ['id' => $document.id])}{*
+                        *}{assign var="template" value=$t_templates.$id}{*
+                        *}<a href="#"
+                             class="{if $document.confirmed === '1'}confirmed-true{else}confirmed-false{/if} choose-from-dial"
+                             data-dial-url="/documents/get-choice/id/{$document.id}"
+                             data-dial-class="modal-lg modal-max"
+                            >
+                            <i class="fa {$template.icon}" data-toggle="tooltip"
+                            {if $document.active == '0'}
+                                style="color:#c7bb00;" title="Archiwum<br>{if $document.confirmed === '0'}Niepotwierdzony<br>{/if}<hr>{$template.name}"
+                            {elseif $document.active == '1'}
+                                title="Aktualny<br>{if $document.confirmed === '0'}Niepotwierdzony<br>{/if}<hr>{$template.name}"
+                            {elseif $document.active == '2'}
+                                style="color:#006d36;" title="Aktualny<br>drobne zmiany<br>{if $document.confirmed === '0'}Niepotwierdzony<br>{/if}<hr>{$template.name}"
+                            {elseif $document.active == '3'}
+                                style="color:#cc0000;" title="Nieaktualny<br>{if $document.confirmed === '0'}Niepotwierdzony<br>{/if}{$template.name}<hr>{$template.name}"
+                            {/if}
+                            ></i>
+                            <span class="hiddenElement">{$document.numbertxt}</span>
+                        </a>{*
+                    *}{/if}{*
+                    *}{/foreach}
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    <div class="table-operations-footer">
+        <div class="btn-group">
+            <button type="submit" class="btn btn-default table-row-action" data-toggle="tooltip" data-title="Wydrukuj zaznaczone" name="rowsAction" value="users-print"><i class="fa fa-print"></i></button>
+            <button type="submit" class="btn btn-default table-row-action" data-toggle="tooltip" data-title="Pobierz zaznaczone" name="rowsAction" value="users-download"><i class="fa fa-download"></i></button>
+            {if $auth->isGranted('perm/documents/update')}
+            <button type="submit" class="btn btn-default table-row-action" data-toggle="tooltip" data-title="Aktualizuj zaznaczone" name="rowsAction" value="users-actualize" data-trigger-fn="runUpdateAllAction"><i class="fa fa-refresh"></i></button>
+            {/if}
+            <span class="btn btn-default dt-select-all-button" data-toggle="tooltip" data-title="Zaznacz / odznacz wszystkie"><i class="fa fa-check"></i></span>
+        </div>
+    </div>
+    <div class="hiddenElement">
+        {foreach $paginator as $d}
+            <input type="hidden" name="id[{$d.id}]" class="js-checkbox-target">
+        {/foreach}
+    </div>
+</form>
+{literal}
+<script type="text/javascript">
+    function showGetChecked() {
+        var ids = '';
+        $('.checkedall').each(function () {
+            if ($(this).is(':checked')) {
+                ids = ids + '' + $(this).attr('id').replace('id', '') + ',';
+            }
+        });
+        if (ids != '') {
+            showDial('/documents/get-choice/?ids=' + ids, '', '');
+        }
+    }
+
+    function runUpdateAllAction() {
+        var data = $('.example').closest('form').serializeObject();
+        showDial('/documents/update-all/', '', {rowSelect: data.rowSelect}); return false;
+    }
+</script>
+{/literal}

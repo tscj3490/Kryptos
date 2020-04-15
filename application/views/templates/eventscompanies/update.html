@@ -1,0 +1,65 @@
+{$message}
+<form name="f_data" id="f_data" method="POST" action="/eventscompanies/save" id="dataform-add">
+   <fieldset>
+      <div class="form-group row">
+         <label for="name" class="col-sm-2">Nazwa:</label>
+         <div class="col-sm-4"><input type="text" name="name" id="name"  class="form-control validate[required]" value="{$data['name']}"></div>
+      </div>
+      <div class="form-group row">
+         <label for="street" class="col-sm-2">Ulica:</label>
+         <div class="col-sm-4"><input type="text" name="street" id="street"  class="form-control" value="{$data['street']}"></div>
+      </div>
+      <div class="form-group row">
+         <label for="house" class="col-sm-2">Nr domu:</label>
+         <div class="col-sm-4"><input type="text" name="house" id="house"  class="form-control" value="{$data['house']}"></div>
+      </div>
+      <div class="form-group row">
+         <label for="locale" class="col-sm-2">Nr lokalu:</label>
+         <div class="col-sm-4"><input type="text" name="locale" id="locale"  class="form-control" value="{$data['locale']}"></div>
+      </div>
+      <div class="form-group row">
+         <label for="postalcode" class="col-sm-2">Kod pocztowy:</label>
+         <div class="col-sm-4"><input type="text" name="postalcode" id="postalcode"  class="form-control" value="{$data['postalcode']}"></div>
+      </div>
+      <div class="form-group row">
+         <label for="city" class="col-sm-2">Miasto:</label>
+         <div class="col-sm-4"><input type="text" name="city" id="city"  class="form-control" value="{$data['city']}"></div>
+      </div>
+      <div class="form-group row">
+         <label for="phone" class="col-sm-2">Telefon:</label>
+         <div class="col-sm-4"><input type="text" name="phone" id="phone"  class="form-control" value="{$data['phone']}"></div>
+      </div>
+      <div class="form-group row">
+         <label for="email" class="col-sm-2">E-mail:</label>
+         <div class="col-sm-4"><input type="text" name="email" id="email"  class="form-control" value="{$data['email']}"></div>
+      </div>
+      <div class="form-group row">
+         <label for="number" class="col-sm-2">Nr:</label>
+         <div class="col-sm-4"><input type="text" name="number" id="number"  class="form-control" value="{$data['number']}"></div>
+      </div>
+      <div id="globalMessage"></div>
+      <div class="">
+         <a href="/eventscompanies/"><input type="button" value="Powrót"  class="btn"  ></a>
+         <input type="button" value="Zapisz"  class="btn btn-info" onclick="return checkSubmit();" >
+         <input type="button" value="Zapisz i dodaj następny"  class="btn btn-info" onclick="$('#addAnother').val('1');return checkSubmit();"  >
+         <input type="hidden" name="id" id="id" value="{$data.id}" />
+      </div>
+   </fieldset>
+   <div style="width:0px;height:0px;overflow:hidden;">
+      <input type="text" name="addAnother" id="addAnother" value="0" />
+      <input type="submit" id="formSubmit" value="Zapisz"  class="btn btn-info"  >
+   </div>
+</form>
+<script type="text/javascript">
+   function checkSubmit () {
+      $.ajax({
+         dataType : 'html',
+         url : '/eventscompanies/checkExist/',
+         data : 'name='+$('#name').val()+'&id={$data.id}',
+         method : 'POST',
+         success : function(mess,textStatus,xhr) { if ( mess == 1 ) { $('#formSubmit').click(); } else { $('#globalMessage').html('<div class="alert alert-danger">Rekord z podaną nazwą już istnieje. Proszę zmienić nazwę.</div>'); setTimeout('$(\'#globalMessage\').html(\'\')',5000); } },
+         error : function(xhr,textStatus,errorThrown) { }
+      });
+   }
+	backendUtilities.addVatidationEngine("f_data");
+</script>

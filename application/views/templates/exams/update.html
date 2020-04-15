@@ -1,0 +1,75 @@
+<div class="row">
+    <div class="col-lg-6">
+        <form name="f_data" id="f_data" method="POST" action="{$baseUrl}/save" enctype="multipart/form-data">
+            <fieldset>
+                {if $data.id}
+                <input type="hidden" name="exam[id]" value="{$data.id}"/>
+                {/if}
+
+                {if $utilities->getAppType() === 'hq_data'}
+                    <div class="form-group row">
+                        <label for="type" class="col-sm-4">Rodzaj szkolenia:</label>
+                        <div class="col-sm-8">
+                            <select name="exam[type]" id="type" class="form-control validate[required]">
+                                {foreach Application_Service_Courses::TYPES_DISPLAY as $type}
+                                    <option value="{$type.id}" {if $type.id == $data.type}selected="selected"{/if}>{$type.label}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                {else}
+                    <input type="hidden" name="type" value="2">
+                {/if}
+                <div class="form-group row">
+                    <label for="status" class="col-sm-4">Status:</label>
+                    <div class="col-sm-8">
+                        <select name="exam[status]" id="status" class="form-control validate[required]">
+                            {foreach Application_Service_Utilities::STATUS_DISPLAY_DUAL as $type}
+                                <option value="{$type.id}" {if $type.id == $data.status}selected="selected"{/if}>{$type.label}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="name" class="col-sm-4">Tytuł:</label>
+                    <div class="col-sm-8"><input type="text" name="exam[name]" id="name" class="form-control validate[required]" value="{$data.name}"></div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="category_id" class="col-sm-4">Kategoria:</label>
+                    <div class="col-sm-8">
+                        <select name="exam[category_id]" id="category_id" class="form-control">
+                            {foreach $categories as $category}
+                                <option value="{$category.id}" {if $data.category_id == $category.id}selected{/if}>{$category.name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="required_to_pass" class="col-sm-4">Ilość poprawnych odpowiedzi do zaliczenia:</label>
+                    <div class="col-sm-8"><input type="text" name="exam[required_to_pass]" id="name" class="form-control validate[required]" value="{$data.required_to_pass}"></div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="importQuestions" class="col-sm-4">Plik z pytaniami:</label>
+                    <div class="col-sm-8">
+                        <input type="file" name="importQuestions" id="importQuestions"/>
+                    </div>
+                </div>
+
+                <div>
+                    <a href="{$baseUrl}"><input type="button" value="Powrót" class="btn"></a>
+                    <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+                </div>
+            </fieldset>
+            <div class="hiddenElement">
+                <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+</script>

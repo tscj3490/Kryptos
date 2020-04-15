@@ -1,0 +1,38 @@
+                <div class="md-modal md-fade-in-scale-up" id="confirmation-modal-1">
+                    <div class="md-content">
+                        <div>
+                            <div>
+                                <h3><strong>Wykorzystałeś już czas na bezpłatne sprawdzenie działania Kryptos24. Co mogę zrobić?</strong></h3>
+                                <div>
+                                    <p class="text-justify"><strong>Wybierz:</strong> dokonaj wyboru odpowiedniego pakietu, który spełni oczekiwania Twoje i organizacji <a href="#">Zobacz pakiety</a>.<br>
+                                        <strong>Zapłać:</strong> dzięki ekspresowym płatnścią internetowym, transakcja trwa jedynie parę minut.<br>
+                                        <strong>Uśmiechnij się:</strong> możesz kontynuować realizację procesu zarządzania informacją w pełni.</p>
+                                    <div class="footer-buttons">
+                                        <button class="btn btn-danger md-close" id="confirmation-modal-1-close">Zamknij</button>
+                                        <button class="btn btn-success pull-right" id="payment"><i class="fa fa-buysellads" aria-hidden="true"></i> KUP TERAZ</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+    $(document).ready(function () {
+        termsModalShow();
+    });
+
+    function termsModalShow() {
+        $('#confirmation-modal-1').addClass("md-show");
+
+        $('#payment').click(function () {
+            window.location.href = '/subscription/payment';
+        });
+
+        $('#confirmation-modal-1-close').click(function () {
+            $('#confirmation-modal-1').removeClass("md-show");
+            window.location.href = '/home/welcome';
+        });
+
+    }
+
+</script>

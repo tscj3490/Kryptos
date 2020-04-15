@@ -1,0 +1,43 @@
+<input type="hidden" name="uploadedFiles" value="">
+<div class="form-group hidden" id="section-attachments-add">
+    <label class="col-sm-2">{'Załączniki'|translate}:</label>
+    <div class="col-sm-12 portlets ui-sortable">
+        <!-- Your awesome content goes here -->
+        <div class="widget messages-dropzone">
+            <div id="msgDropzone" class="dropzone">
+                <div class="dz-default dz-message"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="col-sm-12">
+        <button type="button" class="btn btn-default show-section" data-target="#section-attachments-add" data-auto-hide=".form-group >>">{'Dodaj załączniki'|translate}</button>
+    </div>
+</div>
+{literal}
+<script>
+    documentDropzone = enableDropzoneWidget('#msgDropzone', {
+        url: '/upload.php',
+        params: {
+            dirname: 'messages'
+        }
+    });
+
+    var messageForm = $('#msgDropzone').closest('form');
+    messageForm.on('submit', function() {
+        var uploadedFiles = documentDropzone.getAcceptedFiles(),
+                filesData = [];
+
+        $.each(uploadedFiles, function() {
+            filesData.push({
+                name: this.name,
+                uploadedUri: this.xhr.response
+            });
+        });
+
+        messageForm.find('input[name=uploadedFiles]').val(JSON.stringify(filesData));
+    });
+</script>
+{/literal}

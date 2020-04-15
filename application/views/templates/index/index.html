@@ -1,0 +1,133 @@
+<style>
+.login-widget input[type="password"] {
+    height: 36px;
+    width: 100%;
+    padding: 5px 5px 5px 30px;
+    box-sizing: border-box;
+}
+</style>
+<div id="logging">
+    <div class="login-widget">
+        <div class="logo">
+            <img src="/assets/images/kryptos.jpg">
+        </div>
+        <div class="infoText">
+            <h1>LOGOWANIE</h1>
+        </div>
+        <div class="section">
+            {if $message}
+                <div class="errorMessage">
+                    <span>{$message}</span>
+                </div>
+            {/if}
+            <div class="loginBox">
+                {if $simpleLogin}
+                <form method="post" action="/index/login">
+                {else}
+                <form method="post" action="/index/prelogin">
+                {/if}
+                    <input type="text" style="display:none">
+                    <input type="password" style="display:none">
+                    <div class="form-group login">
+                        <i class="fa fa-user overlay"></i>
+                        <input type="text" name="login" id="login" placeholder="identyfikator" value="{$data.login}">
+                    </div>
+                    {if $simpleLogin}
+                    <div class="form-group login">
+                        <i class="fa fa-lock overlay"></i>
+                        <input type="password" name="password" class="" placeholder="hasło">
+                    </div>
+                    {else}
+                      {math equation="floor(418/x-5)" x=$length assign=width}
+                      {for $i = 0, $empty = 0; $i < $length; $i++}{$j = $i+1}
+                    <div style="width:{$width}px">
+                    <input type="password" name="password[{$i}]" class="password" maxlength="1" {if $gwiazdki[$i]} value="0" disabled{else}data-key="{$empty++}"{/if} maxlength="1">
+                    <span>{$j}</span>
+                    </div>
+                      {/for}
+                    {/if}
+                    <div class="form-group submit">
+                        <span class="help-link"><i class="fa fa-info-circle"></i> pomoc</span>
+                        <input type="submit" name="submit" class="btn btn-submit" value="Zaloguj">
+                    </div>
+                </form>
+            </div>
+            {if !$message}
+            <div class="errorMessage warning">Pamiętaj, że podczas kontaktów telefonicznych KRYPTOS nigdy nie prosi o podanie numeru PIN/identyfikatora i hasła do Kryptos24.</div>
+            <div class="errorMessage warning">Ostrzegamy przed złośliwym oprogramowaniem dla urządzeń mobilnych (tablety, telefony komórkowe) podszywającym się pod aplikacje Banków oraz innych instytucji.</div>
+            <div class="errorMessage warning">Ostrzegamy przed niebezpiecznymi wiadomościami e-mail zawierającymi linki kierujące do fałszywej strony Kryptos24. Kryptos nigdy nie wysyła wiadomości e-mail z linkami do platformy internetowej oraz z prośbą o zalogowanie się za ich pomocą.</div>
+            {/if}
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="help-dial" tabindex="-1" role="dialog" aria-labelledby="ajaxDialLabel">
+    <div class="modal-dialog modal-lg ajaxDialSize" role="document">
+        <div class="modal-content onlyconent">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Pomoc</h4>
+            </div>
+            <div class="modal-body ajaxDialCont">
+                <ul class="help-list">
+                    <li>
+                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#helpCollapse1">
+                            Logowanie
+                        </button>
+                        <div class="collapse" id="helpCollapse1">
+                            <div class="well">
+                                <dl>
+                                    <dt>Jeśli logujesz się pierwszy raz</dt>
+                                    <dd>
+                                        Wprowadź numer klienta i naciśnij „Dalej”
+                                        Na następnej stronie wprowadź PIN do Kryptos24 – czterocyfrowy numer, który ustanowiłeś telefonicznie u konsultanta Kryptos lub otrzymałeś listem poleconym. Naciśnij „Zaloguj”
+                                        Podczas pierwszego logowania system poprosi Cię o ustanowienie hasła, którego będziesz używać przy kolejnych logowaniach do serwisu.
+                                    </dd>
+                                    <dt>Jeśli logujesz się kolejny raz</dt>
+                                    <dd>
+                                        Wprowadź numer klienta i naciśnij „Dalej”
+                                        Na następnej stronie podaj odpowiednie znaki z ustanowionego hasła i naciśnij „Zaloguj”.
+                                    </dd>
+                                    <dt>Jeżeli trzykrotnie popełnisz błąd podczas wpisywania danych</dt>
+                                    <dd>Dostęp do serwisu internetowego zostanie zablokowany.</dd>
+                                    <dt>Jeżeli jest to Twoja pierwsza wizyta na stronie</dt>
+                                    <dd>Zanim się zalogujesz zapoznaj się z zasadami bezpieczeństwa umieszczonymi na naszych stronach.</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#helpCollapse2">
+                            Sytuacje awaryjne
+                        </button>
+                        <div class="collapse" id="helpCollapse2">
+                            <div class="well">
+                                <dl>
+                                    <dt>Zapomniałeś lub zgubiłeś hasło, ale nadal pamiętasz IDENTYFIKATOR do Kryptos24</dt>
+                                    <dd>Skontaktuj się z Administratorem Bezpieczeństwa Informacji (ABI) w swojej firmie. Podczas pierwszego logowania po anulowaniu hasła ustanowisz nowe hasło do serwisu Kryptos24.</dd>
+                                    <dt>Zapomniałeś loginu</dt>
+                                    <dd>Znajduje się on na oświadczeniu o korzystaniu z Kryptos24 lub posiada go ABI.</dd>
+                                    <dt>Zapomniałeś IDENTYFIKATORA oraz hasła i zablokowałeś wszystkie serwisy Kryptos24</dt>
+                                    <dd>W przypadku zapomnienia lub zagubienia IDENTYFIKATORA oraz hasła do Kryptos24, należy ponownie wygenerować hasło. Stosowną dyspozycję można złożyć u Administratora Bezpieczeństwa Informacji.</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('#login').focus();
+
+        $('.help-link').click(function() {
+            $('#help-dial').modal({
+                show: true
+            });
+        });
+    });
+</script>

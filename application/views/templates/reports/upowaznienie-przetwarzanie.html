@@ -1,0 +1,25 @@
+<h1>Rejestr osób upoważnionych do przetwarzania danych</h1>
+<table>
+    <thead>
+    <tr>
+        <th>lp</th>
+        <th>NR UPOWAŻNIENIA</th>
+        <th>IMIĘ I NAZWISKO</th>
+        <th>STANOWISKO</th>
+        <th>LOGIN DO SYSTEMU</th>
+        <th>DATA NADANIA UPOWAŻNIENIA</th>
+   </tr>
+    </thead>
+    <tbody>
+    {foreach $t_documents as $doc}
+    <tr>
+        <td>{$doc@iteration}</td>
+        <td>{$doc.numbertxt}</td>
+        <td>{$doc.personalData.i|mb_strtoupper} {$doc.personalData.n|mb_strtoupper}</td>
+        <td>{$doc.personalData.s}</td>
+        <td>{$doc.personalData.l}</td>
+        <td>{$doc.date}</td>
+    </tr>
+    {/foreach}
+    </tbody>
+ </table>

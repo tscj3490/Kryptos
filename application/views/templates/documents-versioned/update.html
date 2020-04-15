@@ -1,0 +1,23 @@
+<form name="f_data" id="f_data" method="POST" action="{$baseUrl}/save">
+    <fieldset>
+        <div class="form-group row">
+            <label for="title" class="col-sm-2">Tytuł:</label>
+            <div class="col-sm-4"><input type="text" name="document[title]" id="title" class="form-control validate[required]" value="{$data.document.title}"></div>
+        </div>
+
+        {if !$data.document.id}{include file="documents-versioned/_version-form-part.html"}{/if}
+
+        <div>
+            <a href="{$baseUrl}"><input type="button" value="Powrót" class="btn"></a>
+            <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+        </div>
+    </fieldset>
+    <div class="hiddenElement">
+        <input type="text" name="document[id]" id="document_id" value="{$data.document.id}"/>
+        <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+    </div>
+</form>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+</script>

@@ -1,0 +1,22 @@
+<div style="min-height: 500px;" class="widget">
+    <div class="row" style="margin-bottom:40px">
+        <div class="col-sm-12">
+            <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-widget">
+                <tr><td>Dokument:</td><td>{$document.title}</td></tr>
+                <tr><td>Data początku obowiązywania:</td><td>{$document.date_from}</td></tr>
+                <tr><td>Data zatwierdzenia:</td><td>{$document.authorize_date}</td></tr>
+                <tr><td>Sporządzający:</td><td>{$document.author_name|upper}</td></tr>
+                <tr><td>Zatwierdził:</td><td><b>{$document.authorize_user_name|upper}</b></td></tr>
+                <tr><td>Podstawa prawna:</td><td>{$document.version_legal_basis}</td></tr>
+            </table>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-12 document-preview-box">
+            <div>
+                <embed src="/files/view/t/{$document.document_token}" width="100%" height="800" type="application/pdf">
+            </div>
+        </div>
+    </div>
+</div>

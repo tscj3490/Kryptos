@@ -1,0 +1,19 @@
+<h1>Potwierdzenie załącznika</h1>
+
+<div class="row">
+    <div class="col-sm-12">
+        {if $file.file_type|strpos:"image" !== false}
+            <img src="/files/view/t/{$file.token}">
+        {elseif $file.file_type === 'application/pdf'}
+            <embed src="/files/view/t/{$file.token}" width="100%" height="400" type="application/pdf"/>
+        {else}
+            <div class="alert alert-danger">Nie można wyświetlić załącznika</div>
+        {/if}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        {include file="tickets/_element-signature-form.html"}
+    </div>
+</div>

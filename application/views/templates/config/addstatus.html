@@ -1,0 +1,43 @@
+<div>
+    <form name="f_profile" id="f_profile" action="/config/savestatus" method="post" class="form-horizontal" role="form" >
+
+
+        <div class="form-group">
+            <label class="col-sm-2 ">Nazwa:</label>
+            <div class="col-sm-4">
+                <input type="text" id="status" name="status" placeholder="Nazwa statusu" value="{$data.nazwa}" class="form-control validate[required]" />
+            </div>
+        </div>
+<div class="container">
+  
+  <p>The form below contains three inline radio buttons:</p>
+  
+    <label class="radio-inline">
+        <input type="radio" name="color" value="white"> <span style="color: white;font-size: x-large">⚑</span>
+    </label>
+    <label class="radio-inline">
+        <input type="radio" name="color" value="red"> <span style="color: red;font-size: x-large">⚑</span>
+    </label>
+    <label class="radio-inline">
+        <input type="radio" name="color" value="green"> <span style="color: green;font-size: x-large">⚑</span>
+    </label>
+    <label class="radio-inline">
+        <input type="radio" name="color" value="blue"> <span style="color: blue;font-size: x-large">⚑</span>
+    </label>
+    <label class="radio-inline">
+        <input type="radio" name="color" value="black"> <span style="color: black;font-size: x-large">⚑</span>
+    </label>
+
+ 
+</div>
+        <div>
+            <input type="submit" value="Dodaj" class="btn btn-info" />
+        </div>
+<input type="hidden" name="id" value="{$data.id}"  />
+    </form>
+</div>
+
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_profile");
+</script>

@@ -1,0 +1,36 @@
+{$message}
+
+<div class="body-action">
+    <a class="btn btn-info" href="/import">import</a>
+    <a class="btn btn-info" href="/import/update">Add New User</a>
+    
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example" >
+            	<thead>
+                	<tr>
+                    	<th>Name</th>
+                    	<th>Surname</th>
+                    	<th>Position</th>
+                    	<th>Type of Contract</th>
+                    	 
+                        <th width="100px;"></th>
+                    </tr>
+                </thead>
+                <tbody class="ui-widget-content">
+                	{foreach $paginator as $d}
+                	<tr>
+                        <td>{$d.name|ucfirst}</td>
+                        <td>{$d.surname|ucfirst}</td>
+                        <td>{$d.position|ucfirst}</td>
+                        <td>{$d.contract}</td>
+                        <td>
+                            <a  class="glyphicon glyphicon-pencil" href="/import/update/id/{$d.id}"></a>
+                            <a  class="glyphicon glyphicon-trash" onclick="if(confirm('delete?')) window.location.href='/import/delete/id/{$d.id}'" href="javascript:;"></a>
+                        </td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+
+</table>
+ 

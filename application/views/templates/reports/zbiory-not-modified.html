@@ -1,0 +1,19 @@
+<h1>Zbiory, które nie były modyfikowane przez ostatnie 30 dni</h1>
+<table class="printable" cellspacing='1' cellpadding="5">
+    <thead>
+    <tr>
+        <th rowspan="2">Lp.</th>
+        <th rowspan="2">Nazwa zbioru</th>
+        <th colspan="2">Data ostatniej edycji</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $model as $d}
+        <tr>
+            <td>{$d@iteration}</td>
+            <td>{$d.nazwa}</td>
+            <td>{$d.data_edycji}</td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

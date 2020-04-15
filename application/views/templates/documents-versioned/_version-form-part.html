@@ -1,0 +1,110 @@
+<div class="form-group row">
+    <label for="date_to" class="col-sm-2">Identyfikator wersji dokumentu:</label>
+    <div class="col-sm-4"><input type="text" name="version[version]" id="version" class="form-control validate[required]" value="{$data.version.version}"></div>
+</div>
+<div class="form-group row">
+    <label for="version_description" class="col-sm-2">Opis wersji dokumentu:</label>
+    <div class="col-sm-4"><textarea name="version[version_description]" id="version_description" class="form-control">{$data.version.version_description}</textarea></div>
+</div>
+<div class="form-group row">
+    <label for="version_legal_basis" class="col-sm-2">Podstawa wprowadzenia:</label>
+    <div class="col-sm-4"><textarea name="version[version_legal_basis]" id="version_legal_basis" class="form-control">{$data.version.version_legal_basis}</textarea></div>
+</div>
+<div class="form-group row">
+    <label for="author_id" class="col-sm-2">Autor wersji:</label>
+    <div class="col-sm-4">
+        <input type="hidden" name="version[author_id]" id="author_id" value="{$data.version.author_id}"/>
+        <div class="input-group">
+            <input type="text" id="author_id_typeahead" class="form-control typeaheadElement validate[required]" data-source-function="getOsoby" data-target-element="#author_id"/>
+            <span class="input-group-btn">
+                <button class="btn btn-default choose-from-dial" data-target-element="#author_id" data-dial-url="/osoby/addmini/?useProcess=true" type="button">Wybierz</button>
+            </span>
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="authorize_user_id" class="col-sm-2">Osoba zatwierdzająca:</label>
+    <div class="col-sm-4">
+        <input type="hidden" name="version[authorize_user_id]" id="authorize_user_id" value="{$data.version.authorize_user_id}"/>
+        <div class="input-group">
+            <input type="text" id="authorize_user_id_typeahead" class="form-control typeaheadElement validate[required]" data-source-function="getOsoby" data-target-element="#authorize_user_id"/>
+            <span class="input-group-btn">
+                <button class="btn btn-default choose-from-dial" data-target-element="#authorize_user_id" data-dial-url="/osoby/addmini/?useProcess=true" type="button">Wybierz</button>
+            </span>
+        </div>
+    </div>
+</div>
+<div class="form-group row">
+    <label for="authorize_date" class="col-sm-2">Data zatwierdzenia:</label>
+    <div class="col-sm-4"><input type="text" name="version[authorize_date]" id="authorize_date" class="form-control validate[required] datepicker-input" value="{$data.version.authorize_date}"></div>
+</div>
+<div class="form-group row">
+    <label for="date_from" class="col-sm-2">Obowiązuje od:</label>
+    <div class="col-sm-4"><input type="text" name="version[date_from]" id="date_from" class="form-control datepicker-input validate[required]" value="{$data.version.date_from}"></div>
+</div>
+<div class="form-group row">
+    <label for="date_to" class="col-sm-2">Obowiązuje do:</label>
+    <div class="col-sm-4"><input type="text" name="version[date_to]" id="date_to" class="form-control datepicker-input" value="{$data.version.date_to}"></div>
+</div>
+<div class="form-group row" id="section-attachments-add">
+    <input type="hidden" name="uploadedFiles" value="">
+    <label class="col-sm-2">Załącz dokument:</label>
+    <div class="col-sm-4 portlets ui-sortable">
+        <div class="widget messages-dropzone">
+            <div id="docDropzone" class="dropzone">
+                <div class="dz-default dz-message"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="elementHidden">
+    <input type="hidden" name="version[document_id]" value="{$data.version.document_id}"/>
+</div>
+{if $data.version.file_id}
+<div class="form-group row">
+    <div class="col-sm-2">
+        <label>Aktualna wersja</label>
+    </div>
+    <div class="col-sm-4">
+        {include file="_reuse/_element-attachments-list.html" attachments=$data.version.files}
+    </div>
+</div>
+{/if}
+<script>
+    var osoby = {$osoby|json_encode nofilter};
+    function getOsoby() {
+        return osoby;
+    }
+
+    function processAddOsoba(id) {
+        $('#author_osoba_id').val(id).change();
+        $('#ajaxDial').modal('hide');
+    }
+
+    documentDropzone = enableDropzoneWidget('#docDropzone', {
+        url: '/upload.php',
+        params: {
+            dirname: 'documents'
+        },
+        maxFiles: 1,
+        maxfilesexceeded: function(file) {
+            this.removeAllFiles();
+            this.addFile(file);
+        }
+    });
+
+    var documentForm = $('#docDropzone').closest('form');
+    documentForm.on('submit', function() {
+        var uploadedFiles = documentDropzone.getAcceptedFiles(),
+                filesData = [];
+
+        $.each(uploadedFiles, function() {
+            filesData.push({
+                name: this.name,
+                uploadedUri: this.xhr.response
+            });
+        });
+
+        documentForm.find('input[name=uploadedFiles]').val(JSON.stringify(filesData));
+    });
+</script>

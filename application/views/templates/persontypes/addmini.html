@@ -1,0 +1,51 @@
+<h3 class="text-center" style="margin-top:0px;margin-bottom:10px;">Wybór dostępnych typów osób</h3>
+<div class="modtop">
+   <div class="form-group row">
+      <div class="col-sm-12">
+         <input type="text" name="searcher" id="searcher" class="form-control" placeholder="Wpisz szukaną frazę" onkeyup="runOptsSearch();" />
+      </div>
+   </div>
+   <div class="form-group row" style="margin-bottom:0px;">
+      <div class="col-sm-1">
+         <div class="checknew">
+            <input type="hidden" name="showchecked" value="0" />
+            <input type="checkbox" name="showchecked" id="showchecked" value="1" class="" onclick="runOptsSearch();">
+            <label for="showchecked"></label>
+         </div>
+      </div>
+      <label for="categories" class="col-sm-11">Pokaż na liście tylko zaznaczone pozycje</label>
+   </div>
+</div>
+<div class="text-right">
+   <input type="button" class="btn btn-default btn-xs" id="checkall" value="Zaznacz wszystkie" />
+   <input type="button" class="btn btn-default btn-xs" id="uncheckall" value="Odznacz wszystkie" />
+</div>
+<div style="height:20px"></div>
+<div id="optsSearch">
+<div class="alert alert-danger optsnodata"><i class="fa fa-4x fa-exclamation-triangle"></i><div class="floathead"><div class="ins">Zmień kryteria wyszukiwania lub skorzystaj z formularza dodawania nowych rekordów znajdującego się poniżej.</div></div><div class="clear"></div></div>
+{foreach $t_data as $d}
+<div class="selopt2bl" id="id{$d.id}"><span class="{$d.icon}"></span> <span class="title">{$d.name}</span></div>
+{/foreach}
+</div>
+<div style="clear:both;"></div>
+<div class="modbottom">
+   <h3 style="margin-top:0px;">Dodawanie nowych typów osób</h3>
+   <div class="row">
+      <div class="col-sm-9">
+         <label>Nazwy typów osób (rozdzielaj średnikami)</label>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-9">
+         <input type="text" name="newname" id="newname" value="" class="form-control" />
+      </div>
+      <div class="col-sm-3">
+         <button class="btn btn-default" id="addItem" type="button" style="width:100%;" onclick="showDial('/persontypes/savemini/','','name='+$('#newname').val());">Dodaj &nbsp;<i class="fa fa-plus"></i></button>
+      </div>
+   </div>
+</div>
+<script type="text/javascript">
+$('#newname').keypress(function(e) { if(e.which == 13) { $('#addItem').click(); return false; }});
+runPersontypesSel();
+setTimeout('$(\'#searcher\').focus()',500);
+</script>

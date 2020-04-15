@@ -1,0 +1,118 @@
+<div class="widget transparent box-messages">
+    {include file='messages/_top.html'}
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Sidebar Message -->
+            {include file='messages/_menu.html'}
+        </div>
+
+        <div class="col-md-9">
+            <div class="widget">
+                <div class="col-md-12">
+
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h3 class="semibold">{$messageData.topic}</h3>
+                        </div>
+                        {*<div class="col-sm-4">
+                            <div class="btn-toolbar pull-right" role="toolbar">
+                                <div class="btn-group">
+                                    <a href="#" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Print"><i class="fa fa-print"></i></a>
+                                    <a href="#" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Share"><i class="fa fa-share-alt"></i></a>
+                                </div>
+                                <div class="btn-group">
+                                    <a href="#" class="btn btn-sm btn-default" data-toggle="tooltip" title="Bookmark"><i class="fa fa-bookmark"></i></a>
+                                </div>
+                            </div>
+                        </div>*}
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="mail-sender-details">
+                                <img src="/assets/img/users/user-100.jpg" class="img-circle sender-photo"> <small><b>{$author.nazwisko} {$author.imie}</b> {*<span class="text-muted">carmen@electron.com</span>*}<br><span class="text-muted">{$messageData.created_at}</span></small>
+                            </div>
+                        </div>
+                        {*<div class="col-sm-6 text-right">
+                            <div class="btn-group spaced">
+                                <a class="btn btn-danger"><i class="icon-reply-1"></i> Reply</a>
+                                <a class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </a>
+                                <ul class="dropdown-menu text-left pull-right" role="menu">
+                                    <li><a href="#"><i class="icon-reply-all"></i> Reply All</a></li>
+                                    <li><a href="#"><i class="icon-forward-1"></i> Forward</a></li>
+                                    <li><a href="#"><i class="icon-print-1"></i> Print</a></li>
+                                    <li><a href="#"><i class="icon-target-2"></i> Mark as Spam</a></li>
+                                    <li><a href="#"><i class="icon-flag"></i> Report Pishing</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#"><i class="icon-trash"></i> Move to Trash</a></li>
+                                </ul>
+                            </div>
+                        </div>*}
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 mail-body">
+                            <hr>
+                            {$messageData.content nofilter}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <hr>
+                            <div class="gallery-wrap">
+                                {foreach from=$messageData.attachments item=attachment}
+                                <div class="column">
+                                    <div class="inner">
+                                        <a title="{$attachment.name}" href="/files/download/t/{$attachment.token}" target="_blank">
+                                            <div class="img-wrap">
+                                                <img class="mfp-fade" title="{$attachment.name}" src="/files/thumbnail/t/{$attachment.token}">
+                                            </div>
+                                            <div class="caption-static">
+                                                {$attachment.name} ({$attachment.size|filesize})
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                {/foreach}
+                            </div>
+                        </div>
+                    </div>
+                    {if !empty($messages)}
+                    <div class="row">
+                        <div class="col-sm-12 mail-conversation">
+                            <hr>
+                            {include file='messages/_element-conversation.html'}
+                        </div>
+                    </div>
+                    {/if}
+                </div>
+            </div>
+            {if $allowReply}
+            <div class="widget">
+                <div class="widget-header transparent">
+                    <h2>{'Odpowiedź'|translate}</h2>
+                </div>
+                <div class="widget-content padding">
+                    <form action="{$baseUrl}/save" method="post" class="form-horizontal" id="newMessageForm">
+                        {include file='messages/_new-message-form.html'}
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="submit" value="{'Wyślij wiadomość'|translate}" class="btn btn-info pull-right" />
+                            </div>
+                        </div>
+                    </form>
+
+                    {literal}
+                    <script>
+                        backendUtilities.addVatidationEngine("newMessageForm");
+                    </script>
+                    {/literal}
+
+                </div>
+            </div>
+            {/if}
+        </div><!-- End div .col-md-10 -->
+    </div><!-- End div .row -->
+</div><!-- End div .box-info -->

@@ -1,0 +1,30 @@
+{assign var="sectionId" value="ta"|set_id}
+{if empty($id)}
+    {assign var="id" value=$name|set_id}
+{/if}
+
+<div class="form-group row">
+    <label for="{$id}" class="col-sm-4">{if isset($label)}{$label}{else}Pracownik:{/if}</label>
+    <div class="col-sm-8">
+        <input type="hidden" name="{$name}" id="{$id}" value="{$value}"/>
+        {if empty($simple)}
+        <div class="input-group">
+        {/if}
+        <input type="text"
+               id="{$name}_typeahead"
+               class="form-control typeaheadElement validate[required]"
+               data-target-element="#{$id}"
+               data-source-variable="xSV_{$sectionId}"
+        />
+        {if empty($simple)}
+            <span class="input-group-btn">
+                <button class="btn btn-default choose-from-dial" data-target-element="#{$id}" data-dial-url="/osoby/addmini/?useProcess=true" type="button">Wybierz</button>
+            </span>
+        </div>
+        {/if}
+    </div>
+</div>
+
+<script type="text/javascript">
+    var xSV_{$sectionId} = objectsStorage.init({Application_Service_Utilities::getModel('Users')->getAllForTypeahead()|json_encode nofilter});
+</script>

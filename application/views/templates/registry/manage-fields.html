@@ -1,0 +1,286 @@
+{include file="layouts/_section-title.html"}
+<div id="registry_tabs_parametry" class="row section-manage-fields-registry" data-id="{$data.id}">
+    <div class="col-md-12">
+        <div class="row">
+			<div class="col-sm-12">
+				<div class="widget">
+					<div class="widget-header">
+						<h2>Dodaj Akordeon</h2>
+						<div class="additional-btn">
+							<!--<a href="#" class="hidden reload"><i class="icon-ccw-1"></i></a>-->
+							<a href="#" class="widget-toggle"><i class="icon-down-open-2"></i></a>
+							<!--<a href="#" class="widget-close"><i class="icon-cancel-3"></i></a>-->
+						</div>
+					</div>
+					<div id="tabs_widget" class="widget-content padding" style="display: block;">
+						<div class="panel-group accordion-toggle" id="addtabs">
+							<form name="add_tabs" method="post" id="acc_form">
+								<div class="form-group">
+									<label for="input-text" class="col-sm-2 control-label">Nazwa Akordeonu</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control accordion_name" id="input-text" placeholder="Wprowadź nazwę akordeonu">
+										<input type="hidden" name="accordion_id" class="accordion_class" value="">
+									</div>
+								</div>
+								<div class="clearfix"></div>
+								<div class="form-group">
+									<div class="col-sm-12 m20px">
+										<button type="button" id="save_accordion" class="btn btn-info pull-right">Zapisać</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+            <div class="col-sm-6">
+				<div class="widget">
+					<div class="widget-header">
+						<h2>Dodaj Pola</h2>
+						<div class="additional-btn">
+							<!--<a href="#" class="hidden reload"><i class="icon-ccw-1"></i></a>-->
+							<a href="#" class="widget-toggle"><i class="icon-down-open-2"></i></a>
+							<!--<a href="#" class="widget-close"><i class="icon-cancel-3"></i></a>-->
+						</div>
+					</div>
+					<div class="widget-content padding " style="display: block;">
+						<div class="panel-group accordion-toggle showdata" id="accordiondemo">
+							{foreach $accordionFields as $key=>$accordionField}
+								<div class="panel panel-default">
+									<div class="panel-heading">
+									
+									  <h4 class="panel-title">
+										<a data-toggle="collapse" class="collapsed" data-parent="#accordiondemo{$accordionField.accId}" href="#accordion{$accordionField.accId}">
+										   <span id="accord_{$accordionField.accId}" class="accordion_title">{$accordionField.name}</span><span data-name="{$accordionField.name}"  class="accordionAnchor" id="{$accordionField.accId}"><i class="fa fa-edit"></i></span>
+										</a>
+									  </h4>
+									  
+									</div>
+									<div id="accordion{$key}" class="panel-collapse collapse">
+										<div class="panel-body">
+											<table id="table-draggable_{$accordionField.accId}" cellpadding="0" cellspacing="0" border="0" class="table1 table-draggable table table-striped table-widget">
+											<input type="hidden" id="getaccid_{$accordionField.accId}" name="accid" value="{$accordionField.accId}">
+												<tbody class="connectedSortable ui-widget-content">
+													<tr class="first-tr">
+														<th>Nazwa</td>
+														<th>Rodzaj</td>
+													</tr>													
+													{foreach $accordionField['newArr'] as $parameterField}
+														<tr id="{$parameterField.entityId}">
+															<td>{$parameterField.field_title}</td>
+															<td>{$parameterField.entitiestitle}<input type="hidden" id="field_{$parameterField.entityId}" class="entity_field" name="field_id" value="{$parameterField.entityId}"></td>
+														</tr>
+													{/foreach}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							{foreachelse}
+                                <div class="not_found">Nie Znaleziono Akordeonu</div>
+							{/foreach}
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Drag and Drop Fields -->
+			<input type="hidden" name="registry_id" value="{$data.id}" class="registry_id">
+			<div class="col-sm-6">
+				<div class="widget">
+					<div class="widget-header">
+						<h2>Przeciągnij i upuść pola</h2>
+						<div class="additional-btn">
+							<!--<a href="#" class="hidden reload"><i class="icon-ccw-1"></i></a>-->
+							<a href="#" class="widget-toggle"><i class="icon-down-open-2"></i></a>
+							<!--<a href="#" class="widget-close"><i class="icon-cancel-3"></i></a>-->
+						</div>
+					</div>
+					<div class="widget-content padding" style="display: block;">
+						<div class="panel-group accordion-toggle" id="accordiondemo">
+							<table id="maintable" cellpadding="0" cellspacing="0" border="0" class="table2 table-draggable table table-striped table-widget">
+								<tbody class="connectedSortable main_table ui-widget-content">
+									<tr class="first-tr">
+										<th>Nazwa</td>
+										<th>Rodzaj</td>
+									</tr>
+									{foreach $registries as $registry}
+										<tr id="{$registry.entity_id}">
+											<td>{$registry.registry_entries_title}</td>
+											<td>{$registry.entitiestitle}<input type="hidden" id="field_{$registry.entity_id}" class="entity_field" name="field_id" value="{$registry.entity_id}"></td>
+										</tr>
+									{foreachelse}
+										<tr class="not_found1"><td colspan=2>Nie Znaleziono Pola</td></tr>
+									{/foreach}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Drag and Drop Feature Ends here -->
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+ function notify(style,title,message,image) {
+        $.notify({
+            title: title,
+            text: message,
+            image: image
+        }, {
+            style: 'metro',
+            className: style,
+            autoHide: false,
+            clickToHide: true
+        });
+    }
+	$(document).ready(function() {
+		/*********** Ajax to save the accordion in database *******************/
+		$("#save_accordion").click(function(){
+			var name = $('.accordion_name').val();
+			var id = $('.accordion_class').val();
+			$.ajax({
+				url: "/registry-tabs/save",
+				type: "post",
+				data: "name="+name+"&id="+id,
+				success: function(response) {
+					console.log(response.data);
+					console.log("hello");
+					if(response.status==1){
+						$('.accordion_name').val("");
+						$('.accordion_class').val("");
+						if(id==""){
+							$('.not_found').html("");
+							buildAccordion(response.data);
+							notify('success','Akordeon','Akordeon Zapisany Pomyślnie','<i class="fa fa-check"></i>');
+						}else{
+							$("#accord_"+id).html(name);
+							$("#save_accordion").html('Zapisać');
+							console.log("Accordion is Updated");
+							notify('success','Akordeon','Akordeon zaktualizowany z powodzeniem','<i class="fa fa-check"></i>');
+						}
+					}else{
+						notify('error','Aktualizacja pola','Coś poszło nie tak. Spróbuj ponownie później.','<i class="fa fa-times" aria-hidden="true"></i>');
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					console.log(textStatus, errorThrown);
+				}
+			});
+		});
+		
+		$('body').on('click','.accordionAnchor',function(){
+			var id = $(this).attr('id');
+			var name = $(this).data('name');
+			$('html, body').animate({
+				scrollTop: $("#registry_tabs_parametry").offset().top
+			}, 100);
+			$('.accordion_name').val(name);
+			$('.accordion_class').val(id);
+			$("#save_accordion").html('Aktualizacja');
+		});
+				
+		drag();
+		drop();
+		/*********** Drag and drop function *******************/
+	});
+	
+	function drag(){
+	var i = 0;
+		var $tabs=$('.table-draggable')
+		$( "tbody.connectedSortable")
+			.sortable({
+				connectWith: ".connectedSortable",
+				items: "> tr:not(:first)",
+				appendTo: $tabs,
+				helper:"clone",
+				zIndex: 999990,
+				stop: function( event, ui ) {
+					console.log("event stopped");
+				},
+				receive:function( event, ui ){
+				},
+				update:function( event, ui ){
+					//console.log(ui.item.parent()[0].attributes[0].nodeValue);
+					if (this === ui.item.parent()[0]){
+						var rowOrder = ui.item.index();
+						var nearestTable = $(this).closest('table').attr('id');
+						var getAccId = nearestTable.split('_');
+						var tabId = $('#getaccid_'+getAccId[1]).val();
+						var itemId = ui.item[0].id;
+						var fieldId = $('#field_'+itemId).val();
+						if(nearestTable == "maintable"){
+							tabId = 0;
+						}
+						updateFieldsTable(tabId,fieldId,rowOrder);
+						console.log(ui.item.index(),"This one is the final Index");
+					}
+				}
+			})
+			.disableSelection();
+	}
+	
+	function drop(){
+		var $tabs=$('.table-draggable')
+		var $tab_items = $( ".nav-tabs > li", $tabs ).droppable({
+			accept: ".connectedSortable",
+			hoverClass: "ui-state-hover",
+			drop: function( event,ui ){
+				console.log(ui);
+			}
+		});
+	}
+	
+	function buildAccordion(response){
+		$('.showdata').append('<div class="panel panel-default">\
+			<div class="panel-heading">\
+			  <h4 class="panel-title">\
+				<a data-toggle="collapse" data-parent="#accordiondemo" href="#accordion'+response.id+'">\
+				<span id="accord_'+response.id+'" class="accordion_title" id="accordion_title_'+response.id+'">'+response.name+'</span>\
+				<span data-name="'+response.name+'" class="accordionAnchor" id="'+response.id+'"><i class="fa fa-edit"></i></span>\
+				</a>\
+				<span data-name="'+response.name+'" class="accordiondelete" id="'+response.id+'"><i class="fa fa-delete"></i></span>\
+			  </h4>\
+			</div>\
+			<div id="accordion'+response.id+'" class="panel-collapse">\
+				<div class="panel-body">\
+					<table id="table-draggable_'+response.id+'" cellpadding="0" cellspacing="0" border="0" class="table-draggable table table-striped table-widget">\
+						<input type="hidden" id="getaccid_'+response.id+'" name="accid" value="'+response.id+'">\
+						<tbody class="connectedSortable ui-widget-content">\
+							<tr class="first-tr">\
+								<td colspan=2>Przeciągnij i upuść pola</td>\
+							</tr>\
+						</tbody>\
+					</table>\
+				</div>\
+			</div>\
+		</div>');
+		drag();
+		drop();
+	}
+	
+	function updateFieldsTable(tabId,fieldId,rowOrder){
+		var registry_id = $('.registry_id').val();
+		console.log("tabId="+tabId+"&id="+fieldId+"&registry_id="+registry_id+"&order_field="+rowOrder);
+		$.ajax({
+			url: "/registry/update-fields",
+			type: "post",
+			data: "tabId="+tabId+"&id="+fieldId+"&registry_id="+registry_id+"&order_field="+rowOrder,
+			success: function(response) {
+				if(response.status==1){
+					$(".not_found1").hide();
+					notify('success','Aktualizacja pola','Pole zaktualizowane pomyślnie','<i class="fa fa-check"></i>');
+				}else{
+					notify('error','Aktualizacja pola','Coś poszło nie tak. Spróbuj ponownie później.','<i class="fa fa-times" aria-hidden="true"></i>');
+				}
+				console.log(response);
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log(textStatus, errorThrown);
+			}
+		});
+	}
+</script>

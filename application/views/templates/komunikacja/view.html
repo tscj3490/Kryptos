@@ -1,0 +1,117 @@
+<div class="widget transparent box-messages">
+    {include file='komunikacja/_top.html'}
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Sidebar Message -->
+            {include file='komunikacja/_menu.html'}
+        </div>
+
+        <div class="col-md-9">
+            <div class="widget">
+                <div class="col-md-12">
+
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h3 class="semibold">{$messageData.temat}</h3>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="btn-toolbar pull-right" role="toolbar">
+                                <div class="btn-group">
+                                    <a href="#" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Print"><i class="fa fa-print"></i></a>
+                                    <a href="#" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Share"><i class="fa fa-share-alt"></i></a>
+                                </div>
+                                <div class="btn-group">
+                                    <a href="#" class="btn btn-sm btn-default" data-toggle="tooltip" title="Bookmark"><i class="fa fa-bookmark"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="mail-sender-details">
+                                <img src="/assets/img/users/user-100.jpg" class="img-circle sender-photo"> <small><b>{$nadawca.nazwisko} {$nadawca.imie}</b> {*<span class="text-muted">carmen@electron.com</span>*}<br><span class="text-muted">{$messageData.created_at}</span></small>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 text-right">
+                            <div class="btn-group spaced">
+                                <a class="btn btn-danger"><i class="icon-reply-1"></i> Reply</a>
+                                <a class="btn btn-danger dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </a>
+                                <ul class="dropdown-menu text-left pull-right" role="menu">
+                                    <li><a href="#"><i class="icon-reply-all"></i> Reply All</a></li>
+                                    <li><a href="#"><i class="icon-forward-1"></i> Forward</a></li>
+                                    <li><a href="#"><i class="icon-print-1"></i> Print</a></li>
+                                    <li><a href="#"><i class="icon-target-2"></i> Mark as Spam</a></li>
+                                    <li><a href="#"><i class="icon-flag"></i> Report Pishing</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#"><i class="icon-trash"></i> Move to Trash</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 mail-body">
+                            <hr>
+                            {$messageData.tresc}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <hr>
+                            <div class="gallery-wrap">
+                                <div class="column">
+                                    <div class="inner">
+                                        <a title="Image title here" href="images/big/img005.jpg" class="zooming">
+                                            <div class="img-wrap">
+                                                <img class="mfp-fade" title="Image title here" alt="Image gallery" src="images/small/img005_small.jpg">
+                                            </div>
+                                            <div class="caption-static">
+                                                website-banner-1.jpg (1.264KB)
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <div class="inner">
+                                        <a title="Image title here" href="images/big/img002.jpg" class="zooming">
+                                            <div class="img-wrap">
+                                                <img class="mfp-fade" title="Image title here" alt="Image gallery" src="images/small/img002_small.jpg">
+                                            </div>
+                                            <div class="caption-static">
+                                                website-banner-2.jpg (2.033KB)
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="widget">
+                <form action="/komunikacja/save" method="post">
+                    <input type="hidden" name="odbiorca_id" value="{$nadawca.id}" />
+                    <input type="hidden" name="temat" value="{$messageData.temat}" />
+                    <div class="widget-header transparent">
+                        <h2>Odpowiedź:</h2>
+                    </div>
+                    <div class="widget-content padding">
+                        <div class="form-group">
+                            <textarea id="tresc" name="tresc" class="summernote-small form-control" placeholder="Treść wiadomości" cols="70" rows="5" >{$data.tresc}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Wyślij" class="btn btn-success" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div><!-- End div .col-md-10 -->
+    </div><!-- End div .row -->
+</div><!-- End div .box-info -->
+
+
+<link href="/assets/libs/summernote/summernote.css" rel="stylesheet" type="text/css" />
+<script src="/assets/libs/summernote/summernote.js"></script>
+<script src="/_gfx/js/pages/new-message.js"></script>

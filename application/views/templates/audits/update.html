@@ -1,0 +1,45 @@
+{$message}
+<form name="f_data" id="f_data" method="POST" action="/audits/save">
+    <fieldset>
+        <div class="form-group row">
+            <label for="title" class="col-sm-2">Tytuł:</label>
+            <div class="col-sm-4"><input type="text" name="title" id="title" class="form-control validate[required]" value="{$data.title}"></div>
+        </div>
+        <div class="form-group row">
+            <label for="date_from" class="col-sm-2">Data od:</label>
+            <div class="col-sm-4"><input type="text" name="date_from" id="date_from" class="form-control validate[required] datepicker-input" value="{$data.date_from}"></div>
+        </div>
+        <div class="form-group row">
+            <label for="date_to" class="col-sm-2">Data do:</label>
+            <div class="col-sm-4"><input type="text" name="date_to" id="date_to" class="form-control validate[required] datepicker-input" value="{$data.date_to}"></div>
+        </div>
+        <div class="form-group row">
+            <label for="method_id" class="col-sm-2">Metoda:</label>
+            <div class="col-sm-4">
+                <select name="method_id" id="method_id" class="form-control validate[required]">
+                    {foreach from=$auditMethods key=methodId item=methodName}
+                        <option value="{$methodId}"{if $methodId == $data.method_id} selected{/if}>{$methodName}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="date" class="col-sm-2">Identyfikator:</label>
+            <div class="col-sm-4"><input type="text" name="identifier" id="identifier" class="form-control validate[required]" value="{$data.identifier}"></div>
+        </div>
+        <div id="globalMessage"></div>
+        <div class="">
+            <a href="/audits/"><input type="button" value="Powrót" class="btn"></a>
+            <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+            <input type="button" value="Zapisz i dodaj następny" class="btn btn-info" onclick="$('#addAnother').val('1');$('#formSubmit').click();">
+            <input type="hidden" name="id" id="id" value="{$data.id}"/>
+        </div>
+    </fieldset>
+    <div style="width:0px;height:0px;overflow:hidden;">
+        <input type="text" name="addAnother" id="addAnother" value="0"/>
+        <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+    </div>
+</form>
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+</script>

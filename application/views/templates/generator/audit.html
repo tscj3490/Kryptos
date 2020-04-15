@@ -1,0 +1,29 @@
+{$message}
+<div style="height:10px"></div>
+<hr class="nomargin"/>
+<div style="height:10px"></div>
+<form method="post" action="/audits/audit-save/auditId/{$auditId}">
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered">
+        <thead class="ui-widget-header">
+        <tr>
+            <th>Zbiór</th>
+            <th>Data</th>
+            <th>Audytor</th>
+            <th>Niezgodności</th>
+            <th>Wykonane czynności</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content">
+        {foreach $paginator as $d}
+        <tr>
+            <td>{$d.nazwa}</td>
+            <td><input type="text" name="zbior[{$d.id}][date]" id="zbior_{$d.id}_date" class="form-control datepicker-input" value="{$d.date}"></td>
+            <td><input type="text" name="zbior[{$d.id}][auditor]" id="zbior_{$d.id}_auditor" class="form-control" value="{$d.auditor}"></td>
+            <td><textarea name="zbior[{$d.id}][non_compilances]" id="zbior_{$d.id}_non_compilances" class="form-control margin-fix">{$d.non_compilances}</textarea></td>
+            <td><textarea name="zbior[{$d.id}][activities]" id="zbior_{$d.id}_activities" class="form-control margin-fix">{$d.activities}</textarea></td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    <input type="submit" value="Zapisz audyt" class="btn btn-default"/>
+</form>

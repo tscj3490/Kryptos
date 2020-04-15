@@ -1,0 +1,46 @@
+{$message}
+
+<h2>Zastępstwa</h2>
+<div class="row">
+    <div class="body-action">
+        <a class="btn btn-info" href="/zastepstwa/update">Dodaj nowe zastępstwo</a>
+    </div>
+</div>
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th>Osoba zastępowana</th>
+        <th>Osoba zastępująca</th>
+        <th>Od</th>
+        <th>Do</th>
+        <th>Upoważnienia</th>
+        <th width="75px;"></th>
+    </tr>
+    </thead>
+    <tbody class="ui-widget-content">
+    {foreach $paginator as $d}
+    <tr>
+        <td>{$d.osoba_zastepowana_dane|ucfirst}</td>
+        <td>{$d.osoba_zastepujaca_dane|ucfirst}</td>
+        <td>{$d.od}</td>
+        <td>
+            {if $d.do}
+                {$d.do}
+            {else}
+                Bezterminowo
+            {/if}
+        </td>
+        <td>
+            Zbiory: {if $d.przetwarzanie}Tak{else}Nie{/if}<br />
+            Pomieszczenia: {if $d.klucze}Tak{else}Nie{/if}<br />
+            Przetwarzanie poza firmą: {if $d.przetwarzanie_poza}Tak{else}Nie{/if}
+        </td>
+        <td>
+            <a class="glyphicon glyphicon-pencil" href="/zastepstwa/update/id/{$d.id}"></a>
+            <a class="glyphicon glyphicon-trash"
+               onclick="if(confirm('Usunąć?')) window.location.href='/zastepstwa/del/id/{$d.id}'" href="javascript:;"></a>
+        </td>
+    </tr>
+    {/foreach}
+    </tbody>
+</table>

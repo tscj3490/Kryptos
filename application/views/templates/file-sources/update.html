@@ -1,0 +1,87 @@
+<div id="dialog-form-add" class="dialog" title="Dodaj połączenie">
+    <form name="f_profile" id="f_profile" method="POST" action="/file-sources/save" id="dataform-add" enctype="multipart/form-data" class="form-horizontal" role="form">
+        <div class="form-group">
+            <label for="d[name]" class="col-sm-2">Nazwa:</label>
+            <div class="col-sm-10">
+                <input type="text" value="{$data['name']}" name="name" id="d[name]" class="form-control validate[required]" placeholder="Nazwa połączenia">
+            </div>
+        </div>
+        {if $data['type']==Application_Model_FileSources::TYPE_FTP}
+            <div class="form-group">
+                <label for="d[host]" class="col-sm-2">Host:</label>
+                <div class="col-sm-10">
+                    <input type="text" value="{$data['host']}" name="host" id="d[host]" class="form-control validate[required]" placeholder="Host">
+                </div>            
+            </div>
+            <div class="form-group">
+                <label for="d[user]" class="col-sm-2">Użytkownik:</label>
+                <div class="col-sm-10">
+                    <input type="text" value="{$data['user']}" name="user" id="d[user]" class="form-control validate[required]" placeholder="Użytkownik">
+                </div>            
+            </div>
+            <div class="form-group">
+                <label for="d[password]" class="col-sm-2">Hasło:</label>
+                <div class="col-sm-10">
+                    <input type="text" value="{$data['password']}" name="password" id="d[password]" class="form-control validate[required]" placeholder="Hasło">
+                </div>            
+            </div>
+            <div class="form-group">
+                <label for="d[path]" class="col-sm-2">Ściezka:</label>
+                <div class="col-sm-10">
+                    <input type="text" value="{$data['path']}" name="path" id="d[path]" class="form-control validate[required]" placeholder="Ścieżka">
+                </div>            
+            </div>
+        {elseif $data['type']==Application_Model_FileSources::TYPE_DB}
+            <div class="form-group">
+                <label for="d[app_key]" class="col-sm-2">App key:</label>
+                <div class="col-sm-10">
+                    <input type="text" value="{$data['app_key']}" name="app_key" id="d[app_key]" class="form-control validate[required]" placeholder="app_key">
+                </div>            
+            </div>
+            <div class="form-group">
+                <label for="d[app_secret]" class="col-sm-2">App secret:</label>
+                <div class="col-sm-10">
+                    <input type="text" value="{$data['app_secret']}" name="app_secret" id="d[app_secret]" class="form-control validate[required]" placeholder="app_secret">
+                </div>            
+            </div>
+            <div class="form-group">
+                <label for="d[access_token]" class="col-sm-2">Access token:</label>
+                <div class="col-sm-10">
+                    <input type="text" value="{$data['access_token']}" name="access_token" id="d[access_token]" class="form-control validate[required]" placeholder="access_token">
+                </div>            
+            </div>
+        {elseif $data['type']==Application_Model_FileSources::TYPE_GD}
+            <div class="form-group">
+                <label for="d[client_id]" class="col-sm-2">Client id:</label>
+                <div class="col-sm-10">
+                    <input type="text" value="{$data['client_id']}" name="client_id" id="d[client_id]" class="form-control validate[required]" placeholder="client_id">
+                </div>            
+            </div>
+            <div class="form-group">
+                <label for="d[client_secret]" class="col-sm-2">Client secret:</label>
+                <div class="col-sm-10">
+                    <input type="text" value="{$data['client_secret']}" name="client_secret" id="d[client_secret]" class="form-control validate[required]" placeholder="client_secret">
+                </div>            
+            </div>
+        {elseif $data['type']==Application_Model_FileSources::TYPE_OD}
+            <div class="form-group">
+                <label for="d[client_id]" class="col-sm-2">Client id:</label>
+                <div class="col-sm-10">
+                    <input type="text" value="{$data['client_id']}" name="client_id" id="d[client_id]" class="form-control validate[required]" placeholder="client_id">
+                </div>            
+            </div>
+            <div class="form-group">
+                <label for="d[client_secret]" class="col-sm-2">Client secret:</label>
+                <div class="col-sm-10">
+                    <input type="text" value="{$data['client_secret']}" name="client_secret" id="d[client_secret]" class="form-control validate[required]" placeholder="client_secret">
+                </div>            
+            </div>
+        {/if}
+        <div class="">
+            <input type="submit" value="Zapisz" class="btn btn-info"/>
+        </div>
+        <input type="hidden" name="id" id="id" value="{$data['id']}"/>
+        <input type="hidden" name="type" id="type" value="{$data['type']}"/>
+        <input type="hidden" name="role" id="role" value="{$data['role']}"/>
+    </form>
+</div>

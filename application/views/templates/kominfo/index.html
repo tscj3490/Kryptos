@@ -1,0 +1,33 @@
+
+<html>
+<head>
+    <title>Komunikaty</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+{foreach $komunikaty as $k}
+<form action="/kominfo/zapoznalem">
+
+
+    <div class="form-group">
+        <input type="text" id="komunikat" value="{$k.temat}" style="width: 100%" >
+
+    </div>
+     <div class="form-group">
+
+        <textarea  rows="6" cols="87">{$k.tresc}</textarea>
+    </div>
+
+    <div class="checkbox">
+        <label>
+            <input type="checkbox"  name="zap" value="{$k.komunikat_id}" > Zapoznałem się
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-info">Dalej</button>
+    <a href='/home' class='btn' >Pomiń</a>
+</form>
+{/foreach}
+</body>
+</html>

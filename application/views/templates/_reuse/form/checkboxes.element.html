@@ -1,0 +1,27 @@
+{if empty($params.attributes.id)}
+    {assign var="id" value=$params.attributes.name|set_id}
+{else}
+    {assign var="id" value=$params.attributes.id}
+{/if}
+
+<div class="form-group row {$wrapper.class nofilter}" {$wrapper.attributes_string nofilter}>
+    <label for="{$id}" class="col-sm-4">{$params.attributes.label}</label>
+    <div class="col-sm-8">
+        {if $params.attributes.options === 'typeahead'}
+            {assign "options" Application_Service_Utilities::getModel($params.attributes.model)->getAllForTypeahead()}
+        {else}
+            {assign "options" $params.attributes.options}
+        {/if}
+
+        {foreach $options as $option}
+            <div>
+                <label>
+                    <input type="checkbox"
+                           name="{$params.attributes.name}[]"
+                           value="{$option.id}"{if in_array($option.id, $params.attributes.value)} checked{/if}
+                    /> {$option.name}
+                </label>
+            </div>
+        {/foreach}
+    </div>
+</div>

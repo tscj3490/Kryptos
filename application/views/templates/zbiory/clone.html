@@ -1,0 +1,335 @@
+<style>
+    .ui-autocomplete {
+        max-height: 100px;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: hidden;
+        font-size:11px;
+        width:170px;
+    }
+    /* IE 6 doesn't support max-height
+     * we use height instead, but this forces the menu to always be this tall
+     */
+    * html .ui-autocomplete {
+        height: 100px;
+    }
+</style>
+<script>
+    $('#myTab a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    })
+    var arr = $.parseJSON('{$json}');
+    var select = '<select class="osoby_select" name="osoby[]">';
+    for(var key in arr)
+    {
+        if(arr.hasOwnProperty(key))
+        {
+            select += '<option value="' + arr[key].id + '">' + arr[key].login_do_systemu + '</option>';
+        }
+    }
+    select += '</select>'
+    var szablony = [];
+    {foreach $szablony as $s}
+    szablony[{$s.id}] = $.parseJSON('{$s.szablon}');
+    {/foreach}
+    {literal}
+    function selectos_change()
+    {
+        $(this).parent().parent().children().find('input.czy').attr('name', 'czytanie['+ $(this).val() +']');
+        $(this).parent().parent().children().find('input.poz').attr('name', 'pozyskiwanie['+ $(this).val() +']');
+        $(this).parent().parent().children().find('input.wpr').attr('name', 'wprowadzanie['+ $(this).val() +']');
+        $(this).parent().parent().children().find('input.mod').attr('name', 'modyfikacja['+ $(this).val() +']');
+        $(this).parent().parent().children().find('input.usu').attr('name', 'usuwanie['+ $(this).val() +']');
+    }
+    $(function (){
+        $("#osoby_do_zbioru .dodaj_osobe").on('click', function(ev){
+            ev.preventDefault();
+            $("#osoby_do_zbioru table tbody tr").removeClass('new_os');
+            $("#osoby_do_zbioru table tbody").prepend('  <tr class="new_os">	<td>' + select +'</td>'
+                    +'		<td><input type="checkbox" class="czy" name="czytanie[]"></td>'
+                    +'		<td><input type="checkbox" class="poz" name="pozyskiwanie[]"></td>'
+                    +'		<td><input type="checkbox" class="wpr" name="wprowadzanie[]"></td>'
+                    +'		<td><input type="checkbox" class="mod" name="modyfikacja[]"></td>'
+                    +'		<td><input type="checkbox" class="usu" name="usuwanie[]"></td><td><a class="usun_osobe" href="#">X</a></td>'
+                    +' </tr>');
+            $("#osoby_do_zbioru table tbody tr.new_os td input").fancyfields();
+            $("#osoby_do_zbioru table tbody tr.new_os td select").fancyfields();
+            $("#osoby_do_zbioru table tbody tr.new_os td select.osoby_select").change(selectos_change);
+            $("#osoby_do_zbioru table tbody tr.new_os td select.osoby_select").change();
+            $(".usun_osobe").unbind('click');
+            $(".usun_osobe").click(function (){
+                $(this).parent().parent().remove();
+                return false;
+            });
+        });
+
+        //szablony
+//	$("#szablony").fancyfields("bind","onSelectChange", function (input,text,val){
+//    	var szablon = szablony[val];
+//        if ($('#desc_' + val)) {
+//            $('#opis_zbioru').val($('#desc_' + val).val());
+//        }
+//    	$.each(szablony[val], function(i, item){
+//			var pole = $("input[name='pola["+ item +"]']");
+//			//console.log(item);
+//			if(pole.length)
+//			{
+//				pole.fancyfields("checked");
+//			}
+//			else
+//			{
+//				$("#wlasne_pola").prepend('<input checked="true" type="checkbox" name="pola['+ item +']"><label>'+ item +'</label>');
+//			  	$("#wlasne_pola > input[type=checkbox]").fancyfields();
+//			}
+//        });
+//	});
+        {/literal}
+        var aktywny_szablon = $.parseJSON('{$zbior.opis_pol_zbioru}');
+        {literal}
+        $.each(aktywny_szablon, function (i, item){
+            var pole = $("input[name='pola["+ item +"]']");
+            if(pole.length)
+            {
+                pole.fancyfields("checked");
+            }
+            else
+            {
+                $("#wlasne_pola").prepend('<input checked="true" type="checkbox" name="pola['+ item +']"><label>'+ item +'</label>');
+                $("#wlasne_pola > input[type=checkbox]").fancyfields();
+            }
+        });
+
+        /*$("#szukaj_osoby").keyup(function (){
+         var text = $(this).val();
+         $("#osoby_do_zbioru table tr").show();
+         $("#osoby_do_zbioru table tr td").filter(function (){
+         return text.match("/^" + text + ".*$/");
+         }).parent('tr').hide();
+
+         });*/
+
+        var $rows = $('#osoby_do_zbioru table tr');
+        $('#szukaj_osoby').keyup(function() {
+
+            var val = '^(?=.*\\b' + $.trim($(this).val()).split(/\s+/).join('\\b)(?=.*\\b') + ').*$',
+                    reg = RegExp(val, 'i'),
+                    text;
+
+            $rows.show().filter(function() {
+                text = $(this).text().replace(/\s+/g, ' ');
+                return !reg.test(text);
+            }).hide();
+        });
+
+        var pola = $.ajax({ async: false,
+            url: '/zbiory/getpola',
+            type: "GET",
+            global: false,
+            dataType: "json",
+            success: function(res){
+                return res;
+            }
+        }).responseText;
+        pola = $.parseJSON(pola);
+        $( "#tags" ).autocomplete({
+            source: pola
+        });
+    });
+    {/literal}
+</script>
+<div class="errors"></div>
+<h1 class="page-header">Zbiory</h1>
+<form class="fancy dodajzbior" action="/zbiory/save" method="post">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#home" data-toggle="tab">Ogolnie informacja o zbiorze</a></li>
+        <li><a href="#pola" data-toggle="tab">Pola zbioru</a></li>
+        <li><a href="#aplikacje" data-toggle="tab">Aplikacje</a></li>
+        <li><a href="#users" data-toggle="tab">Uzytkownicy</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane active form-horizontal" id="home" style="padding:15px 5px">
+            <div class="form-group">
+                <label for="nazwa" class="col-sm-2 ">Nazwa</label>
+                <input class="col-sm-4" type="text" id="nazwa" name="nazwa" value="{$zbior.nazwa}">
+            </div>
+            <div class="form-group">
+                <label for="forma" class="col-sm-2">Forma</label>
+                <select id="forma" name="forma">
+                    <option  {if $zbior.formaGromadzeniaDanych == 'papierowa'}selected{/if} value="papierowa">papierowa</option>
+                    <option  {if $zbior.formaGromadzeniaDanych == 'elektroniczna'}selected{/if} value="elektroniczna">elektroniczna</option>
+                    <option  {if $zbior.formaGromadzeniaDanych == 'papierowa i elektroniczna'}selected{/if} value="papierowa i elektroniczna">papierowa i elektroniczna</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="poziom_bezpieczenstwa" class="col-sm-2 ">Poziom bezpieczenstwa</label>
+                <select id="poziom_bezpieczenstwa" name="poziomBezpieczenstwa">
+                    <option {if $zbior.poziomBezpieczenstwa == 'A'}selected{/if} value="A">A</option>
+                    <option {if $zbior.poziomBezpieczenstwa == 'B'}selected{/if} value="B">B</option>
+                    <option {if $zbior.poziomBezpieczenstwa == 'C'}selected{/if} value="C">C</option>
+                    <option {if $zbior.poziomBezpieczenstwa == 'AB'}selected{/if} value="AB">AB</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="pomieszczenia" class="col-sm-2">Pomieszczenia</label>
+                <select id="pomieszczenia" name="pomieszczenia_id">
+                    {foreach $pomieszczenia as $p}<option {if $p.id==$zbior.pomieszczenia_id}selected{/if} value="{$p.id}">{$p.nazwa}</option>{/foreach}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="giodo" class="col-sm-2">Czy do GIODO</label>
+                <select id="giodo" name="status">
+                    <option {if $zbior.status == 'zgloszony'}selected{/if} value="zgloszony">zgłoszony</option>
+                    <option {if $zbior.status == 'niepodlega'}selected{/if} value="niepodlega">nie podlega</option>
+                    <option {if $zbior.status == 'podlega_niezgloszony'}selected{/if} value="podlega_niezgloszony">podlega, nie zgłoszony</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="pochodzenie" class="col-sm-2">Pochodzenie danych</label>
+                <select id="pochodzenie" name="pochodzenie_danych">
+                    <option {if $zbior.pochodzenie_danych== 'od osob ktorych dotycza'}selected{/if} value="od osob ktorych dotycza">od osób, których dotycza</option>
+                    <option {if $zbior.pochodzenie_danych== 'z innych zrodel'}selected{/if} value="z innych zrodel">z innych źródeł</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="description" class="col-sm-2">Opis zbioru</label>
+                <textarea name="description" rows="5" cols="50" id="description">{$zbior.opis_zbioru}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="szablony" class="col-sm-2">Szablony pól</label>
+                <select id="szablony" name="szablony" class="col-sm-3">
+                    <option>wybierz</option>
+                    {foreach $szablony as $szablon}
+                    <option value='{$szablon.id}'>{$szablon.nazwa}</option>
+                    {/foreach}
+                </select>
+            </div>
+            {foreach $szablony as $szablon}
+            {if $szablon.description}
+            <input type="hidden" id="desc_{$szablon.id}" name="desc_{$szablon.id}" value="{$szablon.description}" />
+            {/if}
+            {/foreach}
+        </div>
+        <div class="tab-pane" id="pola">
+            <fieldset class="container-fluid">
+                <legend>Standardowe pola zbioru</legend>
+                <div class="row-fluid">
+                    <div class="col-sm-3">
+                        <label class="col-sm-12"><input type="checkbox" name="pola[imiona]" {if array_key_exists('imiona',$opis)}checked="true"{/if}>Imiona</label>
+                        <label class="col-sm-12"><input type="checkbox" name="pola[nazwisko]" {if array_key_exists('nazwisko',$opis)}checked="true"{/if}>Nazwisko</label>
+                        <label class="col-sm-12"><input type="checkbox" name="pola[adres]" {if array_key_exists('adres',$opis)}checked="true"{/if}>Adres</label>
+                        <label class="col-sm-12"><input type="checkbox" name="pola[nip]" {if array_key_exists('nip',$opis)}checked="true"{/if}>NIP</label>
+                        <label class="col-sm-12"><input type="checkbox" name="pola[miejsce urodzenia]" {if array_key_exists('miejsce urodzenia',$opis)}checked="true"{/if}>Miejsce urodzenia</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="col-sm-12"><input type="checkbox" name="pola[data urodzenia]" {if array_key_exists('data urodzenia',$opis)}checked="true"{/if}>Data urodzenia</label>
+                        <label class="col-sm-12"><input type="checkbox" name="pola[pesel]"  {if array_key_exists('pesel',$opis)}checked="true"{/if}>Pesel</label>
+                        <label class="col-sm-12"><input type="checkbox" name="pola[nr dowodu]"  {if array_key_exists('nr dowodu',$opis)}checked="true"{/if}>Nr Dowodu</label>
+                        <label class="col-sm-12"><input type="checkbox" name="pola[imiona rodzicow]"  {if array_key_exists('imiona rodzicow',$opis)}checked="true"{/if}>Imiona rodziców</label>
+
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="col-sm-12"><input type="checkbox" name="pola[wyksztalcenie]"  {if array_key_exists('wyksztalcenie',$opis)}checked="true"{/if}>Wykształcenie</label>
+                        <label class="col-sm-12"><input type="checkbox" name="pola[nr telefonu]"  {if array_key_exists('nr telefonu',$opis)}checked="true"{/if}>Nr telefonu</label>
+                        <label class="col-sm-12"><input type="checkbox" name="pola[adres e-mail]"  {if array_key_exists('adres e-mail',$opis)}checked="true"{/if}>Adres e-mail</label>
+                        <label class="col-sm-12"><input type="checkbox" name="pola[numer konta bankowego]"  {if array_key_exists('numer konta bankowego',$opis)}checked="true"{/if}>Numer konta bankowego</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="col-sm-12"><input type="checkbox" name="pola[miejsce pracy]" {if array_key_exists('miejsce pracy',$opis)}checked="true"{/if}>Miejsce pracy</label>
+                        <label class="col-sm-12"><input type="checkbox" name="pola[zawod]" {if array_key_exists('zawod',$opis)}checked="true"{/if}>Zawód</label>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="container-fluid">
+                <legend>Dodatkowe pola zbioru</legend>
+                <div class="row-fluid">
+                    <div class="col-sm-3">
+                        <label class="col-sm-12"><input type="checkbox" name="pola[pochodzenie rasowe]" {if array_key_exists('pochodzenie rasowe',$opis)}checked="true"{/if}>Pochodzenie rasowe</label>
+                        <label class="col-sm-12"><input type="checkbox" name="pola[poglady etniczne]" {if array_key_exists('poglady etniczne',$opis)}checked="true"{/if}>Poglądy etniczne</label>
+                        <label class="col-sm-12"><input type="checkbox" name="pola[przekonania religijne]" {if array_key_exists('przekonania religijne',$opis)}checked="true"{/if}>Przekonania religijne</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="col-sm-12"><input type="checkbox" name="pola[przekonania filozoficzne]" {if array_key_exists('przekonania filozoficzne',$opis)}checked="true"{/if}>Przekonania filozoficzne</label>
+                        <label class="col-sm-12"><input type="checkbox" name="pola[przynaleznosc wyznaniowa]" {if array_key_exists('przynaleznosc wyznaniowa',$opis)}checked="true"{/if}>Przynależność wyznaniowa</label>
+                        <label class="col-sm-12"><input type="checkbox" name="pola[przynaleznosc partyjna]" {if array_key_exists('przynaleznosc partyjna',$opis)}checked="true"{/if}>Przynależność partyjna</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="col-sm-12"><input type="checkbox" name="pola[przynaleznosc zwiazkowa]" {if array_key_exists('przynaleznosc zwiazkowa',$opis)}checked="true"{/if}>Przynależność związkowa</label>
+                        <label class="col-sm-12"><input type="checkbox" name="pola[stan zdrowia]" {if array_key_exists('stan zdrowia',$opis)}checked="true"{/if}>Stan zdrowia</label>
+                        <label class="col-sm-12"><input type="checkbox" name="pola[nalogi]" {if array_key_exists('nalogi',$opis)}checked="true"{/if}>Nałogi</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <label class="col-sm-12"><input type="checkbox" name="pola[zycie seksualne]" {if array_key_exists('zycie seksualne',$opis)}checked="true"{/if}>Życie seksualne</label>
+                    </div>
+            </fieldset>
+            <!--<fieldset id="wlasne_pola" style="margin-left:0;">-->
+            <!--<legend>Inne pola zbioru</legend>-->
+            <!--<input style="width:200px;" class="notfancy" id="tags" type="text" placeholder="wpisz pole do dodania">-->
+            <!--<input style="float:left; margin-left:10px;" type="button" value="dodaj pole" id="dodaj_pole2" >-->
+            <!--{*<input style="float:left; margin-left:10px; clear:both;" type="button" id="dodaj_pole" value="dodaj inne pole" >*}-->
+            <!--</fieldset>-->
+        </div>
+        <div class="tab-pane" id="aplikacje">
+            <table id="app_tab">
+                <thead>
+                <tr>
+                    <th>nazwa</th>
+                    <th>wersja</th>
+                    <th>zaznacz</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $apps as $a}
+                <tr>
+                    <td>{$a.nazwa|ucfirst}</td>
+                    <td>{$a.wersja}</td>
+                    <td><input type="checkbox" {if array_key_exists('assigned',$a)}checked="true"{/if} name="apps[]" value="{$a.id}"></td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane" id="users">
+            <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+                <thead>
+                <tr>
+                    <th>identyfikator</th>
+                    <th>czytanie</th>
+                    <th>pozyskiwanie</th>
+                    <th>wprowadzanie</th>
+                    <th>modyfikacja</th>
+                    <th>usuwanie</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $osoby as $o}
+                <tr class="new_os">
+                    <td>
+                        {$o.imie} {$o.nazwisko}
+                    </td>
+                    <td><input {if array_key_exists('czytanie',$o.upowaznienia) && $o.upowaznienia.czytanie}checked="true"{/if} type="checkbox" class="czy" name="u_{$o.id}[czytanie]"></td>
+                    <td><input {if array_key_exists('pozyskiwanie',$o.upowaznienia) && $o.upowaznienia.pozyskiwanie}checked="true"{/if} type="checkbox" class="poz" name="u_{$o.id}[pozyskiwanie]"></td>
+                    <td><input {if array_key_exists('wprowadzanie',$o.upowaznienia) && $o.upowaznienia.wprowadzanie}checked="true"{/if}  type="checkbox" class="wpr" name="u_{$o.id}[wprowadzanie]"></td>
+                    <td><input {if array_key_exists('modyfikacja',$o.upowaznienia)  && $o.upowaznienia.modyfikacja}checked="true"{/if}  type="checkbox" class="mod" name="u_{$o.id}[modyfikacja]"></td>
+                    <td><input {if array_key_exists('usuwanie',$o.upowaznienia) && $o.upowaznienia.usuwanie}checked="true"{/if}  type="checkbox" class="usu" name="u_{$o.id}[usuwanie]"></td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+    {*
+    <fieldset id="osoby_do_zbioru">
+        <legend>Osoby upoważnione do zbioru</legend>
+
+        <input style="float:left; clear:both;" type="button" class="dodaj_osobe" value="dodaj osobę" >
+    </fieldset>
+    *}
+    <fieldset style="margin-left:0;">
+        <input type="submit" class="btn btn-info" value="Zapisz" />
+    </fieldset>
+</form>

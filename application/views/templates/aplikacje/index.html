@@ -1,0 +1,45 @@
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover();   
+});
+</script>
+{include file='modals/modal.tpl' title='Aplikacje - co to jest?' content='Wykaz aplikacji i modułów, służą przede wszystkim skutecznej ewidencji systemów informatycznych, które używamy do przetwarzania danych osobowych. W formularzu dodawania aplikacji możliwe jest załączenie aktualnej dokumentacji programu, dzięki czemu możemy mieć wszystko w jednym miejscu: w Kryptos24, a dodatkowo w razie kontroli GIODO, możemy odnieść się do dokumentacji aplikacji nie tracąc czasu na pobieranie i szukanie.'}
+<div class="table-operations-header">
+    <a class="btn btn-success" href="/aplikacje/update" data-title="Dodaj nową aplikację" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+    <a class="btn btn-success" href="/reports/appreport" data-title="Raport aplikacji" data-toggle="tooltip"><i class="fa fa-print"></i> &nbsp;Raport aplikacji</a>
+</div>
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="string">producent</th>
+        <th data-filter-type="string">nazwa</th>
+        <th data-filter-type="string">wersja</th>
+        <th>dokument</th>
+        <th width="70px"></th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $paginator as $d}
+        <tr>
+            <td>{$d.producent|ucfirst}</td>
+            <td>{$d.nazwa|ucfirst}</td>
+            <td>{$d.wersja|ucfirst}</td>
+            <td>
+                {if $d.document}
+                    <a href="/dokumenty/pobierzplik/id/{$d.document}" target="_blank"><img src="/images/document.png" width="32px"></a>
+                {else}
+                    BRAK
+                {/if}
+            </td>
+            <td class="operations nowrap">
+                {if $auth->isGranted('node/aplikacje/update', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-pencil" href="/aplikacje/update/id/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                {/if}
+                {if $auth->isGranted('node/aplikacje/del', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-trash modal-confirm" data-href="/aplikacje/del/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

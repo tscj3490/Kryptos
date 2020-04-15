@@ -1,0 +1,452 @@
+<form id="f_profile" name="f_profile" action="/osoby/save" method="POST" class="form-horizontal" role="form">
+    <input type="hidden" name="id" id="id" value="{$data.id}"/>
+    <input type="hidden" name="page_name" id="page_name" value="{$pageName}"/>
+    <input type="hidden" name="proposal_role" id="proposal_role" value="{$proposalRole}"/>
+    <input type="hidden" name="task_id" id="task_id" value="{$taskId}"/>
+
+    <ul class="nav nav-tabs">
+        {assign "showHome" $pageName !== 'proposal' || in_array($proposalRole, ['create', 'abi', 'lad'])}
+        {assign "showRola" $pageName !== 'proposal' || in_array($proposalRole, ['create', 'abi', 'lad'])}
+        {assign "showGroups" $pageName !== 'proposal' || in_array($proposalRole, ['create', 'abi', 'lad'])}
+        {assign "showKeys" $pageName !== 'proposal' || in_array($proposalRole, ['abi', 'lad'])}
+        {assign "showRights" $pageName !== 'proposal' || in_array($proposalRole, ['abi', 'lad'])}
+        {assign "showZbiory" $pageName !== 'proposal' || in_array($proposalRole, ['abi', 'lad'])}
+        {assign "showPermissions" $pageName !== 'proposal' || in_array($proposalRole, ['abi', 'lad', 'asi'])}
+        {assign "showRegistries" $pageName !== 'proposal'}
+
+        {if $showHome}
+            <li class="active"><a href="#home" data-toggle="tab">Ogólnie informacja</a></li>
+        {/if}
+
+        {*
+        <li><a href="#kryptos" data-toggle="tab">Dostęp do Kryptos</a></li>
+        *}
+
+        {if $showRola}
+        <li><a href="#rola" data-toggle="tab">Rola</a></li>
+        {/if}
+
+        {if $showGroups}
+        <li><a href="#groups" data-toggle="tab">Grupy</a></li>
+        {/if}
+
+        {if $showKeys}
+        {if $auth->isGranted('perm/osoby/set-klucze')}
+            <li><a href="#keys" data-toggle="tab">Dostęp do pomieszczeń</a></li>
+        {/if}
+        {/if}
+
+        {if $showRights}
+        {if $auth->isGranted('perm/osoby/set-permissions')}
+            <li><a href="#rights" data-toggle="tab">Uprawnienia Kryptos</a></li>
+        {/if}
+        {/if}
+
+        {if $showZbiory}
+        {if $auth->isGranted('perm/osoby/set-upowaznienia')}
+            <li><a href="#zbiory" data-toggle="tab">Zbiory</a></li>
+        {/if}
+            <li><a href="#zzd" data-toggle="tab">ZZD</a></li>
+        {/if}
+
+        {if $showPermissions}
+        <li><a href="#permissions" data-toggle="tab">Uprawnienia</a></li>
+        {/if}
+
+        {if $showRegistries}
+        {Application_Service_Ui::getInstance()->getSectionByName('rejestr_osob_pracownik_update_tabs') nofilter}
+        {/if}
+    </ul>
+    <div class="tab-content">
+        {if $showHome}
+        <div class="tab-pane form-horizontal" id="home" style="padding:15px 5px">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group row">
+                        <label for="login" class="col-sm-4">Login:</label>
+                        <div class="col-sm-8"><input type="text" placeholder="" class="form-control" disabled="disabled"" value="{$user['login']}"></div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="imie" class="col-sm-4">Imię:</label>
+                        <div class="col-sm-8"><input type="text" placeholder="imię" name="imie" class="form-control validate[required]" value="{$data['imie']}"></div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="nazwisko" class="col-sm-4">Nazwisko:</label>
+                        <div class="col-sm-8"><input type="text" placeholder="nazwisko" name="nazwisko" class="form-control validate[required]" value="{$data['nazwisko']}" ></div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="stanowisko" class="col-sm-4">Stanowisko:</label>
+                        <div class="col-sm-8"><input type="text" placeholder="stanowisko" name="stanowisko" class="form-control" value="{$data['stanowisko']}"></div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="umowa" class="col-sm-4">Rodzaj umowy:</label>
+
+                        <div class="col-sm-8">
+                            <select id="umowa" name="umowa" class="form-control validate[required]">
+                                <option value="o-prace" {if $data.rodzajUmowy == 'u-o-prace'}selected{/if}>Umowa o pracę</option>
+                                <option value="cywilnoprawna" {if $data.rodzajUmowy == 'cywilnoprawna'}selected{/if}>Umowa cywilnoprawna</option>
+                                <option value="dzialalnosc-g" {if $data.rodzajUmowy == 'dzialalnosc-g'}selected{/if}>Działalność gospodarcza</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="dzial" class="col-sm-4">Dział:</label>
+                        <div class="col-sm-8"><input type="text" placeholder="dział" name="dzial" class="form-control" value="{$data['dzial']}"></div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="email" class="col-sm-4">E-mail:</label>
+                        <div class="col-sm-8"><input type="text" placeholder="e-mail" name="email" id="email" class="form-control" value="{$data.email}"></div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="email" class="col-sm-4">E-mail do powiadomień:</label>
+                        <div class="col-sm-8"><input type="text" placeholder="e-mail" name="notification_email" id="notification_email" class="form-control" value="{$data.notification_email}"></div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="telefon_stacjonarny" class="col-sm-4">Telefon stacjonarny:</label>
+                        <div class="col-sm-8"><input type="text" placeholder="telefon stacjonarny" name="telefon_stacjonarny" id="telefon_stacjonarny" class="form-control" value="{$data.telefon_stacjonarny}"></div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="telefon_komorkowy" class="col-sm-4">Telefon komórkowy:</label>
+                        <div class="col-sm-8"><input type="text" placeholder="telefon komórkowy" name="telefon_komorkowy" id="telefon_komorkowy" class="form-control" value="{$data.telefon_komorkowy}"></div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    {if $pageName !== 'proposal'}
+                        <div class="form-group row">
+                            <label for="status" class="col-sm-4">Status:</label>
+
+                            <div class="col-sm-8">
+                                <select id="status" name="status" class="form-control validate[required]">
+                                    <option value="1" {if $data.status == 1}selected{/if}>Aktywny</option>
+                                    <option value="2" {if $data.status == 2}selected{/if}>Oczekuje na aktywację</option>
+                                    <option value="4" {if $data.status == 4}selected{/if}>Zwolniony</option>
+                                </select>
+                            </div>
+                        </div>
+                    {/if}
+                    <div class="form-group row">
+                        <label>
+                            <div class="col-sm-12"><input type="checkbox" name="zgodaNaPrzetwarzaniePozaFirma" id="zgodaNaPrzetwarzaniePozaFirma" {if $data.zgodaNaPrzetwarzaniePozaFirma}checked{/if}>
+                                czy osoba wyraziła zgodę na przetwarzania danych poza firma
+                            </div>
+                        </label>
+                    </div>
+                    <div class="form-group row">
+                        <label>
+                            <div class="col-sm-12"><input type="checkbox" id="zapoznanaZPolityka" name="zapoznanaZPolityka" {if $data.zapoznanaZPolityka}checked{/if}>
+                                czy osoba jest zapoznana z polityką bezpieczeństwa
+                            </div>
+                        </label>
+                    </div>
+                    <div class="form-group row">
+                        <label>
+                            <div class="col-sm-12"><input type="checkbox" id="zgodaUdostepnienieWizerunku" name="zgodaUdostepnienieWizerunku" {if $data.zgodaUdostepnienieWizerunku}checked{/if}>
+                                czy osoba wyraziła zgodę na udostępnianie wizerunku
+                            </div>
+                        </label>
+                    </div>
+                    <div class="form-group row">
+                        <label>
+                            <div class="col-sm-12"><input type="checkbox" id="zgodaPrzetwarzanieMarketing" name="zgodaPrzetwarzanieMarketing" {if $data.zgodaPrzetwarzanieMarketing}checked{/if}>
+                                czy osoba wyraziła zgodę na przetwarzanie danych w celach marketingowych
+                            </div>
+                        </label>
+                    </div>
+                    <div class="form-group row">
+                        <label>
+                            <div class="col-sm-12"><input type="checkbox" id="generate_documents" name="generate_documents" value="1" {if $data.generate_documents}checked{/if}>
+                                generuj dokumentację osobową dla tej osoby
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/if}
+
+        {if $showKryptos}
+        <div class="tab-pane" id="kryptos" style="padding:15px 5px">
+            {if $data['login_do_systemu']}
+                <div class="form-group row">
+                    <label for="dzial" class="col-sm-2">Login do systemu:</label>
+
+                    <div class="col-sm-4"><input type="text" placeholder="login" class="form-control" value="{$data['login_do_systemu']}" disabled></div>
+                </div>
+            {/if}
+            <div class="form-group row">
+                <label for="password" class="col-sm-2">Hasło:</label>
+
+                <div class="col-sm-4"><input type="password" id="new_pass1" placeholder="Hasło" name="password" class="form-control validate[  minSize[10], maxSize[15]]"></div>
+            </div>
+            <div class="form-group row">
+                <label for="password_repeat" class="col-sm-2">Hasło:</label>
+
+                <div class="col-sm-4"><input type="password" id="new_pass2" placeholder="Hasło powtórzone" name="password_repeat" class="form-control validate[minSize[10], maxSize[15]]"></div>
+            </div>
+        </div>
+        {/if}
+
+        {if $showRola}
+        <div class="tab-pane" id="rola" style="padding:15px 5px">
+            <div class="form-group row">
+                <label for="data" class="col-sm-2">Role:</label>
+
+                <div class="col-md-8 checkout-list">
+                    {foreach $role as $r}
+                        <label class="col-sm-12">
+                            <input type="checkbox" {if ($r.id==5 || (is_array($roles) && in_array($r.id, $roles)))}checked{/if} name="role[]" value="{$r.id}">{$r.nazwa} ({$r.opis})
+                        </label>
+                    {/foreach}
+                </div>
+            </div>
+        </div>
+        {/if}
+
+        {if $showGroups}
+        <div class="tab-pane" id="groups" style="padding:15px 5px">
+            <div class="form-group row">
+                <label for="data" class="col-sm-2">Grupy:</label>
+
+                <div class="col-md-8 checkout-list">
+                    {foreach $groups as $r}
+                        <label class="col-sm-12">
+                            <input type="checkbox" {if array_key_exists($r.id, $osobaGroups)}checked{/if} name="groups[]" value="{$r.id}"> {$r.name}
+                        </label>
+                    {/foreach}
+                </div>
+            </div>
+        </div>
+        {/if}
+
+        {if $showKeys}
+        <div class="tab-pane" id="keys" style="padding:15px 5px">
+            <div class="form-group row">
+                <div class="col-md-12">
+                    <table cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered example">
+                        <thead>
+                        <tr>
+                            <th data-disable-sort class="min-width"></th>
+                            <th data-filter-type="string">nazwa</th>
+                            <th data-filter-type="string">nr</th>
+                            <th data-filter-type="string">wydział</th>
+                            <th data-filter-type="string">budynek</th>
+                        </tr>
+                        </thead>
+                        <tbody class="js-checkbox-container">
+                        {foreach $pomieszczenia as $p}
+                            <tr>
+                                <td>
+                                    <div class="icheckbox_square-aero js-checkbox" aria-checked="false" aria-disabled="false" data-target-id="klucze[{$p.p_id}]">
+                                        <ins class="iCheck-helper"></ins>
+                                        <span class="hidden text-indicator"></span>
+                                    </div>
+                                </td>
+                                <td>{$p.nazwa_pomieszczenia}</td>
+                                <td>{$p.nr}</td>
+                                <td>{$p.wydzial}</td>
+                                <td>{$p.nazwa_budynku}</td>
+                            </tr>
+                        {/foreach}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {/if}
+
+        {if $showRights}
+        <div class="tab-pane" id="rights" style="padding:15px 5px">
+            <div class="form-group row">
+                <div class="col-md-8">
+                    {include file='osoby/_element-rights-extended.html'}
+                </div>
+            </div>
+        </div>
+        {/if}
+
+        {if $showZbiory}
+        <div class="tab-pane" id="zbiory" style="padding:15px 5px;">
+            <div class="form-group row">
+                <div class="col-sm-12">
+                    <div class="margin-bottom">
+                        <button type="button" class="btn" onclick="$('#zbiory .icheckbox_square-aero').not('.action-select-all').not('.checked').click()">Zaznacz wszystkie</button>
+                        <button type="button" class="btn" onclick="$('#zbiory .icheckbox_square-aero').not('.action-select-all').filter('.checked').click()">Odznacz wszystkie</button>
+                    </div>
+                    <div class="uncommentBigData">
+                        <table cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered example">
+                            <thead>
+                            <tr>
+                                <th data-filter-type="string">Zbiór</th>
+                                <th data-filter-type="select">forma</th>
+                                <th data-filter-type="select-items">pomieszczenia</th>
+                                <th data-disable-sort>czytanie</th>
+                                <th data-disable-sort>pozyskiwanie</th>
+                                <th data-disable-sort>wprowadzanie</th>
+                                <th data-disable-sort>modyfikowanie</th>
+                                <th data-disable-sort>usuwanie</th>
+                                <th data-disable-sort>zaznacz wszystkie</th>
+                            </tr>
+                            </thead>
+                            <tbody class="js-checkbox-container">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane" id="zzd" style="padding:15px 5px;">
+              <table cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered example">
+                            <thead>
+                            <tr>
+                                <th>Nazwa zbioru</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                 {foreach $zbioryOsobyOdpowiedzialne as $z}
+                                 <tr><td><a href="/zbiory/update/id/{$z.zbior_id}">{$z.zbior.nazwa}</a></td></tr>
+                                 {/foreach}
+                            </tbody>
+                        </table>
+        </div>
+        {/if}
+
+        {if $showPermissions}
+        <div class="tab-pane" id="permissions" style="padding:15px 5px">
+            <div class="form-group row">
+                <div class="col-md-12">
+                    {if $permissionsFormBasic}
+                        {include file="osoby/_element-permissions.html"}
+                    {else}
+                        {include file="osoby/_element-permissions-extended.html"}
+                    {/if}
+                </div>
+            </div>
+        </div>
+        {/if}
+
+        {if $showRegistries}
+        {Application_Service_Ui::getInstance()->getSectionByName('rejestr_osob_pracownik_update_content', ['osoba' => $data]) nofilter}
+        {/if}
+
+        <div class="hiddenElement">
+            <div class="hiddenFormElements"></div>
+            <div id="klucze-form-data">
+                {if $showKeys}
+                    {foreach $pomieszczenia as $p}
+                        <input value="{if (is_array($klucze) && in_array($p->p_id,$klucze))}1{else}0{/if}" type="hidden" data-id="klucze[{$p->p_id}]" name="klucze[{$p->p_id}]">
+                    {/foreach}
+                {/if}
+            </div>
+        </div>
+        <div class="">
+            {include file=$formControlsTemplate}
+        </div>
+</form>
+
+<script type="text/javascript">
+    $('.tab-pane').eq(0).addClass('active');
+
+    upowaznieniaPack = {$upowaznieniaPack nofilter};
+    var unpacked2 = unpacked = '';
+    $(upowaznieniaPack).each(function() {
+        unpacked += '<tr>' +
+                '<td>' + this[1] + '</td>' +
+                '<td>' + this[3] + '</td>' +
+                '<td>' + this[4] + '</td>' +
+                '<td><div class="icheckbox_square-aero js-checkbox-from-container" data-target-id="upowaznienia[' + this[0] + '][czytanie]"><ins class="iCheck-helper"></ins></div></td>' +
+                '<td><div class="icheckbox_square-aero js-checkbox-from-container" data-target-id="upowaznienia[' + this[0] + '][pozyskiwanie]"><ins class="iCheck-helper"></ins></div></td>' +
+                '<td><div class="icheckbox_square-aero js-checkbox-from-container" data-target-id="upowaznienia[' + this[0] + '][wprowadzanie]"><ins class="iCheck-helper"></ins></div></td>' +
+                '<td><div class="icheckbox_square-aero js-checkbox-from-container" data-target-id="upowaznienia[' + this[0] + '][modyfikacja]"><ins class="iCheck-helper"></ins></div></td>' +
+                '<td><div class="icheckbox_square-aero js-checkbox-from-container" data-target-id="upowaznienia[' + this[0] + '][usuwanie]"><ins class="iCheck-helper"></ins></div></td>' +
+                '<td><div class="icheckbox_square-aero action-select-all"><ins class="iCheck-helper"></ins></div></td>' +
+                '</tr>';
+
+        unpacked2 += '<input type="hidden" data-key="' + this[0] + '" value="' + this[2][0] + '" name="upowaznienia[' + this[0] + '][czytanie]" class="js-checkbox-target">' +
+                '<input type="hidden" data-key="' + this[0] + '" value="' + this[2][1] + '" name="upowaznienia[' + this[0] + '][pozyskiwanie]" class="js-checkbox-target">' +
+                '<input type="hidden" data-key="' + this[0] + '" value="' + this[2][2] + '" name="upowaznienia[' + this[0] + '][wprowadzanie]" class="js-checkbox-target">' +
+                '<input type="hidden" data-key="' + this[0] + '" value="' + this[2][3] + '" name="upowaznienia[' + this[0] + '][modyfikacja]" class="js-checkbox-target">' +
+                '<input type="hidden" data-key="' + this[0] + '" value="' + this[2][4] + '" name="upowaznienia[' + this[0] + '][usuwanie]" class="js-checkbox-target">'
+    });
+    $(unpacked).appendTo('#zbiory .js-checkbox-container');
+    $(unpacked2).appendTo('.hiddenFormElements');
+
+    function czy_jest_znak(haslo, male_litery) {
+        var jest_mala_litera = false;
+        for (var i = 0; i < haslo.length; i++) {
+            //var litera_hasla=haslo.substring(i, 1);
+            litera_hasla = haslo.charAt(i);
+            if (male_litery.indexOf(litera_hasla) != -1) {
+                var jest_mala_litera = true;
+                break;
+            }
+        }
+        if (jest_mala_litera == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    $(document).ready(function () {
+
+
+        backendUtilities.addVatidationEngine("f_profile");
+
+        $('#f_profile').submit(function () {
+
+            if ($('#new_pass1').size()) {
+                if ($('#new_pass1').val() != '' || $('#new_pass2').val() != "") {
+
+                    if ($('#new_pass1').val() != $('#new_pass2').val()) {
+                        alert('Wprowadzone nowe hasła różnią się.');
+                        return false;
+                    }
+
+                    var haslo = $('#new_pass1').val();
+                    var male_litery = "qwertyuiopasdfghjklzxcvbnmęóąśłżźćń";
+
+                    if (czy_jest_znak(haslo, male_litery)) {
+                    } else {
+                        alert('Wymagana jest co najmniej jedna mała litera');
+                        return false;
+                    }
+
+                    var wielkie_litery = male_litery.toUpperCase()
+
+
+                    if (czy_jest_znak(haslo, wielkie_litery)) {
+                    } else {
+                        alert('Wymagana jest co najmniej jedna wielka litera');
+                        return false;
+                    }
+
+
+                    if (czy_jest_znak(haslo, '1234567890')) {
+                    } else {
+                        alert('Wymagana jest co najmniej cyfra');
+                        return false;
+                    }
+
+                    if (czy_jest_znak(haslo, {literal}'`~!@#$%^&*()_+|[];\',./{}:">?_-=\\"'{/literal})) {
+
+                    } else {
+                        alert('Wymagany jest co najmniej jeden znak specjalny');
+                        return false;
+                    }
+
+
+                }
+            }
+
+            {if $pageName == 'proposal'}
+            if ($('#groups').size()) {
+                if (!$('#groups').find(':checkbox:checked').size()) {
+                    alert('Przypisz pracownika do grupy');
+                    return false;
+                }
+            }
+            {/if}
+        });
+    });
+</script>

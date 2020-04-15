@@ -1,0 +1,75 @@
+{$message}
+<form name="f_data" id="f_data" method="POST" action="/eventspersons/save" id="dataform-add">
+   <fieldset>
+      <div class="form-group row">
+         <label for="eventscompany_id" class="col-sm-2">Firma:</label>
+         <div class="col-sm-4">
+            <select type="text" name="eventscompany_id" id="eventscompany_id"  class="form-control">
+               <option value="0">brak</option>
+             	{foreach $eventscompanies as $company}
+                  <option value="{$company.id}" {if $data['eventscompany_id'] == $company.id}selected="selected"{/if}>{$company.name}</option>
+               {/foreach}
+            </select>
+         </div>
+      </div>
+      <div class="form-group row">
+         <label for="eventspersonstype_id" class="col-sm-2">Rodzaj osoby:</label>
+         <div class="col-sm-4">
+            <select type="text" name="eventspersonstype_id" id="eventspersonstype_id"  class="form-control">
+             	{foreach $eventspersonstypes as $type}
+                  <option value="{$type.id}" {if $data['eventspersonstype_id'] == $type.id}selected="selected"{/if}>{$type.name}</option>
+               {/foreach}
+            </select>
+         </div>
+      </div>
+      <div class="form-group row">
+         <label for="name" class="col-sm-2">Imię:</label>
+         <div class="col-sm-4"><input type="text" name="name" id="name"  class="form-control validate[required]" value="{$data['name']}"></div>
+      </div>
+      <div class="form-group row">
+         <label for="lastname" class="col-sm-2">Nazwisko:</label>
+         <div class="col-sm-4"><input type="text" name="lastname" id="lastname"  class="form-control validate[required]" value="{$data['lastname']}"></div>
+      </div>
+       <div class="form-group row">
+           <label for="number" class="col-sm-2">Numer karty:</label>
+           <div class="col-sm-4"><input type="text" name="number" id="number"  class="form-control" value="{$data['number']}"></div>
+       </div>
+       <div class="form-group row">
+           <label for="number" class="col-sm-2">PESEL:</label>
+           <div class="col-sm-4"><input type="text" name="pesel" id="pesel"  class="form-control validate[custom[pesel]]" value="{$data['pesel']}"></div>
+       </div>
+       <div class="form-group row">
+           <label for="number" class="col-sm-2">Numer weterynaryjny:</label>
+           <div class="col-sm-4"><input type="text" name="veterinary_number" id="veterinary_number"  class="form-control validate[required]" value="{$data['veterinary_number']}"></div>
+       </div>
+      <div id="globalMessage"></div>
+      <div class="">
+         <a href="/eventspersons/"><input type="button" value="Powrót"  class="btn"  ></a>
+         <input type="button" value="Zapisz"  class="btn btn-info" onclick="return checkSubmit();" >
+         <input type="button" value="Zapisz i dodaj następny"  class="btn btn-info" onclick="$('#addAnother').val('1');return checkSubmit();"  >
+         <input type="hidden" name="id" id="id" value="{$data.id}" />
+      </div>
+   </fieldset>
+   <div style="width:0px;height:0px;overflow:hidden;">
+      <input type="text" name="addAnother" id="addAnother" value="0" />
+      <input type="submit" id="formSubmit" value="Zapisz"  class="btn btn-info"  >
+   </div>
+</form>
+<script type="text/javascript">
+    function checkSubmit() {
+        $('#formSubmit').click();
+    }
+
+   $('#eventspersonstype_id')
+       .on('change', function() {
+           var $tg = $(this),
+               vetNoRow = $('#veterinary_number').closest('.row');
+           if ($tg.val() === '443') {
+               vetNoRow.show();
+           } else {
+               vetNoRow.hide();
+           }
+       })
+       .change();
+	backendUtilities.addVatidationEngine("f_data");
+</script>

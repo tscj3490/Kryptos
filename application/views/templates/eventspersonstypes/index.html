@@ -1,0 +1,49 @@
+{$message}
+<div class="body-action">
+    <a class="btn btn-default" href="/events">Powrót</a>
+    <a class="btn btn-info" href="/eventspersonstypes/update">Dodaj nowy rodzaj osoby</a>
+</div>
+<form method="post" action="/eventspersonstypes/delChecked/">
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead class="ui-widget-header">
+        <tr>
+            <th></th>
+            <th>nr</th>
+            <th>nazwa</th>
+            <th>dodatkowe pola</th>
+            <th>domyślny cel</th>
+            <th>data utworzenia</th>
+            <th>data edycji</th>
+            <th>opcje</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content">
+        {foreach $paginator as $d}
+            <tr>
+                <td style="width:22px">
+                    <input type="checkbox" name="id{$d.id}" id="id{$d.id}" value="1"/>
+                </td>
+                <td>{$d@iteration}</td>
+                <td>{$d.name}</td>
+                <td>{$d.addonfields}</td>
+                <td>{if $d.defaultpurpose_id}{$d.room_name}{if $d.room_no}, pok. {$d.room_no}{/if}, {$d.building_name}{/if}</td>
+                <td>{$d.created_at}</td>
+                <td>{if $d.updated_at}{$d.updated_at}{else}brak{/if}</td>
+                <td class="operations">
+                    {if $auth->isGranted('node/eventspersonstypes/update', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-pencil" href="/eventspersonstypes/update/id/{$d.id}"></a>
+                    {/if}
+                    {if $auth->isGranted('node/eventspersonstypes/update')}
+                    <a class="glyphicon glyphicon-star" href="/eventspersonstypes/update/copy/{$d.id}"></a>
+                    {/if}
+                    {if $auth->isGranted('node/eventspersonstypes/del', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-trash" onclick="if(confirm('Usunąć?')) window.location.href='/eventspersonstypes/del/id/{$d.id}'" href="javascript:;"></a>
+                    {/if}
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+
+    </table>
+    <input type="submit" value="Usuń zaznaczone" class="btn btn-default"/>
+</form>

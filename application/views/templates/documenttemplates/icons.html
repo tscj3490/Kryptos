@@ -1,0 +1,27 @@
+<h3 class="text-center" style="margin-top:0px;margin-bottom:10px;">Lista dostępnych ikon</h3>
+<div style="padding-left:16px;padding-right:15px;padding-top:1px;">
+   {assign var="sum" value=0}
+   {assign var="cell" value=0}
+   {foreach $icons as $icon}
+      {assign var="sum" value=$sum+1}
+      {assign var="cell" value=$cell+1}
+      {if $cell == 1}<div class="row"><div class="col-md-6"><div class="row"><div class="col-sm-6"><div class="row">{/if}
+      {if $cell == 3}<div class="col-sm-6"><div class="row">{/if}
+      {if $cell == 5}<div class="col-md-6"><div class="row"><div class="col-sm-6"><div class="row">{/if}
+      {if $cell == 7}<div class="col-sm-6"><div class="row">{/if}
+      
+      <div class="col-xs-6" style="padding:0px;"><div class="iconmodal" onclick="$('#icon').val('{$icon}'); setIcons();" data-dismiss="modal"><div style="height:15px;"></div><i class="fa fa-fw fa-2x {$icon}"></i></div></div>
+      
+      {if $cell == 2}</div></div>{/if}
+      {if $cell == 4}</div></div></div></div>{/if}
+      {if $cell == 6}</div></div>{/if}
+      {if $cell == 8}{assign var="cell" value=0}</div></div></div></div></div>{/if}
+   {/foreach}
+   {if $cell == 1}</div></div></div></div></div>{/if}
+   {if $cell == 2}</div></div></div>{/if}
+   {if $cell == 3}</div></div></div>{/if}
+   {if $cell == 4}</div>{/if}
+   {if $cell == 5}</div></div></div></div></div>{/if}
+   {if $cell == 6}</div></div></div>{/if}
+   {if $cell == 7}</div></div></div></div></div>{/if}
+</div>

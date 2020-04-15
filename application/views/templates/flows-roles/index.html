@@ -1,0 +1,33 @@
+<div class="table-operations-header">
+    {if $auth->isGranted('node/flows-roles/update')}
+    <a class="btn btn-success" href="{$baseUrl}/update" data-title="Dodaj obieg" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj role w przepływie</a>
+    {/if}
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+        <tr>
+            <th data-filter-type="string">Nazwa roli</th>
+            <th data-filter-type="date-range">Data dodania</th>
+            <th data-filter-type="date-range">Data edycji</th>
+            <th>Operacje</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach $paginator as $d}
+        <tr>
+            <td>{$d.name}</td>
+            <td>{smart_date value=$d.date_added}</td>
+            <td>{smart_date value=$d.date_edited}</td>
+            <td class="operations">
+                {if $auth->isGranted('node/flows-roles/update', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-pencil" href="/flows-roles/update/id/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                {/if}
+                {if $auth->isGranted('node/flows-roles/del', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="/flows-roles/del/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>

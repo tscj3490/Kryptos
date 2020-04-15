@@ -1,0 +1,264 @@
+<div class="row">
+    <div class="col-lg-6">
+        <form name="f_data" id="f_data" method="POST" action="/risk-assessment/save" enctype="multipart/form-data">
+            <fieldset>
+                {if $data.id}<input type="hidden" name="id" value="{$data.id}" />{/if}
+                <div class="form-group row">
+                    <label for="name" class="col-sm-4">Nazwa:</label>
+                    <div class="col-sm-8">
+                        <input type="text" name="name" id="name" class="form-control validate[required]" value="{$data.name}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="person" class="col-sm-4">Właściciel analizy:</label>
+                    <div class="col-sm-8">
+                          <input type="hidden" name="person_id" id="person_typeahead" value="{$data.person_id}" />
+                        <div class="input-group col-sm-12">
+                            <input type="text" id="person_typeahead" class="form-control typeaheadElement validate[required]" data-source-function="getPeople"
+                                data-target-element="#person_typeahead" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="asset_group_typeahead" class="col-sm-4">Grupa aktywów:</label>
+                    <div class="col-sm-8">
+                        <input type="hidden" name="asset_group_id" id="asset_group_id" value="{$data.asset_group_id}" />
+                        <div class="input-group col-sm-12">
+                           
+                            <input type="text" id="asset_group_typeahead" class="form-control typeaheadElement validate[required]" data-source-function="getAssetGroups"
+                                data-target-element="#asset_group_id" />
+                         
+                        </div>
+                    </div>
+                </div>
+                                <div class="form-group row">
+                    <label for="classification_typeahead" class="col-sm-4">Klasyfikacja na podstawie:</label>
+                    <div class="col-sm-8">
+                        <input type="hidden" name="classification_id" id="classification_id" value="{$data.classification_id}" />
+                        <div class="input-group col-sm-12">
+                           
+                            <input type="text" id="asset_group_typeahead" class="form-control typeaheadElement validate[required]" data-source-function="getClassifications"
+                                data-target-element="#classification_id" />
+                         
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="safeguard_typeahead" class="col-sm-4">Dodatkowe zabezpieczenia:</label>
+                    <div class="col-sm-8">
+                        <input type="hidden" name="extra_safeguard_id" id="extra_safeguard_id" value="{$data.extra_safeguard_id}" />
+                        <div class="input-group col-sm-12">
+                           
+                            <input type="text" id="asset_group_typeahead" class="form-control typeaheadElement validate[required]" data-source-function="getSafeguards"
+                                data-target-element="#extra_safeguard_id" />
+                         
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row ">
+                    <label for="elem_1" class="col-sm-4">Aktywa zagrożone:</label>
+                    <div class="col-sm-8">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button class="btn btn-md btn-default choose-from-dial" type="button" data-dial-url="/home/universal-mini-choose/model/RiskAssessmentAssetsAtRisk"
+                                    data-dial-ready-fn="filter_ta_elem_1" data-dial-process-fn="add_ta_elem_1"
+                                    data-target-element="#elem_1">Wybierz</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" id="elem_1">
+                            {foreach $assetsAtRiskValues as $d}
+                                <div class="seloptmin"><span>{$d.assetAtRisk}</span><i title="Usuń" class="glyphicon glyphicon-trash remove-element" data-closest-target=".seloptmin"></i><input type="hidden" name="elem_1[]" value="{$d.value}"></div>
+                               {/foreach}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row ">
+                    <label for="elem_1" class="col-sm-4">Zagrożone atrybuty:</label>
+                    <div class="col-sm-8">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button class="btn btn-md btn-default choose-from-dial" type="button" data-dial-url="/home/universal-mini-choose/model/RiskAssessmentAttributesAtRisk"
+                                    data-dial-ready-fn="filter_ta_elem_2" data-dial-process-fn="add_ta_elem_2"
+                                    data-target-element="#elem_2">Wybierz</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" id="elem_2">
+                                {foreach $attributuesAtRiskValues as $d}
+                                <div class="seloptmin"><span>{$d.attributeAtRisk}</span><i title="Usuń" class="glyphicon glyphicon-trash remove-element remove-element" data-closest-target=".seloptmin"></i><input type="hidden" name="elem_2[]" value="{$d.value}"></div>
+                                 {/foreach}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row ">
+                    <label for="elem_1" class="col-sm-4">Podatności:</label>
+                    <div class="col-sm-8">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button class="btn btn-md btn-default choose-from-dial" type="button" data-dial-url="/home/universal-mini-choose/model/RiskAssessmentSusceptibilites"
+                                    data-dial-ready-fn="filter_ta_elem_3" data-dial-process-fn="add_ta_elem_3"
+                                    data-target-element="#elem_3">Wybierz</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" id="elem_3">
+                                {foreach $susceptibilitiesValues as $d}
+                                <div class="seloptmin"><span>{$d.susceptibility}</span><i title="Usuń" class="glyphicon glyphicon-trash remove-element remove-element" data-closest-target=".seloptmin"></i><input type="hidden" name="elem_3[]" value="{$d.value}"></div>
+                                {/foreach}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row ">
+                    <label for="elem_1" class="col-sm-4">Zagrożenia:</label>
+                    <div class="col-sm-8">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button class="btn btn-md btn-default choose-from-dial" type="button" data-dial-url="/home/universal-mini-choose/model/RiskAssessmentRisks"
+                                    data-dial-ready-fn="filter_ta_elem_4" data-dial-process-fn="add_ta_elem_4"
+                                    data-target-element="#elem_4">Wybierz</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" id="elem_4">
+                                {foreach $risksValues as $d}
+                                <div class="seloptmin"><span>{$d.risk}</span><i title="Usuń" class="glyphicon glyphicon-trash remove-element remove-element" data-closest-target=".seloptmin"></i><input type="hidden" name="elem_4[]" value="{$d.value}"></div>
+                                {/foreach}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="name" class="col-sm-4">CNSQ - Skutki:</label>
+                    <div class="col-sm-8">
+                        <input type="text" name="cnsq" id="cnsq" class="form-control validate[onlyNumberSp,min[0]]" value="{$data.cnsq}">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="name" class="col-sm-4">LKLH - Prawdopodobieństwo:</label>
+                    <div class="col-sm-8">
+                        <input type="text" name="lklh" id="lklh" class="form-control validate[onlyNumberSp,min[0]]" value="{$data.lklh}">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="name" class="col-sm-4">AV - Wartość aktywów:</label>
+                    <div class="col-sm-8">
+                        <input type="text" name="av" id="av" class="form-control validate[onlyNumberSp,min[0]]" value="{$data.lklh}">
+                    </div>
+                </div>
+
+                 {element tag="bs.select" attributes=[
+                    'id' => 'value_c',
+                    'name' => 'value_c',
+                    'label' => 'C - Poufność',
+                    'options' => Application_Model_RiskAssessment::TYPES_3,
+                    'value' => $data.value_c,
+                    'relative' => false
+                ]}
+
+                 {element tag="bs.select" attributes=[
+                    'id' => 'value_i',
+                    'name' => 'value_i',
+                    'label' => 'I - Integralność',
+                    'options' => Application_Model_RiskAssessment::TYPES_3,
+                    'value' => $data.value_i,
+                    'relative' => false
+                ]}
+
+                {element tag="bs.select" attributes=[
+                    'id' => 'value_a',
+                    'name' => 'value_a',
+                    'label' => 'A - Dostępność',
+                    'options' => Application_Model_RiskAssessment::TYPES_3,
+                    'value' => $data.value_a,
+                    'relative' => false
+                ]}
+
+                {element tag="bs.select" attributes=[
+                    'id' => 'type_1',
+                    'name' => 'type_1',
+                    'label' => 'Potencjał ryzyka',
+                    'options' => Application_Model_RiskAssessment::TYPES_1,
+                    'value' => $data.type_1,
+                    'relative' => false
+                ]}
+
+                 {element tag="bs.select" attributes=[
+                    'id' => 'type_2',
+                    'name' => 'type_2',
+                    'label' => 'Potencjał wpływu',
+                    'options' => Application_Model_RiskAssessment::TYPES_2,
+                    'value' => $data.type_2,
+                    'relative' => false
+                ]}
+
+                <div>
+                    <a href="{$baseUrl}" class="btn btn-default">Powrót</a>
+                    <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+                </div>
+            </fieldset>
+            <div class="hiddenElement">
+                <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var assetGroups = {$assetGroups|json_encode nofilter};
+    function getAssetGroups() {
+        return assetGroups;
+    }
+
+    var people = {$people|json_encode nofilter};
+    function getPeople() {
+        return people;
+    }
+
+    var classifications = {$classifications|json_encode nofilter};
+    function getClassifications() {
+        return classifications;
+    }
+
+        var safeguards = {$safeguards|json_encode nofilter};
+    function getSafeguards() {
+        return safeguards;
+    }
+
+    backendUtilities.addVatidationEngine("f_data");
+
+</script>
+
+
+<script type="text/javascript">
+{foreach from=[1,2,3,4] item=x}
+    function filter_ta_elem_{$x}() {
+        $('#elem_{$x}').find('input').each(function () {
+            $('#optsSearch').find('#id' + this.value).addClass('active');
+        });
+    }
+
+        function add_ta_elem_{$x}(object, status) {
+        if (status) {
+            var newTag = $('<div class="seloptmin">');
+            newTag.append($('<span></span>').text(object.displayName));
+            newTag.append($('<i title="Usuń" class="glyphicon glyphicon-trash remove-element" data-closest-target=".seloptmin">'));
+            newTag.append($('<input type="hidden" name="elem_{$x}[]" value="' + object.id + '">'));
+            $('#elem_{$x}').append(newTag);
+
+            systemAssignHandlers();
+        } else {
+            $('#elem_{$x}').find('input[value="' + object.id + '"]').closest('.seloptmin').remove();
+        }
+    }
+    {/foreach}
+
+
+</script>

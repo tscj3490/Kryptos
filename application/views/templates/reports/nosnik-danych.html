@@ -1,0 +1,25 @@
+<h1>Ewidencja nośników służących przetwarzaniu danych osobowych</h1>
+<table>
+    <thread>
+        <th>lp</th>
+        <th>IDENTYFIKATOR</th>
+        <th>LOKALIZACJA</th>
+        <th>TYP NOŚNIKA</th>
+        <th>OSOBA ODPOWIEDZIALNA</th>
+    </thread>
+    <tbody>
+        {foreach $data as $computer}
+        <tr>
+            <td>{$computer@iteration}</td>
+            <td>{$computer.identity}</td>
+			<td>
+				{$pomieszczenia[$computer.location]['nazwa_budynku']}
+				{$pomieszczenia[$computer.location]['nazwa']}
+			</td>
+			<td>{$typy[$computer.typ]}</td>
+			<td>{$computer.nazwisko} {$computer.imie}</td>
+        </tr>
+        {/foreach}
+    </tbody>
+
+</table>

@@ -1,0 +1,173 @@
+{$message}
+<form name="f_data" id="f_data" method="POST" action="{$baseUrl}/save">
+    <fieldset>
+        <div class="form-group row">
+            <label for="type" class="col-sm-2">Typ transferu:</label>
+            <div class="col-sm-4">
+                <select name="type" id="type" class="form-control">
+                    {foreach from=$transferTypes item=type}
+                        <option value="{$type.id}" {if $data.type == $type.id}selected="selected"{/if}>{$type.name}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="source_company_id" class="col-sm-2">Źródło transferu - podmiot:</label>
+            <div class="col-sm-4">
+                <input type="hidden" name="source_company_id" id="source_company_id" value="{$data.source_company_id}"/>
+                <div class="input-group">
+                    <input type="text" id="source_company_typeahead" class="form-control typeaheadElement" data-source-function="getCompaniesData" data-target-element="#source_company_id">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default choose-from-dial" data-dial-url="/companies/mini-add" data-dial-process-fn="processAddSourceCompany" type="button">Dodaj</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="source_company_id" class="col-sm-2">Źródło transferu - osoba:</label>
+            <div class="col-sm-4">
+                <input type="hidden" name="source_employee_id" id="source_employee_id" value="{$data.source_employee_id}"/>
+                <div class="input-group">
+                    <input type="text" id="source_employee_typeahead" class="form-control typeaheadElement" data-source-function="getCompanyEmployeesData" data-target-element="#source_employee_id" data-relative-element="#source_company_id"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default choose-from-dial" data-dial-url-function="getEmployeeSourceMiniUrl" data-dial-process-fn="processAddSourceEmployee" type="button">Dodaj</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="target_company_id" class="col-sm-2">Cel transferu - podmiot:</label>
+            <div class="col-sm-4">
+                <input type="hidden" name="target_company_id" id="target_company_id" value="{$data.target_company_id}"/>
+                <div class="input-group">
+                    <input type="text" id="target_company_typeahead" class="form-control typeaheadElement" data-source-function="getCompaniesData" data-target-element="#target_company_id">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default choose-from-dial" data-dial-url="/companies/mini-add" data-dial-process-fn="processAddTargetCompany" type="button">Dodaj</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="target_company_id" class="col-sm-2">Cel transferu - osoba:</label>
+            <div class="col-sm-4">
+                <input type="hidden" name="target_employee_id" id="target_employee_id" value="{$.data.target_employee_id}"/>
+                <div class="input-group">
+                    <input type="text" id="target_employee_typeahead" class="form-control typeaheadElement" data-source-function="getCompanyEmployeesData" data-target-element="#target_employee_id" data-relative-element="#target_company_id"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default choose-from-dial" data-dial-url-function="getEmployeeTargetMiniUrl" data-dial-process-fn="processAddTargetEmployee" type="button">Dodaj</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="target_room_id" class="col-sm-2">Cel transferu - pokój:</label>
+            <div class="col-sm-4">
+                <input type="hidden" name="target_room_id" id="target_room_id" value="{$data.target_room_id}"/>
+                <input type="text" id="target_room_typeahead" class="form-control typeaheadElement" data-source-function="getRooms" data-target-element="#target_room_id">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="transfer_legal_basics_id_typeahed" class="col-sm-2">Cel transferu - podstawa prawna:</label>
+            <div class="col-sm-4">
+                <input type="hidden" name="transfer_legal_basics_id" id="transfer_legal_basics_id" value="{$data.transfer_legal_basics_id}"/>
+                <input type="text" id="transfer_legal_basics_id_typeahed" class="form-control typeaheadElement" data-source-function="getLegalBasics">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="zbior_id" class="col-sm-2">Zbiór:</label>
+            <div class="col-sm-4">
+                <input type="hidden" name="zbior_id" id="zbior_id" value="{$data.zbior_id}"/>
+                <input type="text" id="zbior_typeahead" class="form-control typeaheadElement" data-source-function="getZbiory" data-target-element="#zbior_id">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="transfer_purpose" class="col-sm-2">Powód transferu:</label>
+            <div class="col-sm-4"><textarea name="transfer_purpose" id="transfer_purpose" class="form-control">{$data.transfer_purpose}</textarea></div>
+        </div>
+        <div class="form-group row">
+            <label for="transfer_comment" class="col-sm-2">Komentarz:</label>
+            <div class="col-sm-4"><textarea name="transfer_comment" id="transfer_comment" class="form-control">{$data.transfer_comment}</textarea></div>
+        </div>
+        <div class="form-group row">
+            <label for="transfer_date" class="col-sm-2">Data transferu:</label>
+            <div class="col-sm-4"><input type="text" name="transfer_date" id="transfer_date" class="form-control datepicker-input" value="{$data.transfer_date}"></div>
+        </div>
+        <div class="form-group row">
+            <label for="transfer_deadline_date" class="col-sm-2">Data transferu - do kiedy:</label>
+            <div class="col-sm-4"><input type="text" name="transfer_deadline_date" id="transfer_deadline_date" class="form-control datepicker-input" value="{$data.transfer_deadline_date}"></div>
+        </div>
+        <div id="globalMessage"></div>
+        <div class="">
+            <a href="{$baseUrl}"><input type="button" value="Powrót" class="btn"></a>
+            <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+            <input type="button" value="Zapisz i dodaj następny" class="btn btn-info" onclick="$('#addAnother').val('1');$('#formSubmit').click();">
+            <input type="hidden" name="id" id="id" value="{$data.id}"/>
+        </div>
+    </fieldset>
+    <div style="width:0px;height:0px;overflow:hidden;">
+        <input type="text" name="addAnother" id="addAnother" value="0"/>
+        <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+    </div>
+</form>
+
+<script type="text/javascript">
+    var companiesData = {$companies|json_encode nofilter};
+    function getCompaniesData() {
+        return companiesData;
+    }
+    var companyEmployeesData = {$companyEmployees|json_encode nofilter};
+    function getCompanyEmployeesData() {
+        return companyEmployeesData;
+    }
+    var legalBasics = {$legalBasics|json_encode nofilter};
+    function getLegalBasics() {
+        return legalBasics;
+    }
+    var rooms = {$rooms|json_encode nofilter};
+    function getRooms() {
+        return rooms;
+    }
+    var zbiory = {$zbiory|json_encode nofilter};
+    function getZbiory() {
+        return zbiory;
+    }
+
+    function processAddSourceCompany(object) {
+        $('#source_company_id').val(object.id);
+        $('#source_company_typeahead').val(object.name);
+        $('#source_employee_id').val('');
+        $('#source_employee_typeahead').val('');
+    }
+    function processAddSourceEmployee(object) {
+        $('#source_employee_id').val(object.id);
+        $('#source_employee_typeahead').val(object.last_name + ' ' + object.first_name + ' - ' + $('#source_company_typeahead').val());
+    }
+    function getEmployeeSourceMiniUrl() {
+        var companyId = $('#source_company_id').val();
+        if (!companyId) {
+            return false;
+        }
+        return '/company-employees/' + companyId + '/mini-add/';
+    }
+
+    function processAddTargetCompany(object) {
+        $('#source_company_id').val(object.id);
+        $('#source_company_typeahead').val(object.name);
+        $('#source_employee_id').val('');
+        $('#source_employee_typeahead').val('');
+    }
+    function processAddTargetEmployee(object) {
+        $('#source_employee_id').val(object.id);
+        $('#source_employee_typeahead').val(object.last_name + ' ' + object.first_name + ' - ' + $('#target_company_typeahead').val());
+    }
+    function getEmployeeTargetMiniUrl() {
+        var companyId = $('#target_company_id').val();
+        if (!companyId) {
+            return false;
+        }
+        return '/company-employees/' + companyId + '/mini-add/';
+    }
+
+    backendUtilities.addVatidationEngine("f_data");
+</script>

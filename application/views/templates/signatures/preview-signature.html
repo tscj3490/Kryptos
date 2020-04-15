@@ -1,0 +1,18 @@
+<h3>{'POŚWIADCZENIE PODPISU ELEKTRONICZNEGO KRYPTOS'|translate}</h3>
+
+<ul>
+    <li><b>{'Autor'|translate}: </b> {$signature.imie} {$signature.nazwisko} ({$signature.osoba_id})</li>
+    {if $signature.document}
+    <li><b>{'Nazwa dokumentu'|translate}: </b> {$signature.document.template_name} {$signature.document.numbertxt}</li>
+    {else}
+    <li><b>{'Nazwa zadania'|translate}: </b> {$signature.task_title}</li>
+    {/if}
+    <li><b>{'Data otwarcia dokumentu'|translate}: </b> {$signature.resource_view_date}</li>
+    <li><b>{'Data podpisu'|translate}: </b> {$signature.sign_date}</li>
+    <li><b>{'Adres IP'|translate}: </b> {$signature.ip}</li>
+    <li><b>{'Unikalny identyfikator podpisu'|translate}: </b> {$signature.unique_id}</li>
+</ul>
+
+<div class="text-center">
+    <a class="btn btn-default" href="/signatures/print-signature/id/{$signature.id}" target="_blank">{'WYDRUKUJ POTWIERDZENIE'|translate}</a>
+</div>

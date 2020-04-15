@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Track Your ticket Status</title>
+</head>
+<body style="text-align: center; margin: 50px;">
+<h1>Welcome to Kryptos Ticket Tracking Services !</h1>
+	<div>
+		<h3>Status of ticket No :</h3>
+		<h2>#{$tid}</h2>
+		<div style="background-color: #c1cfd6; min-width: 200px; height: 25px; padding: 10px; margin: 0px auto; color: #252525; font-size: x-large;">
+			<strong>{if $status}
+						{$status}
+					{else}
+						Your Ticket Has been Closed !
+					{/if}
+
+		</strong></div>
+		<div style=" margin: 0px auto;"><h3>{if $tel}
+				You will receive sms on this number : <br>{$tel}<br>{/if}
+				When ticket will update by Admin groups.</h3>
+				<h4>Thanks<br>Kryptos Team </h4>
+		</div>
+	</div>
+</body>
+</html>

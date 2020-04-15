@@ -1,0 +1,22 @@
+<form method="POST" action="/pomieszczenia/zapiszbudynek">
+	<table>
+		<tr><td>nazwa</td><td><input type="text" value="{$d.nazwa}" name="d[nazwa]"></td></tr>
+		<tr>
+			<td>opis</td>
+			<td>
+				<textarea name="d[opis]">{$d.opis}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td>adres</td>
+			<td>
+				<textarea name="d[adres]">{$d.adres}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td>zapisz</td>
+			<td><input type="submit" value="zapisz"></td>
+		</tr>
+	</table>
+	<input type="hidden" value="{$id}" name="id">
+</form>

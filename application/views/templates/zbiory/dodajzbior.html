@@ -1,0 +1,307 @@
+<style>
+.ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+    font-size:11px;
+    width:170px;
+  }
+  /* IE 6 doesn't support max-height
+   * we use height instead, but this forces the menu to always be this tall
+   */
+  * html .ui-autocomplete {
+    height: 100px;
+  }
+</style>
+<script>
+	var arr = $.parseJSON('{$json}');
+	var select = '<select class="osoby_select" name="osoby[]">';
+    for(var key in arr)
+    {
+        if(arr.hasOwnProperty(key))
+        {
+        	select += '<option value="' + arr[key].id + '">' + arr[key].login_do_systemu + '</option>';
+        }
+    }
+	select += '</select>'
+	var szablony = [];
+	{foreach $szablony as $s}
+	szablony[{$s.id}] = $.parseJSON('{$s.szablon}');
+	{/foreach}
+
+	var szablony_doc = [];
+	{foreach $szablony_doc as $s}
+	szablony_doc[{$s.id}] = $.parseJSON('{$s.szablon}');
+	{/foreach}	
+{literal}
+	function selectos_change()
+	{
+		$(this).parent().parent().children().find('input.czy').attr('name', 'czytanie['+ $(this).val() +']');
+		$(this).parent().parent().children().find('input.poz').attr('name', 'pozyskiwanie['+ $(this).val() +']');
+		$(this).parent().parent().children().find('input.wpr').attr('name', 'wprowadzanie['+ $(this).val() +']');
+		$(this).parent().parent().children().find('input.mod').attr('name', 'modyfikacja['+ $(this).val() +']');
+		$(this).parent().parent().children().find('input.usu').attr('name', 'usuwanie['+ $(this).val() +']');
+	}
+$(function (){
+	$("#osoby_do_zbioru .dodaj_osobe").on('click', function(ev){
+		  ev.preventDefault();
+		  $("#osoby_do_zbioru table tbody tr").removeClass('new_os');
+		  $("#osoby_do_zbioru table tbody").prepend('  <tr class="new_os">	<td>' + select +'</td>'
+				  									+'		<td><input checked type="checkbox" class="czy" name="czytanie[]"></td>'
+				  									+'		<td><input checked type="checkbox" class="poz" name="pozyskiwanie[]"></td>'
+				  									+'		<td><input checked type="checkbox" class="wpr" name="wprowadzanie[]"></td>'
+				  									+'		<td><input checked type="checkbox" class="mod" name="modyfikacja[]"></td>'
+				  									+'		<td><input checked type="checkbox" class="usu" name="usuwanie[]"></td>'
+				  									+'		<td><a class="usun_osobe" href="#">X</a></td>'
+				  									+' </tr>');
+		  $("#osoby_do_zbioru table tbody tr.new_os td input").fancyfields();	
+		  $("#osoby_do_zbioru table tbody tr.new_os td select.osoby_select").change(selectos_change);
+		  $("#osoby_do_zbioru table tbody tr.new_os td select.osoby_select").change();
+	});
+
+	//szablony
+	$("#szablony").fancyfields("bind","onSelectChange", function (input,text,val){
+		$("input[type='checkbox']").fancyfields("unchecked");
+		
+    	var szablon = szablony[val];
+    	$.each(szablony[val], function(i, item){
+			var pole = $("input[name='pola["+ item +"]']");
+			//console.log(item);
+			if(pole.length)
+			{
+				pole.fancyfields("checked");
+			}
+			else
+			{
+				$("#wlasne_pola").prepend('<input checked="true" type="checkbox" name="pola['+ item +']"><label>'+ item +'</label>');
+			  	$("#wlasne_pola > input[type=checkbox]").fancyfields();
+			}
+        });
+	});
+
+	$("#szablony_doc").fancyfields("bind","onSelectChange", function (input,text,val){
+		//$("input[type='checkbox']").fancyfields("unchecked");
+		
+    	var szablon = szablony_doc[val];
+    	$.each(szablony_doc[val], function(i, item){
+			var pole = $("input[name='pola["+ item +"]']");
+			//console.log(item);
+			if(pole.length)
+			{
+				pole.fancyfields("checked");
+			}
+			else
+			{
+				$("#wlasne_pola").prepend('<input checked="true" type="checkbox" name="pola['+ item +']"><label>'+ item +'</label>');
+			  	$("#wlasne_pola > input[type=checkbox]").fancyfields();
+			}
+        });
+	});
+	
+	//kopiowanie zbioru
+	$("#kopiuj_pola").fancyfields("bind","onSelectChange", function (input,text,val){
+		$("#wlasne_pola").children("div.ffCheckboxWrapper").remove();
+		$("input[type='checkbox']").fancyfields("unchecked");
+		$.ajax({
+			url: '/zbiory/getcollectionfields/',
+			dataType: 'json',
+			method: 'get',
+			data: {id: val},
+			success: function(msg){
+				$.each(msg, function(i, item){
+					var pole = $("input[name='pola["+ item +"]']");
+					if(pole.length)
+					{
+						pole.fancyfields("checked");
+					}
+					else
+					{
+						$("#wlasne_pola").prepend('<input checked="true" type="checkbox" name="pola['+ item +']"><label>'+ item +'</label>');
+						$("#wlasne_pola > input[type=checkbox]").fancyfields();
+					}
+				});
+			}	
+		});
+    	/*var szablon = szablony[val];
+    	$.each(szablony[val], function(i, item){
+			var pole = $("input[name='pola["+ item +"]']");
+			//console.log(item);
+			if(pole.length)
+			{
+				pole.fancyfields("checked");
+			}
+			else
+			{
+				$("#wlasne_pola").prepend('<input checked="true" type="checkbox" name="pola['+ item +']"><label>'+ item +'</label>');
+			  	$("#wlasne_pola > input[type=checkbox]").fancyfields();
+			}
+        });*/
+	});
+	
+	$("#app_tab").next('button').click(function (e){
+		e.preventDefault();
+		
+	});
+    
+	var pola = $.ajax({ async: false, 
+						url: '/zbiory/getpola', 
+						type: "GET", 
+						global: false,
+						dataType: "json", 
+						success: function(res){
+							 return res; 
+						}
+	}).responseText;
+	pola = $.parseJSON(pola);
+	$( "#tags" ).autocomplete({
+	      source: pola
+	});
+	
+});
+{/literal}
+</script>
+<div class="errors"></div>
+<form class="fancy dodajzbior" action="/zbiory/zapisz" method="post">
+
+<fieldset>
+	<legend>Podstawowe informacje</legend>
+	<label for="nazwa">Nazwa</label>
+	<input type="text" id="nazwa" class="notfancy" style="border:1px solid #f1d5d5; font-size: 13px;padding:2px;width:450px;outline: none;color: #555;" name="d[nazwa]">
+	<label for="forma">Forma</label>
+	<select id="forma" name="d[formaGromadzeniaDanych]">
+		<option value="papierowa">papierowa</option>
+		<option value="elektroniczna">elektroniczna</option>
+	</select>
+	<label for="poziom_bezpieczenstwa">Poziom bezpieczenstwa</label>
+	<select id="poziom_bezpieczenstwa" name="d[poziomBezpieczenstwa]">
+		<option value="A">A</option>
+		<option value="B">B</option>
+		<option value="C">C</option>
+		<option value="AB">AB</option>
+	</select>
+	<label for="pomieszczenia">Pomieszczenia</label>
+	<select id="pomieszczenia" name="d[pomieszczenia_id]">
+		{foreach $pomieszczenia as $p}<option value="{$p.id}">{$p.nazwa}</option>{/foreach}
+	</select>
+	<label for="giodo">Czy do GIODO</label>
+	<select id="giodo" name="d[status]">
+		<option value="zgloszony">zgłoszony</option>
+		<option selected="selected" value="niepodlega">nie podlega</option>
+		<option value="podlega_niezgloszony" selected>podlega, nie zgłoszony</option>
+	</select>
+	<label for="pochodzenie">Pochodzenie danych</label>
+	<select id="pochodzenie" name="d[pochodzenie_danych]">
+		<option value="od osob ktorych dotycza">od osób, których dotycza</option>
+		<option value="z innych zrodel">z innych źródeł</option>
+	</select>
+    <label for="opis_zbioru">Opis zbioru</label>
+    <textarea name="d[opis_zbioru]"  style="height:250px; width:200px;font-size:11px;padding:1px;"  id="opis_zbioru"></textarea>
+	<label for="szablony">Szablony pól</label>
+	<select id="szablony" name="szablony">
+		<option>wybierz</option>
+		{foreach $szablony as $szablon}
+			<option value='{$szablon.id}'>{$szablon.nazwa}</option>
+		{/foreach}
+	</select>
+	<label for="szablony_doc">Szablony dokumentów</label>
+	<select id="szablony_doc" name="szablony_doc">
+		<option>wybierz</option>
+		{foreach $szablony_doc as $szablon}
+			<option value='{$szablon.id}'>{$szablon.nazwa}</option>
+		{/foreach}
+	</select>
+    <label for="kopiuj_pola">Kopiuj pola ze zbioru</label>
+	<select id="kopiuj_pola" name="kopiuj_pola">
+		<option>wybierz</option>
+		{foreach $zbiory_all as $z}
+			<option value='{$z.id}'>{$z.nazwa}</option>
+		{/foreach}
+	</select>
+</fieldset>
+{*<fieldset>
+	<legend>Pomieszczenia</legend>
+	{foreach $pomieszczenia as $p}
+	<input type="checkbox" value="{$p.id}" name="pomieszczenia[]"><<
+	{/foreach}
+</fieldset>*}
+<fieldset>
+	<legend>Aplikacje używające zbioru</legend>
+	<table id="app_tab">
+		<thead>
+		<tr>
+			<th>nazwa</th>
+			<th>wersja</th>
+			<th>zaznacz</th>
+		</tr>
+		</thead>
+		<tbody>
+			{foreach $apps as $a}
+			<tr>
+				<td>{$a.nazwa|ucfirst}</td>
+				<td>{$a.wersja}</td>
+				<td><input type="checkbox" name="apps[]" value="{$a.id}"></td>
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
+</fieldset>
+<fieldset>
+	<legend>Standardowe pola zbioru</legend>
+	<input type="checkbox" checked name="pola[imiona]"><label>Imiona</label>
+	<input type="checkbox" checked name="pola[nazwisko]"><label>Nazwisko</label>
+	<input type="checkbox" name="pola[adres]"><label>Adres</label>
+	<input type="checkbox" name="pola[nip]"><label>NIP</label>
+	<input type="checkbox" name="pola[miejsce urodzenia]"><label>Miejsce urodzenia</label>
+	<input type="checkbox" name="pola[data urodzenia]"><label>Data urodzenia</label>
+	<input type="checkbox" name="pola[pesel]"><label>Pesel</label>
+	<input type="checkbox" name="pola[nr dowodu]"><label>Nr Dowodu</label>
+	<input type="checkbox" name="pola[imiona rodzicow]"><label>Imiona rodziców</label>
+	<input type="checkbox" name="pola[miejsce pracy]"><label>Miejsce pracy</label>
+	<input type="checkbox" name="pola[zawod]"><label>Zawód</label>
+	<input type="checkbox" name="pola[wyksztalcenie]"><label>Wykształcenie</label>
+	<input type="checkbox" name="pola[nr telefonu]"><label>Nr telefonu</label>
+	<input type="checkbox" name="pola[adres e-mail]"><label>Adres e-mail</label>
+	<input type="checkbox" name="pola[numer konta bankowego]"><label>Numer konta bankowego</label>
+</fieldset> 
+<fieldset>
+	<legend>Dodatkowe pola zbioru</legend>
+	<input type="checkbox" name="pola[pochodzenie rasowe]"><label>Pochodzenie rasowe</label>
+	<input type="checkbox" name="pola[poglady etniczne]]"><label>Poglądy etniczne</label>
+	<input type="checkbox" name="pola[przekonania religijne]"><label>Przekonania religijne</label>
+	<input type="checkbox" name="pola[przekonania filozoficzne]"><label>Przekonania filozoficzne</label>
+	<input type="checkbox" name="pola[przynaleznosc wyznaniowa]"><label>Przynależność wyznaniowa</label>
+	<input type="checkbox" name="pola[przynaleznosc partyjna]"><label>Przynależność partyjna</label>
+	<input type="checkbox" name="pola[przynaleznosc zwiazkowa]"><label>Przynależność związkowa</label>
+	<input type="checkbox" name="pola[stan zdrowia]"><label>Stan zdrowia</label>
+	<input type="checkbox" name="pola[nalogi]"><label>Nałogi</label>
+	<input type="checkbox" name="pola[zycie seksualne]"><label>Życie seksualne</label>
+</fieldset>
+<fieldset id="wlasne_pola" style="margin-left:0;">
+	<legend>Inne pola zbioru</legend>
+	<input style="width:200px;" class="notfancy" id="tags" type="text" placeholder="wpisz pole do dodania">
+	<input style="float:left; margin-left:10px;" type="button" value="dodaj pole" id="dodaj_pole2" >
+	{*<input style="float:left; margin-left:10px; clear:both;" type="button" id="dodaj_pole" value="dodaj inne pole" >*}
+</fieldset>
+<fieldset id="osoby_do_zbioru">
+	<legend>Osoby upoważnione do zbioru</legend>
+	<table>
+		<thead>
+			<tr>
+				<th>identyfikator</th>
+				<th>wgląd</th>
+				<th>wprowadzanie</th>
+				<th>modyfikacja</th>
+				<th>usuwanie</th>
+			</tr>
+		</thead>
+		<tbody>
+		
+		</tbody>
+	</table>
+	<input style="float:left; clear:both;" type="button" class="dodaj_osobe" value="dodaj osobę" >
+</fieldset>
+<fieldset style="margin-left:0;">
+<input type="submit" value="zapisz zbiór" />
+</fieldset>
+</form>

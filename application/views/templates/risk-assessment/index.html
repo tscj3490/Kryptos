@@ -1,0 +1,56 @@
+{include file='modals/modal.tpl' title='Analiza ryzyka - co to jest?' content='W module analizy ryzyka możesz wykonać analizę ryzyka w jednostce z pomocą jednej z kilku metod oraz utworzyć kompletne sprawozdanie ze zrobionej analizy.'}
+<div class="table-operations-header">
+    {if $auth->isGranted('node/risk-assessment/update')}
+    <a class="btn btn-success" href="{$baseUrl}/update" data-title="Dodaj analize ryzyka" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj analize ryzyka</a>    {/if}
+
+            <a class="btn btn-success dt-report" data-href="{$baseUrl}/report" data-title="Raport PDF" data-toggle="tooltip"><i class="fa icon-print-2"></i> &nbsp;Raport</a>
+
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+        <tr>
+            <th data-filter-type="string">Nazwa</th>
+            <th data-filter-type="string">C</th>
+            <th data-filter-type="string">I</th>
+            <th data-filter-type="string">A</th>
+            <th data-filter-type="string">AV</th>
+            <th data-filter-type="string">CNSQ</th>
+            <th data-filter-type="string">LKLH</th>
+            <th data-filter-type="string">Poziom ryzyka</th>
+            <th data-filter-type="string">Klasyfikacja ryzyka</th>
+            <th>Operacje</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach $paginator as $d}
+        <tr>
+            <td>{$d.name}</td>
+            <td>{$d.value_c}</td>
+            <td>{$d.value_i}</td>
+            <td>{$d.value_a}</td>
+            <td>{$d.av}</td>
+            <td>{$d.cnsq}</td>
+            <td>{$d.lklh}</td>
+            <td>{$d.risk_value}</td>
+            {*
+            <td>{smart_date value=$d.date_created}</td>
+            <td>{smart_date value=$d.date_updated}</td>*}
+            <td class="center">
+                {if $d.risk_assessment == 1}
+                <i class="fa fa-circle" style="color: green;" data-toggle="tooltip" title="" data-original-title="Akceptowalne"><span class="select-item hiddenElement" data-value="1">Akceptowalne</span></i>                {else} {if ($d.risk_assessment == 2)}
+                <i class="fa fa-circle" style="color: yellow;" data-toggle="tooltip" title="" data-original-title="Akceptowalne / Nieakceptowalne"><span class="select-item hiddenElement" data-value="1">Akceptowalne / Nieakceptowalne</span></i>                {else}
+                <i class="fa fa-circle" style="color: red;" data-toggle="tooltip" title="" data-original-title="Nieakceptowalne"><span class="select-item hiddenElement" data-value="1">Nieakceptowalne</span></i>                {/if} {/if}
+            </td>
+            <td class="operations">
+                {if $auth->isGranted('node/risk-assessment/update', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-pencil" href="/risk-assessment/update/id/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                {/if} {if $auth->isGranted('node/risk-assessment/del', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="/risk-assessment/del/id/{$d.id}" data-confirmation-class="singleDelete"
+                    data-toggle="tooltip" title="USUŃ"></a>
+                    {/if}
+            </td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>

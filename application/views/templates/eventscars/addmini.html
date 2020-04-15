@@ -1,0 +1,203 @@
+<h3 class="text-center" style="margin-top:0px;margin-bottom:10px;">Wybór dostępnych pojazdów</h3>
+<div class="modtop">
+    <div class="form-group row">
+        <div class="col-sm-12">
+            <a class="btn btn-success js-anchor" href="#section-add-car">Dodaj pojazd</a>
+        </div>
+    </div>
+   <div class="form-group row">
+      <label for="categories" class="col-sm-2">Kategoria:</label>
+      <div class="col-sm-10"><select name="categories" id="categories" class="form-control" onchange="runOptsSearch();">
+         <option value="">wszystkie</option>
+         <option value="0"{if $categories === '0'}selected="selected"{/if}>bez kategorii</option>
+      {foreach $eventscompanies as $cat}
+         <option value="{$cat->id}" {if $cat->name && ($defaultcategory == $cat->name OR $categories === $cat->id)}selected="selected"{/if}>{$cat->name}</option>
+      {/foreach}
+      </select></div>
+   </div>
+   <div class="form-group row">
+      <div class="col-sm-12">
+         <input type="text" name="searcher" id="searcher" class="form-control" placeholder="Wpisz szukaną frazę" onkeyup="runOptsSearch();" />
+      </div>
+   </div>
+</div>
+<div id="optsSearch">
+<div class="alert alert-danger optsnodata"><i class="fa fa-4x fa-exclamation-triangle"></i><div class="floathead"><div class="ins">Zmień kryteria wyszukiwania lub skorzystaj z formularza dodawania nowych rekordów znajdującego się poniżej.</div></div><div class="clear"></div></div>
+{foreach $t_data as $d}
+<div class="selopt2bl" id="id{$d.id}" data-dismiss="modal"
+     {if $d.eventscompany.id > 0}rel="category{$d.eventscompany.id}"{/if}
+     data-id="{$d.id}"
+     data-company-id="{$d.eventscompany.id}"
+     data-company-name="{$d.eventscompany.name}"
+     {if $d.eventsperson}
+     data-person-id="{$d.eventsperson.id}"
+     data-person-name="{$d.eventsperson.name} {$d.eventsperson.lastname}"
+     data-persontype="{$d.eventsperson.eventspersonstype_id}"
+     data-purpose="{$d.eventspersonstype.defaultpurpose_id}"
+     {/if}
+    >{$d.name}</div>
+{/foreach}
+</div>
+<div class="modbottom" id="section-add-car">
+    <h3 style="margin-top:0px;">Dodawanie nowego pojazdu</h3>
+    <form name="f_data_mini" id="f_data_mini">
+        <fieldset>
+            <div class="form-group row" id="form_company_field">
+                <label for="form_eventscompany_id" class="col-sm-4">Firma:</label>
+                <div class="col-sm-8">
+                    <select type="text" name="form_eventscompany_id" id="form_eventscompany_id" class="form-control">
+                        <option value="0">brak</option>
+                        {foreach $eventscompanies as $company}
+                        <option value="{$company.id}" {if $data['eventscompany_id'] == $company.id}selected="selected"{/if}>{$company.name}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="name" class="col-sm-4">Nr rejestracyjny:</label>
+                <div class="col-sm-8"><input type="text" name="name" id="name"  class="form-control validate[required]" value="{$data['name']}"></div>
+            </div>
+            <div class="form-group row">
+                <label for="type" class="col-sm-4">Rodzaj:</label>
+                <div class="col-sm-8">
+                    <select type="text" name="type" id="type"  class="form-control">
+                        {if !$userIsKodoOrAbi}
+                        <option value="4" {if $data['type'] == '4'}selected="selected"{/if}>ciężarowy</option>
+                        {/if}
+                        <option value="3" {if $data['type'] == '3'}selected="selected"{/if}>cysterna</option>
+                        {if !$userIsKodoOrAbi}
+                        <option value="2" {if $data['type'] == '2'}selected="selected"{/if}>dostawczy</option>
+                        {/if}
+                        <option value="1" {if $data['type'] == '1'}selected="selected"{/if}>osobowy</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="ownership" class="col-sm-4">Własność:</label>
+                <div class="col-sm-8">
+                    <select type="text" name="ownership" id="ownership"  class="form-control">
+                        <option value="0" {if $data['ownership'] == '0'}selected="selected"{/if}>nie</option>
+                        <option value="1" {if $data['ownership'] == '1'}selected="selected"{/if}>tak</option>
+                    </select>
+                </div>
+            </div>
+            <div id="globalMessage_mini"></div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <input type="button" value="Zapisz" class="btn btn-info pull-right" onclick="return checkSubmit();">
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+{if !$userIsKodoOrAbi}
+<script>
+if ($.inArray($('#eventsperson_type').val(), ['440', '447']) !== -1) {
+    $('#section-add-car').hide();
+}
+</script>
+{/if}
+
+{literal}
+<script type="text/javascript">
+setTimeout('$(\'#searcher\').focus()',500);
+
+if ($('#eventscompany_id').val()) {
+    $('#form_company_field').hide();
+}
+
+$('.js-anchor').on('click', function() {
+    var selector = $(this).attr('href');
+    $(selector)
+        .css('background-color', '#68C39F')
+        .animate({backgroundColor: 'transparent'}, 500);
+});
+
+function setCar() {
+    var tg = $(this);
+    $('#eventscompany_id').val(tg.attr('data-company-id'));
+    $('#eventscompany').val(tg.attr('data-company-name'));
+
+    $('#eventscar_id').val(tg.attr('data-id'));
+    $('#eventscar').val(tg.text());
+
+    $('#eventsperson_id').val(tg.attr('data-person-id'));
+    $('#eventsperson').val(tg.attr('data-person-name'));
+    $('#eventsperson_type').val(tg.attr('data-persontype'));
+    if (tg.attr('data-purpose') > 0) {
+        $('#purpose_id').val(tg.attr('data-purpose'));
+    }
+
+    if (tg.attr('data-persontype') == 443 && $('#type').val() == 2) {
+        $('#ilosc_serwatki').removeClass('hidden');
+    } else {
+        $('#ilosc_serwatki').addClass('hidden');
+    }
+}
+$('.selopt2bl').on('click', setCar);
+
+function checkSubmit() {
+    var dataSamochod = {
+            eventscompany_id: $('#eventscompany_id').val() ? $('#eventscompany_id').val() : $('#form_eventscompany_id').val(),
+            name: $('#name').val(),
+            type: $('#type').val(),
+            ownership: $('#ownership').val()
+        },
+        dataCheck = {
+            name: dataSamochod.name
+        };
+
+    $.ajax({
+        dataType : 'html',
+        url : '/eventscars/checkExist/',
+        data : dataCheck,
+        method : 'POST',
+        success : function(mess,textStatus,xhr) {
+            if ( mess == 1 ) {
+                $.ajax({
+                    url : '/eventscars/saveminisave/',
+                    data : dataSamochod,
+                    method : 'POST',
+                    dataType: 'json',
+                    success: function(result) {
+                        $('#eventscompany_id').val(result.firma.id);
+                        $('#eventscompany').val(result.firma.name);
+
+                        $('#eventscar_id').val(result.samochod.id);
+                        $('#eventscar').val(result.samochod.name);
+
+                        if (result.osoba) {
+                            $('#eventsperson_id').val(result.osoba.id);
+                            $('#eventsperson').val(result.osoba.name + ' - ' + result.osoba.lastname);
+                            $('#eventsperson_type').val(result.osoba.eventspersonstype_id);
+
+                            if (result.osoba.eventspersonstype.defaultpurpose_id > 0) {
+                                $('#purpose_id').val(result.osoba.eventspersonstype.defaultpurpose_id);
+                            }
+
+                            if (result.eventspersonstype == 443 && $('#type').val() == 2) {
+                                $('#ilosc_serwatki').removeClass('hidden');
+                            } else {
+                                $('#ilosc_serwatki').addClass('hidden');
+                            }
+                        }
+
+                        $('#section-add-car').closest('.modal').find('button[data-dismiss=modal]').click();
+                    }
+                });
+            } else {
+                $('#globalMessage_mini').html('<div class="alert alert-danger">Rekord z podaną nazwą już istnieje. Proszę zmienić nazwę.</div>');
+                setTimeout('$(\'#globalMessage\').html(\'\')',5000);
+            }
+        },
+        error : function(xhr,textStatus,errorThrown) { }
+    });
+}
+
+$('#searcher').on('change, input', function() {
+    $('#name').val($('#searcher').val());
+});
+backendUtilities.addVatidationEngine("f_data_mini");
+</script>
+{/literal}

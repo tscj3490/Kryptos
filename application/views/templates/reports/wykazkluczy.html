@@ -1,0 +1,39 @@
+<h1>Wykaz kluczy do pomieszczeń gdzie gromadzone są dane osobowe, wraz ze wskazaniem osób mogących je pobrać</h1>
+{assign var="i" value="1"}
+{assign var="x" value="0"}
+<table class="printable" cellspacing='1' cellpadding="5">
+    <thead>
+    <tr>
+        <th>Lp.</th>
+        <th width="30%">Budynek</th>
+        <th width="20%">Nazwa/nr pomieszczenia</th>
+        <th>
+            imię i nazwisko osoby mogącej pobrać klucz
+        </th>
+        <th>NUMER UPOWAŻNIENIA</th>
+    </tr>
+    </thead>
+    <tbody>
+    {assign var="w" value="0"}
+    {foreach $t_budynki as $bud}
+        {foreach $bud.pomieszczenia as $pom}
+            {foreach $pom.klucze as $klucz}
+                {assign var="w" value=$w+1}
+                <tr>
+                    <td>{$w}</td>
+                    <td>{$bud.nazwa}</td>
+                    <td>{$pom.nazwa} {$pom.nr}</td>
+                    <td>
+                        {$klucz.osoba.imie|mb_strtoupper} {$klucz.osoba.nazwisko|mb_strtoupper}
+                    </td>
+                    <td>{$klucz.document.numbertxt}</td>
+                </tr>
+            {/foreach}
+        {/foreach}
+    {/foreach}
+    </tbody>
+</table>
+{foreach $t_budynki as $bud}
+<p>* {$bud.nazwa|upper} - {$bud.opis|upper}</p>
+{/foreach}
+<p style="float:right; margin-top:60px; text-align:center; display:block; width:200px; border-top:2px solid; ">data i podpis Administratora Danych Osobowych</p>

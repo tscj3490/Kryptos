@@ -1,0 +1,151 @@
+<div class="row">
+    <div class="col-lg-8">
+        <form name="f_data" id="f_data" method="POST" action="{$baseUrl}/save" enctype="multipart/form-data">
+            <fieldset>
+                {if $data.id}
+                <input type="hidden" name="id" value="{$data.id}"/>
+                {/if}
+
+                {element tag="bs.varchar" attributes=[
+                'name' => 'procurement_number',
+                'label' => 'Numer przetargu',
+                'value' => $data.procurement_number
+                ]}
+
+                {element tag="bs.varchar" attributes=[
+                'name' => 'procedure_number',
+                'label' => 'Numer postępowania',
+                'value' => $data.procedure_number
+                ]}
+
+                {element tag="bs.varchar" attributes=[
+                'name' => 'title',
+                'label' => 'Tytuł',
+                'value' => $data.title
+                ]}
+
+                <div class="form-group row">
+                    <label class="col-sm-2">Data otwarcia:</label>
+                    <div class="col-sm-4"><input class="form-control validate[required] datepicker-input" type="date" id="date_opened_d" name="date_opened_d" value="{$data.date_opened_d}" placeholder="YYYY-mm-dd" /></div>
+                    <label class="col-sm-2">Godzina:</label>
+                    <div class="col-sm-4"><input class="form-control validate[required]" type="text" id="date_opened_h" name="date_opened_h" placeholder="GG:mm" value="{if $data.date_opened_h}{$data.date_opened_h}{else}{date('H:i')}{/if}" /></div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2">Data zamknięcia:</label>
+                    <div class="col-sm-4"><input class="form-control validate[required] datepicker-input" type="date" id="date_closed_d" name="date_closed_d" value="{$data.date_closed_d}" placeholder="YYYY-mm-dd" /></div>
+                    <label class="col-sm-2">Godzina:</label>
+                    <div class="col-sm-4"><input class="form-control validate[required]" type="text" id="date_closed_h" name="date_closed_h" placeholder="GG:mm" value="{if $data.date_closed_h}{$data.date_closed_h}{else}{date('H:i')}{/if}" /></div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2">Data składania ofert:</label>
+                    <div class="col-sm-4"><input class="form-control validate[required] datepicker-input" type="date" id="date_due_d" name="date_due_d" value="{$data.date_due_d}" placeholder="YYYY-mm-dd" /></div>
+                    <label class="col-sm-2">Godzina:</label>
+                    <div class="col-sm-4"><input class="form-control validate[required]" type="text" id="date_due_h" name="date_due_h" placeholder="GG:mm" value="{if $data.date_due_h}{$data.date_due_h}{else}{date('H:i')}{/if}" /></div>
+                </div>
+                
+                      <div class="form-group row">
+                    <label class="col-sm-2">Data ogłoszenia wyników:</label>
+                    <div class="col-sm-4"><input class="form-control validate[required] datepicker-input" type="date" id="date_published_d" name="date_published_d" value="{$data.date_published_d}" placeholder="YYYY-mm-dd" /></div>
+                    <label class="col-sm-2">Godzina:</label>
+                    <div class="col-sm-4"><input class="form-control validate[required]" type="text" id="date_published_h" name="date_published_h" placeholder="GG:mm" value="{if $data.date_published_h}{$data.date_published_h}{else}{date('H:i')}{/if}" /></div>
+                </div>
+
+                {element tag="bs.text" attributes=[
+                'name' => 'institution_name]',
+                'label' => 'Nazwa i adres instytucji zamawiającej',
+                'value' => $data.institution_name
+                ]}
+
+                {element tag="bs.text" attributes=[
+                'name' => 'subject]',
+                'label' => 'Przedmiot zamówienia',
+                'value' => $data.subject,
+                'class' => 'huge-textarea'
+                ]}
+
+
+
+                {element tag="bs.text" attributes=[
+                'name' => 'criterion]',
+                'label' => 'Kryterium zamówienia',
+                'value' => $data.criterion,
+                'class' => 'huge-textarea'
+                ]}
+
+                <input type="hidden" name="uploadedFiles" value="">
+                <div class="form-group hidden" id="section-attachments-add">
+                    <label class="col-sm-2">{'Załączniki'|translate}:</label>
+                    <div class="col-sm-12 portlets ui-sortable">
+                        <!-- Your awesome content goes here -->
+                        <div class="widget messages-dropzone">
+                            <div id="msgDropzone" class="dropzone">
+                                <div class="dz-default dz-message"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>z
+                <h3> Załączniki</h3>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <button type="button" class="btn btn-default show-section" data-target="#section-attachments-add" data-auto-hide=".form-group >>">{'Dodaj załączniki'|translate}</button>
+                    </div>
+                </div>
+                <br/><br/>
+
+                <table>
+                    {foreach $files as $f}
+                    <tr><td>{$f.file.name}<a class="glyphicon glyphicon-trash modal-confirm processed-modal-confirm" href="/public-procurements/remove-file/id/{$f.id}/ppid/{$data.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="" data-original-title="Usuń"></a></td></tr>
+                    {/foreach}
+                </table>
+                <br/>  <br/>
+
+
+                <div>
+                    <a href="{$baseUrl}" class="btn btn-default">Powrót</a>
+                    <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+                </div>
+
+            </fieldset>
+
+            <div class="hiddenElement">
+                <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+            </div>
+        </form>
+    </div>
+</div>
+<style>
+    .huge-textarea{
+        height:200px !important;
+        width:100%;
+    }
+</style>
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+</script>
+{literal}
+<script>
+    documentDropzone = enableDropzoneWidget('#msgDropzone', {
+        url: '/upload.php',
+        params: {
+            dirname: 'public_procurements'
+        }
+    });
+
+    var messageForm = $('#msgDropzone').closest('form');
+    messageForm.on('submit', function () {
+        var uploadedFiles = documentDropzone.getAcceptedFiles(),
+                filesData = [];
+
+        $.each(uploadedFiles, function () {
+            filesData.push({
+                name: this.name,
+                uploadedUri: this.xhr.response
+            });
+        });
+
+        messageForm.find('input[name=uploadedFiles]').val(JSON.stringify(filesData));
+    });
+</script>
+{/literal}

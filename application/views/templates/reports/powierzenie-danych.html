@@ -1,0 +1,29 @@
+<h1>Rejestr udostępnień/powierzeń danych osobowych</h1>
+<table>
+    <thead>
+    <tr>
+        <th>lp</th>
+        <th>ADRESAT</th>
+        <th>DATA OD</th>
+        <th>DATA DO</th>
+        <th>ZAKRES</th>
+        <th>CEL</th>
+        <th>UMOWA</th>
+        <th>OSOBA ODPOWIEDZIALNA</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $powierzenia as $item}
+    <tr>
+        <td>{$item@iteration}</td>
+        <td>{$item['podmiot']}</td>
+        <td>{$item['data_od']}</td>
+        <td>{$item['data_do']}</td>
+        <td>{$item['zakres']}</td>
+        <td>{$item['cel']}</td>
+        <td>{$item['umowa']}</td>
+        <td>{$item['imie']} {$item['nazwisko']}</td>
+    </tr>
+    {/foreach}
+    </tbody>
+</table>

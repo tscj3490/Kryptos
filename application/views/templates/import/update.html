@@ -1,0 +1,34 @@
+{$message}
+<form name="f_profile" id="f_profile" method="POST" action="/import/save" id="dataform-add">
+    <fieldset>
+        <div class="form-group row">
+            <label for="nazwa" class="col-sm-2">Name:</label>
+            <div class="col-sm-4"><input type="text" name="name" id="name"  class="form-control validate[required]" value="{$data['name']}"></div>
+        </div>
+        <div class="form-group row">
+            <label for="nr" class="col-sm-2">Surname:</label>
+            <div class="col-sm-4"><input type="text" name="surname" id="surname"   class="form-control validate[required]" value="{$data['surname']}"></div>
+        </div>
+        <div class="form-group row">
+            <label for="wydzial" class="col-sm-2">Position:</label>
+            <div class="col-sm-4">
+                <input type="text" name="position" id="position"  class="form-control validate[required]" value="{$data['position']}">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="budynek" class="col-sm-2">Type of Contract:</label>
+            <div class="col-sm-4">
+                    <input type="text" name="contract" id="contract"  class="form-control validate[required]" value="{$data['contract']}">
+              </div>
+        </div>
+        
+        <div class="">
+            <input type="submit" value="Save"  class="btn btn-info"  >
+            <input type="hidden" name="id" id="id" value="{$data.id}" />
+        </div>
+    </fieldset>
+</form>
+
+<script type="text/javascript">
+	backendUtilities.addVatidationEngine("f_profile");
+</script>

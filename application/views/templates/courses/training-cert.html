@@ -1,0 +1,102 @@
+<div class="container">
+        <div class="img-container">
+                <img src="/assets/images/certyfikat.png" width="100%" height="auto">
+        </div>
+        <div class="top">
+                <span class="napis1">WWW.KRYPTOS.CO<br><hr></strong></span>
+                <span class="napis2"><strong>CERTYFIKAT<BR></strong></span>
+                <span class="napis3"><strong>PRZESZKOLENIA Z KATEGORII: {$courseCategory.name}<hr></strong></span>
+                <span class="napis4"><strong>Niniejszy dyplom potwierdza, że: <br></strong></span>
+                <span class="napis5"><strong>PAN/I</strong></span><br/><span class="napis6">{$osoba.imie} {$osoba.nazwisko}<strong><br></strong></span>
+                <span class="napis5a"><strong>{$osoba.stanowisko}<br></strong></span>
+                <span class="napis5a"><strong>{{$company}}<hr></strong></span>
+                <span class="napis3"><strong>Ukończył/a szkolenie:<br></strong></span>
+                <span class="napis3"><strong>"{{$course.topic}}"<br></strong></span>
+                <span class="napis3"><strong>organizowane przez<br></strong></span>
+                <span class="napis3"><strong>{$company}</strong></span>
+        </div>
+        <div class="footer1">
+                <span class="napis7"><strong>{$abi}<br></strong></span>
+        </div>
+        <div class="footer2">
+                <span class="napis3" style="padding-left:30px;"><strong>{$city}, {$date}</strong></span>
+        </div>
+</div>
+
+<style>
+.container
+{
+    border:10px solid #232059;
+    margin-top: 5%;
+
+}
+
+.img-container{
+    width: 300px;
+    height: auto;
+    padding: 10px 20px 10px 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.top
+{
+text-align: center;
+}
+.footer1{
+        margin-top: 100px;
+        margin-left: 10px;
+        text-align: left;
+}
+.footer2{
+        margin-bottom: 50px;
+        text-align: right;
+}
+.napis1
+{
+    color: #343062;
+    font-size: 18px;
+}
+.napis2
+{
+        font-size: 50px;
+        color: #191741
+}
+.napis3
+ {
+         font-size: 25px;
+         color: #191741;
+        line-height: 1.5;
+ }
+.napis4
+ {
+         font-size: 20px;
+         color: #191741
+ }
+.napis5
+ {
+         font-size: 30px;
+         color: #191741;
+
+ }
+.napis5a
+{
+        font-size: 35px;
+        color: #191741;
+        padding: 10px 10px 10px 10px;
+        margin-top: 10px;
+}
+
+.napis6
+{
+        font-size: 50px;
+        color: #ed008c
+}
+
+.napis7
+{
+        font-size: 30px;
+        color: #ed008c;
+        margin-left: 30px;
+}
+
+</style>

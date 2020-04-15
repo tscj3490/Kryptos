@@ -1,0 +1,165 @@
+<div class="row">
+    <div class="col-lg-6">
+        <form name="f_data" id="f_data" method="POST" action="{$baseUrl}/save" enctype="multipart/form-data">
+            <fieldset>
+                {if $data.id}
+                    <input type="hidden" name="arrival[id]" value="{$data.id}"/>
+                {/if}
+
+                <div class="form-group row">
+                    <label for="author_id" class="col-sm-4">Osoba odbierająca:</label>
+                    <div class="col-sm-8">
+                        <input type="hidden" name="arrival[author_id]" id="author_id" value="{$data.author_id}"/>
+                        <div class="input-group">
+                            <input type="text" id="osoba_typeahead" class="form-control typeaheadElement" data-source-variable="storageUsers" data-target-element="#author_id"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default choose-from-dial" data-dial-url="/osoby/mini-add-employee/?useProcess=true" data-target-element="#author_id" type="button">Dodaj</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="date" class="col-sm-4">Data i godzina rozmowy:</label>
+                    <div class="col-sm-8"><input type="text" name="arrival[date]" id="date" class="form-control datetimepicker-input" value="{$data.date}" placeholder="AKTUALNY CZAS"></div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-4">Rodzaj osoby dzwoniącej:</label>
+                    <div class="col-sm-8">
+                        <input type="hidden" id="source_type" name="source_type" value="{$data.source_type}" class="toggle-relative clear-relative"/>
+                        <div class="form-inline">
+                            <div class="radio iradio">
+                                <label>
+                                    <input type="radio" data-value="1" name="radio_company_type" data-target="#source_type" class="transfer-value" {if $data.source_type == 1}checked{/if}>
+                                    Pracownik firmy
+                                </label>
+                            </div>
+                            <div class="radio iradio">
+                                <label>
+                                    <input type="radio" data-value="2" name="radio_company_type" data-target="#source_type" class="transfer-value" {if $data.source_type == 2}checked{/if}>
+                                    Osoba prywatna
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="source_company_id" class="col-sm-4 relative-element" data-relation-base="source_type" data-relation-id="1">Firma osoby dzwoniącej:</label>
+                    <label for="source_company_id" class="col-sm-4 relative-element" data-relation-base="source_type" data-relation-id="2">Osoba dzwoniąca:</label>
+                    <div class="col-sm-8">
+                        <input type="hidden" name="arrival[source_company_id]" id="source_company_id" value="{$data.source_company_id}" class="clear-relative-element" data-clear-relative-base="source_type"/>
+                        <div class="input-group">
+                            <input type="text" id="source_typeahead" class="form-control typeaheadElement" data-source-variable="storageCompanies" data-target-element="#source_company_id" data-relative-element="#source_type">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default choose-from-dial" data-dial-url-fn="getCompanyMiniUrl" data-dial-process-fn="processAddSourceCompany" type="button">Dodaj</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row" data-relation-base="source_type" data-relation-id="1">
+                    <label for="source_employee_id" class="col-sm-4">Osoba dzwoniąca:</label>
+                    <div class="col-sm-8">
+                        <input type="hidden" name="arrival[source_employee_id]" id="source_employee_id" value="{$data.source_employee_id}" class="clear-relative-element" data-clear-relative-base="source_type"/>
+                        <div class="input-group">
+                            <input type="text" id="source_employee_typeahead" class="form-control typeaheadElement" data-source-variable="storageEmployees" data-target-element="#source_employee_id" data-relative-element="#source_company_id"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default choose-from-dial" data-dial-url-fn="getEmployeeSourceMiniUrl" data-dial-process-fn="processAddSourceEmployee" type="button">Dodaj</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="destination_user_id" class="col-sm-4">Osoba wywoływana:</label>
+                    <div class="col-sm-8">
+                        <input type="hidden" name="arrival[destination_user_id]" id="destination_user_id" value="{$data.destination_user_id}"/>
+                        <div class="input-group">
+                            <input type="text" id="osoba_typeahead" class="form-control typeaheadElement" data-source-variable="storageUsers" data-target-element="#destination_user_id"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default choose-from-dial" data-dial-url="/osoby/mini-add-employee/?useProcess=true" data-target-element="#destination_user_id" type="button">Dodaj</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="topic" class="col-sm-4">Temat rozmowy:</label>
+                    <div class="col-sm-8"><input type="text" name="arrival[topic]" id="topic" class="form-control validate[required]" value="{$data.topic}"></div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="comment" class="col-sm-4">Komentarz:</label>
+                    <div class="col-sm-8"><textarea name="arrival[comment]" id="comment" class="form-control">{$data.comment}</textarea></div>
+                </div>
+
+                <div>
+                    <a href="{$baseUrl}"><input type="button" value="Powrót" class="btn"></a>
+                    <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+                    <input type="button" value="Zapisz i dodaj" class="btn btn-info" onclick="$('#formSubmit').click();">
+                </div>
+            </fieldset>
+            <div class="hiddenElement">
+                <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+</script>
+
+
+<script>
+    var storageUsers = objectsStorage.init({$users|json_encode nofilter});
+    var storageCompanies = objectsStorage.init({$companies|json_encode nofilter});
+    var storageEmployees = objectsStorage.init({$employees|json_encode nofilter});
+
+    function processAddSourceCompany(object) {
+        if (!storageCompanies.has(object.id)) {
+            storageCompanies.push({
+                id: object.id,
+                name: object.name,
+                relation: object.type
+            });
+        }
+
+        $('#source_company_id').val(object.id).change();
+        $('#source_employee_id').val('').change();
+
+        $('#ajaxDial').modal('hide');
+        selectNextFormElement(dial.lastDialTarget);
+    }
+    function getCompanyMiniUrl() {
+        return '/companies/mini-choose/type/' + $('#source_type').val();
+    }
+
+    function processAddSourceEmployee(object) {
+        $('#source_company_id').val(object.company_id).change();
+
+        var name = object.last_name + ' ' + object.first_name + ' - ' + $('#source_company_typeahead').val();
+
+        if (!storageEmployees.has(object.id)) {
+            storageEmployees.push({
+                id: object.id,
+                name: name,
+                relation: object.company_id
+            });
+        }
+
+        $('#source_employee_id').val(object.id).change();
+
+        $('#ajaxDial').modal('hide');
+        selectNextFormElement(dial.lastDialTarget);
+    }
+    function getEmployeeSourceMiniUrl() {
+        var companyId = $('#source_company_id').val();
+        if (companyId) {
+            companyId = companyId + '/';
+        }
+        return '/company-employees/' + companyId + 'mini-choose/';
+    }
+
+</script>

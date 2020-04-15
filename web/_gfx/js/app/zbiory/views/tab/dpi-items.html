@@ -1,0 +1,35 @@
+<div ng-controller="IndexCtrl">
+    <div ng-include="'/assets/js/app/zbiory/views/partials/personModal.html'"></div>
+    <div ng-include="'/assets/js/app/zbiory/views/partials/typeModal.html'"></div>
+    <div ng-include="'/assets/js/app/zbiory/views/partials/fieldModal.html'"></div>
+
+    <br />
+    <br/>
+    <div>
+        <ul class="nav nav-tabs js-ang-ul" role="tablist">
+            <li role="presentation" ng-repeat="(pk,pv) in form.person"><a href="#<%pk%>" aria-controls="home" role="tab" data-toggle="tab"><%pk%></a></li>
+            <li role="presentation"><button class="btn btn-primary btn" type="button" data-toggle="modal" data-target="#personModal"><i class="glyphicon glyphicon-plus"></i></button></li>
+        </ul>
+        <div class="tab-content js-ang-tab">
+            <div role="tabpanel" class="tab-pane" ng-repeat="(pk,pv) in form.person" id="<%pk%>">
+                <button class="btn btn-primary btn-xs" type="button" ng-click="setTypes('#typeModal', pk)"><i class="glyphicon glyphicon-plus"> Dodaj</i></button>
+                <fieldset ng-repeat="(tk,tv) in form.type[pk]">
+                    <legend><button class="btn btn-primary btn-xs" type="button" ng-click="setFields(tv, '#fieldModal', pk, tk)"><i class="glyphicon glyphicon-plus"></i></button> <%tk%></legend>
+                    <div class="container-fluid col-md-12">
+                        <div class="checkbox" >
+                            <label class="col-md-3" ng-repeat="(fk,fv) in form.field[pk][tk]">
+                                <input type="checkbox" class="angular" ng-model="form.details[pk][tk][fk]"><%fk%>
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-primary btn-xs col-md-offset-3" type="button" ng-click="save()"><i class="glyphicon glyphicon-plus"> Zapisz</i></button>
+</div>
+<br />
+<fieldset style="margin-left:0;">
+    <a href="#aplikacje" data-toggle="tab" class="btn btn-info js-next">Dalej</a>
+</fieldset>
+

@@ -1,0 +1,18 @@
+<form name="f_data" id="f_data" method="POST" action="{$baseUrl}/save-version">
+    <fieldset>
+        {include file="documents-versioned/_version-form-part.html"}
+
+        <div>
+            <a href="{$baseUrl}"><input type="button" value="Powrót" class="btn"></a>
+            <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+        </div>
+    </fieldset>
+    <div class="hiddenElement">
+        <input type="text" name="version[id]" id="version_id" value="{$data.version.id}"/>
+        <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+    </div>
+</form>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+</script>

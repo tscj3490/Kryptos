@@ -1,0 +1,46 @@
+<h3 class="text-center" style="margin-top:0px;margin-bottom:10px;">Automatyczne dodawanie pól</h3>
+<div class="modbottom">
+   <div class="row">
+      <div class="col-sm-9">
+         <label>Nazwy pól (rozdzielaj średnikami)</label>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-sm-9">
+         <input type="text" name="newname" id="newname" value="" class="form-control" />
+      </div>
+      <div class="col-sm-3">
+         <button class="btn btn-default" id="addItem" type="button" style="width:100%;" onclick="addFields();">Dodaj &nbsp;<i class="fa fa-plus"></i></button>
+      </div>
+   </div>
+</div>
+<br />
+<br />
+<br />
+<div class="alert alert-info"><i class="fa fa-info"></i> &nbsp;Jeśli podane w powyższym formularzu pola danych osobowych istnieją już w systemie, zostaną automatycznie zaznaczone i przypisane do właściwych sekcji. W przeciwnym wypadku zostaną dodane do sekcji INNE.</div>
+<script type="text/javascript">
+function addFields(){
+$.ajax({
+   dataType : 'html',
+   url : '/fields/saveminiautomatic/',
+   data : 'name='+$('#newname').val(),
+   method : 'POST',
+   success : function(mess,textStatus,xhr) {
+      var txt = mess.split(';');
+      $.each(txt, function( k,v ) {
+         var txt2 = v.split('|');
+         if ( txt2['1']*1 > 0 ) {
+            activeFields = txt2['0']*1;
+            if ( activeFields > 0 ) { var a = t_opts['t_personsdata'][activePerson]['t_fields'+activeFields].indexOf(txt2['2']); }
+            else { var a = t_opts['t_fields0'].indexOf(txt2['2']); }
+            if ( a == -1 ) { addField('id'+txt2['1'],txt2['2']); }
+         }
+      });
+      showDial('/fields/addautomatic/','','');
+   },
+   error : function(xhr,textStatus,errorThrown) {  }
+});
+}
+runFieldsSel();
+$('#newname').keypress(function(e) { if(e.which == 13) { $('#addItem').click(); return false; }});
+</script>

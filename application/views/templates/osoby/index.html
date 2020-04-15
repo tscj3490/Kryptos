@@ -1,0 +1,92 @@
+{include file='modals/modal.tpl' title='Rejestr osób - Co to jest?' content='Moduł zarządzania użytkownikami, zwany w aplikacji Rejestrem osób, jest jednym z bazowych części aplikacji. To właśnie do tego modułu odwołuje się większość funkcji jakie zawiera aplikacja. Moduł umożliwia m. in. Importowanie/eksportowanie listy użytkowników z i do systemu z rozszerzeniem .xls lub .xlsx, lub innych formatów jak .csv, czyli pliki zgodne z takimi programami jak Microsoft Excel lub Open Office. Wzór, jak ma wyglądać tabela do importu pracowników przekazywany jest w dokumentacji do systemu. Można oczywiście dodawać/edytować/usuwać użytkowników(Pracowników) oraz ich dane w systemie. Funkcjonalność została przygotowana tak by system mógł zacząć działać jak najszybciej przy minimalnym zakresie wprowadzanych informacji. Jeśli jednak poświęcisz więcej czasu na wprowadzenie odpowiednich informacji, program pomoże Ci w wielu kwestiach. Zaczynając od rejestru zatrudnienia z opcją wyszukiwania statusu zatrudnienia w danym dniu, wraz z dokumentami, które obowiązywały go danego dnia, a kończąc na rejestrze uprawnień do kluczy lub kodów alarmu. Posłuchaj co potrafię: przypisywać role pracownikom; przypisywać pracowników do grup, dzięki czemu możesz odwzorować całą strukturę organizacyjną; upoważniać pracowników do pomieszczeń; nadawać zaawansowane uprawnienia do systemu Kryptos; modyfikować uprawnienia do zbiorów danych osobowych; przypisywać użytkownikowi opiekę nad zbiorem danych osobowych; dodawać uprawnienia do systemów/rejestrów; prowadzić historię zatrudnienia oraz załączać pliki; prowadzić rejestr wyrażonych zgód przez pracownika. Dodatkowo umożliwiam Ci prowadzić rejestr podpisów elektronicznych wraz z osobami do nich upoważnionymi oraz rejestr kont bankowych wraz z osobami upoważnionymi do ich prowadzenia. Umożliwiam Ci również dodawanie uprawnień do dodatkowych systemów oraz prowadzenie rejestru zmian dotyczących konkretnej osoby. Zapewne zauważyłeś, że część z tych funkcji to przygotowanie do wypełniania obostrzeń RODO. Jestem gotowy na zmiany, które wejdą w roku 2018.'}
+<form method="post" action="/osoby">
+    <div class="table-operations-header">
+        {if $auth->isGranted('node/osoby/update')}
+        <a class="btn btn-success" href="/osoby/update" data-title="Dodaj nowego pracownika" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+        {/if}
+        {if $auth->isGranted('node/osoby/proposal', ['name' => 'employee_add'])}
+        <a class="btn btn-success" href="/osoby/proposal/name/employee_add" data-title="Dodaj wniosek o nowego pracownika" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Wniosek</a>
+        {/if}
+    </div>
+
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead>
+        <tr>
+            <th></th>
+            <th data-filter-type="string">nazwisko</th>
+            <th data-filter-type="string">imię</th>
+            <th data-filter-type="select">dział</th>
+            <th data-filter-type="string" data-visible="false">e-mail</th>
+            <th data-filter-type="string" data-visible="false">e-mail powiadomień</th>
+            <th data-filter-type="string" data-visible="false" class="text-center min-width">generuj dokumentację</th>
+            <th data-filter-type="string" data-visible="false" class="text-center min-width">aktywacja</th>
+            <th data-filter-type="select" data-visible="false" class="text-center min-width">status</th>
+            <th data-filter-type="select">stanowisko</th>
+            <th data-filter-type="string">login</th>
+            <th class="min-width text-center">operacje</th>
+        </tr>
+        </thead>
+        <tbody class="js-checkbox-container">
+        {foreach $paginator as $d}
+            <tr>
+                <td>
+                    <div class="icheckbox_square-aero js-checkbox-from-container" data-target-id="id[{$d.id}]">
+                        <ins class="iCheck-helper"></ins>
+                        <span class="hidden text-indicator"></span>
+                    </div>
+                </td>
+                <td>{$d.nazwisko|ucfirst} <span class="hiddenElement">{$d.imie|ucfirst}</span></td>
+                <td>{$d.imie|ucfirst}</td>
+                <td>{$d.dzial|ucfirst}</td>
+                <td>{$d.email}</td>
+                <td>{$d.notification_email}</td>
+                <td class="text-center">{smart_string_select value=$d.generate_documents config=Application_Service_Utilities::STATUS_DISPLAY_YESNO}</td>
+                <td class="text-center">{smart_string_select value=$d.activated config=Application_Service_Utilities::STATUS_DISPLAY_YESNO}</td>
+                <td class="text-center">{smart_string_select value=$d.status config=Application_Model_Osoby::STATUS_NAMES}</td>
+                <td>{$d.stanowisko|ucfirst}</td>
+                <td>{$d.login_do_systemu}</td>
+                <td class="operations nowrap">
+                    {if $auth->isGranted('node/osoby/update', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-pencil" href="/osoby/update/id/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                    {/if}
+                    {if $auth->isGranted('node/osoby/repository-operations', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-align-justify" href="/osoby/repository-history/id/{$d.id}" data-toggle="tooltip" title="Historia zmian"></a>
+                    {/if}
+                    {if $auth->isGranted('node/documents/user-documents', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-folder-open" href="/documents/user-documents/id/{$d.id}" data-toggle="tooltip" title="Dokumenty"></a>
+                    {/if}
+                    {*<a class="glyphicon glyphicon-list" href="/osoby/upowaznienia-history/id/{$d.id}" data-toggle="tooltip" title="HISTORIA UPOWAŻNIEŃ"></a>*}
+                    {if $auth->isGranted('node/osoby/reset-password', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-lock" href="/osoby/reset-password/id/{$d.id}" data-toggle="tooltip" title="Generuj hasło"></a>
+                    {/if}
+                    {if $auth->isGranted('node/osoby/remove', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-trash modal-confirm" data-href="/osoby/remove/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="Usuń"></a>
+                    {/if}
+                    {element tag='a' route='osoby/extra-list' routeParams=['id' => $d.id] attributes=[
+                        'dialog' => [
+                            'new-dialog' => true
+                        ],
+                        'class' => 'glyphicon glyphicon-star',
+                        'tooltip' => 'Operacje'
+                    ]}
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+
+    <div class="table-operations-footer">
+        <div class="btn-group">
+            <span class="btn btn-default dt-select-all-button" data-toggle="tooltip" data-title="Zaznacz / odznacz wszystkie"><i class="fa fa-check"></i></span>
+            {if $auth->isGranted('node/osoby/reset-password-all')}
+                <button type="submit" class="btn btn-default modal-confirm table-row-action" data-action-url="/osoby/reset-password-all" data-confirmation-text="Czy na pewno chcesz wygenerować hasła dla wybranych osób?" data-toggle="tooltip" title="Wygeneruj hasła" data-chain="1" name="rowsAction" value="reset-password"><span class="glyphicon glyphicon-lock"></span></button>
+            {/if}
+        </div>
+    </div>
+
+    <div class="hiddenElement">
+        {foreach $paginator as $d}
+            <input type="hidden" name="id[{$d.id}]" class="js-checkbox-target">
+        {/foreach}
+    </div>
+</form>

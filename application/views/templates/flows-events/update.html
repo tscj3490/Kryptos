@@ -1,0 +1,475 @@
+<div class="row">
+    <div class="col-lg-12">
+        <form name="f_data" id="f_data" method="POST" action="{$baseUrl}/save" enctype="multipart/form-data">
+            <fieldset>
+                {if $id}
+                <input type="hidden" name="id" value="{$id}"/>
+                {/if}
+
+                <div class="form-group row">
+                    <label for="name" class="col-sm-4">Nazwa:</label>
+                    <div class="col-sm-8">
+                        <input type="text" name="name" id="name" class="form-control validate[required]" value="{$data.name}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="description" class="col-sm-4">Opis:</label>
+                    <div class="col-sm-8">
+                        <input type="text" name="description" id="description" class="form-control" value="{$data.description}">
+                    </div>
+                </div>
+                     
+               {element tag="bs.typeahead" attributes=[
+                'name' => 'role_id',
+                'label' => 'Rola',
+                'model' => 'FlowsRoles',
+                'value' => $data.role_id
+                ]}
+               {element tag="bs.typeahead" attributes=[
+                'name' => 'application_module_id',
+                'label' => 'Moduł aplikacji',
+                'model' => 'ApplicationsModules',
+                'value' => $applicaton_module_id
+                ]}
+                {element tag="bs.typeahead" attributes=[
+                'name' => 'public_registry_id',
+                'label' => 'Rejestr publiczny',
+                'model' => 'PublicRegistry',
+                'value' => $public_registry_id
+                ]}    
+                {element tag="bs.typeahead" attributes=[
+                'name' => 'operational_system_id',
+                'label' => 'System teleinformacyjny',
+                'model' => 'OperationalSystems',
+                'value' => $operational_system_id
+                ]}
+                {element tag="bs.typeahead" attributes=[
+                'name' => 'set_id',
+                'label' => 'Kompletny zbiór',
+                'model' => 'Zbiory',
+                'value' => $set_id
+                ]}
+                               
+                {element tag="bs.select" attributes=[
+                    'id' => 'type_id',
+                    'name' => 'type_id',
+                    'label' => 'Typ wydarzenia',
+                    'options' => Application_Model_FlowsEvents::TYPES_DISPLAY,
+                    'value' => $data.type_id,
+                    'relative' => false
+                ]}
+             
+                <div class="form-group">
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="panel-group accordion-toggle" id="accordiondemo">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a class="toggle-collapse" data-target="#accordionPeople">
+                                                Osoby odpowiedzialne &nbsp;
+                                                <button class="btn btn-xs btn-info choose-from-dial" data-dial-url="/osoby/addmini/?useProcess=1" data-dial-ready-fn="filterOsobyPopup" data-dial-process-fn="configAddOsoba" type="button">Dodaj</button>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="accordionPeople" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div id="responsible_persons">
+                                                {foreach $responsiblePersons as $a}
+                                                <div class="seloptmin"><span>{$a.osoba.display_name}</span><i title="Usuń" class="glyphicon glyphicon-trash remove-element" data-closest-target=".seloptmin"></i><input type="hidden" name="responsive_persons[]" value="{$a.osoba_id}"></div>
+                                                {/foreach}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default" id="applicationscont">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a class="toggle-collapse" data-target="#accordionApplications">
+                                                Aplikacje &nbsp;
+                                                <input type="button" class="btn btn-xs btn-info" value="Dodaj" onclick="showDial('/aplikacje/addmini/', '', '');"/>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="accordionApplications" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div id="apps"></div>
+                                            <div id="appscheck" style="width:0px;height:0px;overflow:hidden;">
+                                                {foreach $apps as $a}
+                                                <label>
+                                                    <input class="form-control" type="checkbox" {if array_key_exists('assigned', $a) && $a.assigned}checked{/if} name="apps[]" value="{$a.id}" title="{$a.nazwa}">{$a.nazwa}
+                                                </label>
+                                                {/foreach}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default" id="roomsPanelWhole">
+                                <div class="panel-heading" >
+                                    <h4 class="panel-title">
+                                        <a class="toggle-collapse collapse" data-target="#roomsPanel">
+                                            Pomieszczenia &nbsp;
+                                        </a>
+                                    </h4>
+                                </div>
+
+                                <div class="panel-collapse collapse" id="roomsPanel">
+                                    <div class="panel-body" style="padding-left:50px;">
+                                        <div class="row">
+                                            {assign var="naglowek" value=""}
+                                            {foreach $pomieszczenia as $p}
+                                            {assign var="budynek_id" value=$p.budynki_id}
+                                            {assign var="nazwa" value=$budynki.$budynek_id}
+                                            {if $naglowek <> {$nazwa}}
+                                            {assign var="naglowek" value=$nazwa}
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <h3>{$naglowek}</h3>
+                                            {/if}
+                                            <div class="checkbox col-lg-4 col-md-6">
+                                                <label>
+                                                    <input class="form-control pomieszczenieChk" type="checkbox" {if (is_array($pomieszczenia_events) && in_array($p.p_id, $pomieszczenia_events))}checked{/if} name="pomieszczenia[]" data-security="{$p.lista_zabezpieczen}" value="{$p.p_id}">{$p.nazwa_pomieszczenia}{if $p.nr}, P.{$p.nr}{/if}
+                                                </label>
+                                            </div>
+
+                                            {/foreach}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a class="toggle-collapse collapse" data-target="#accordionElements">
+                                            Elementy zbioru &nbsp;
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div class="panel-collapse collapse" id="accordionElements">
+                                    <div class="panel-body" style="padding-left:50px;">
+                                <div class="form-group row">
+                                    <div class="col-sm-4"><b>Element zbioru</b></div>
+                                    <div class="col-sm-4"><b>Zbiór</b></div>
+                                </div>
+                                {foreach from=$events_fielditems item=zf}
+                                <div class="form-group row">
+                                    <div class="col-sm-4">
+                                        <input type="hidden" name="przedmioty[przedmiot][]" id="przedmioty_przedmiot_{$zf@iteration}" value="{$zf.fielditem_id}" class="przedmiotId"/>
+                                        <div class="input-group">
+                                            <input type="text" id="przedmiot_typeahead_{$zf@iteration}" class="form-control typeaheadElement" data-source-function="getPrzedmioty" data-target-element="#przedmioty_przedmiot_{$zf@iteration}" data-after-select-fn="processWybranyPrzedmiot">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default choose-from-dial" data-dial-url="/fielditems/addmini/?useProcess=true" data-dial-process-fn="processAddPrzedmiot" data-dial-ready-fn="filterPrzedmiotPopup" data-dial-process-element="#przedmiot_typeahead_{$zf@iteration}" type="button">Dodaj</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="hidden" name="przedmioty[zbior][]" id="przedmioty_zbior_{$zf@iteration}" value="{$zf.set_id}"/>
+                                        <div class="input-group">
+                                            <input type="text" id="zbior_typeahead_{$zf@iteration}" class="form-control typeaheadElement" data-source-function="getZbiory" data-target-element="#przedmioty_zbior_{$zf@iteration}" data-after-select-fn="processWybranyZbior" data-relative-element="#przedmioty_przedmiot_{$zf@iteration}">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default choose-from-dial" data-dial-url-fn="getZbioryMiniUrl" data-dial-process-fn="processAddZbior" data-dial-ready-fn="filterZbiorPopup" data-dial-process-element="#zbior_typeahead_{$zf@iteration}" type="button">Dodaj</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <span class="btn btn-danger remove-row" type="button" data-before-remove-fn="processRemoveRow">Usuń</span>
+                                    </div>
+                                </div>
+                                {/foreach}
+
+
+                                <div class="panel-collapse collapse in">
+                                    <div class="form-group row">
+                                        <div class="col-sm-4">
+                                            <input type="hidden" name="przedmioty[przedmiot][]" id="przedmioty_przedmiot_n_1" class="przedmiotId"/>
+                                            <div class="input-group">
+                                                <input type="text" id="przedmiot_typeahead_n_1" class="form-control typeaheadElement" data-source-function="getPrzedmioty" data-target-element="#przedmioty_przedmiot_n_1" data-after-select-fn="processWybranyPrzedmiot">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-default choose-from-dial" data-dial-url="/fielditems/addmini/?useProcess=true" data-dial-process-fn="processAddPrzedmiot" data-dial-ready-fn="filterPrzedmiotPopup" data-dial-process-element="#przedmiot_typeahead_n_1" type="button">Dodaj</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <input type="hidden" name="przedmioty[zbior][]" id="przedmioty_zbior_n_1"/>
+                                            <div class="input-group">
+                                                <input type="text" id="zbior_typeahead_n_1" class="form-control typeaheadElement" data-source-function="getZbiory" data-target-element="#przedmioty_zbior_n_1" data-after-select-fn="processWybranyZbior" data-relative-element="#przedmioty_przedmiot_n_1" disabled>
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-default choose-from-dial" data-dial-url-fn="getZbioryMiniUrl" data-dial-process-fn="processAddZbior" data-dial-ready-fn="filterZbiorPopup" data-dial-process-element="#zbior_typeahead_n_1" type="button">Dodaj</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <span class="btn btn-danger remove-row" type="button" data-before-remove-fn="processRemoveRow">Usuń</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <a href="{$baseUrl}"><input type="button" value="Powrót" class="btn"></a>
+                        <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+                    </div>
+            </fieldset>
+            <div class="hiddenElement">
+                <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+            </div>
+        </form>
+    </div>
+</div>
+     <script type="text/javascript">
+                    var activeitem = '';
+                    var activepersons = { };
+                    var t_opts = {if $data.jsonoptions <> ''}jQuery.parseJSON('{$data.jsonoptions nofilter}');{else}{ldelim}t_items:new Array(),t_itemsdata:{ldelim}{rdelim}{rdelim};{/if};
+                    $('#itemsList').change(function(){ activeitem = $(this).children('option:selected').html(); setOptsView(); });
+                </script>
+<script src="/_gfx/js/zbiory.js"></script>
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+
+    function filterOsobyPopup() {
+        $('#responsible_persons').find('input').each(function () {
+            $('#optsSearch').find('#id' + this.value).addClass('active');
+        });
+    }
+
+    function configAddOsoba(id, object, status) {
+        if (status) {
+            var newTag = $('<div class="seloptmin">');
+            newTag.append($('<span></span>').text(object.displayName));
+            newTag.append($('<i title="Usuń" class="glyphicon glyphicon-trash remove-element" data-closest-target=".seloptmin">'));
+            newTag.append($('<input type="hidden" name="responsive_persons[]" value="' + object.id + '">'));
+            $('#responsible_persons').append(newTag);
+
+            systemAssignHandlers();
+        } else {
+            $('#responsible_persons').find('input[value="' + object.id + '"]').closest('.seloptmin').remove();
+        }
+    }
+
+    function runaplikacjeSel() {
+        setaplikacjeSel();
+        $('.selopt2bl').click(function () {
+            var ide = $(this).attr('id').replace('id', '');
+            if ($('#appscheck input[value="' + ide + '"]').is(':checked')) {
+                $('#appscheck input[value="' + ide + '"]').iCheck('uncheck');
+            } else {
+                $('#appscheck input[value="' + ide + '"]').iCheck('check');
+            }
+            setaplikacjeSel();
+            setaplikacje();
+            runOptsSearch();
+        });
+        $('#checkall').click(function () {
+            $('.selopt2bl').each(function () {
+                var ide = $(this).attr('id').replace('id', '');
+                if (!$(this).hasClass('active') && $(this).css('display') != 'none') {
+                    $('#appscheck input[value="' + ide + '"]').iCheck('check');
+                }
+            });
+            setaplikacjeSel();
+            setaplikacje();
+            runOptsSearch();
+        });
+        $('#uncheckall').click(function () {
+            $('.selopt2bl').each(function () {
+                var ide = $(this).attr('id').replace('id', '');
+                if ($(this).hasClass('active') && $(this).css('display') != 'none') {
+                    $('#appscheck input[value="' + ide + '"]').iCheck('uncheck');
+                }
+            });
+            setaplikacjeSel();
+            setaplikacje();
+            runOptsSearch();
+        });
+    }
+    function setaplikacjeSel() {
+        $('.selopt2bl').removeClass('active');
+        $('#appscheck input').each(function () {
+            if ($(this).is(':checked')) {
+                $('.selopt2bl[id="id' + $(this).attr('value') + '"]').addClass('active');
+            }
+        });
+    }
+    function setaplikacje() {
+        $('#apps').html('');
+        $('#appscheck input').each(function () {
+            if ($(this).is(':checked')) {
+                $('#apps').append('<div class="seloptmin" title="' + $(this).attr('title') + '"><span>' + $(this).attr('title') + '</span><i title="Usuń" class="glyphicon glyphicon-trash" onclick="$(\'#appscheck input[value=\\\'' + $(this).attr('value') + '\\\']\').iCheck(\'uncheck\'); setaplikacje();"></i></div>');
+            }
+        });
+        if ($('#apps').html() == '') {
+            $('#apps').append('<div class="alert alert-danger">Nie dokonano wyboru. Aby dodać aplikacje kliknij przycisk DODAJ znajdujący się powyżej.</div>');
+        }
+
+
+    }
+
+
+    $(function () {
+        setaplikacje();
+    });
+
+
+</script>
+<script>
+
+    var zbiory = {$zbiory|json_encode nofilter}
+    ;
+    function getZbiory() {
+    return zbiory;
+    }
+    var przedmioty = {$przedmioty|json_encode nofilter};
+            function getPrzedmioty(getAll) {
+            if (getAll) {
+            return przedmioty;
+            }
+            var used = [];
+                    $('input[name="przedmioty[przedmiot][]"]').each(function() {
+            if (this.value) {
+            used.push(this.value);
+            }
+            });
+                    var toUse = [];
+                    $(przedmioty).each(function() {
+            if ($.inArray(this.id, used) === - 1) {
+            toUse.push(this);
+            }
+            });
+                    return toUse;
+            }
+
+    function filterZbiorPopup() {
+    var dialog = $('#ajaxDial');
+            $('input[name="przedmioty[zbior][]"]').each(function () {
+    dialog.find('.selopt2bl[id=id' + this.value + ']').hide();
+    });
+    }
+    function filterPrzedmiotPopup() {
+    var dialog = $('#ajaxDial');
+            $('input[name="przedmioty[przedmiot][]"]').each(function () {
+    dialog.find('.selopt2bl[id=id' + this.value + ']').hide();
+    });
+    }
+
+    function processAddZbior(id) {
+    var input = $(dial.lastDialTarget.attr('data-dial-process-element')),
+            sourceFn = window[input.attr('data-source-function')],
+            items = sourceFn(true);
+            var name = '';
+            $(items).each(function () {
+    if (this.id === id) {
+    name = this.name;
+            return false;
+    }
+    });
+            input.val(name);
+            input.typeahead('getTypeahead').lookup(name);
+            setTimeout(function () {
+            input.typeahead('getTypeahead').select();
+                    input.typeahead('getTypeahead').hide();
+            }, 200);
+            $('#ajaxDial').modal('hide');
+    }
+    function processWybranyZbior() {
+
+    }
+
+    function processRemoveRow() {
+    deleteItem(this.closest('.row').find('input.przedmiotId').val());
+    }
+
+    function processAddPrzedmiot(id) {
+    var input = $(dial.lastDialTarget.attr('data-dial-process-element')),
+            sourceFn = window[input.attr('data-source-function')],
+            items = sourceFn();
+            var name = '';
+            $(items).each(function () {
+    if (this.id === id) {
+    name = this.name;
+            return false;
+    }
+    });
+            if (!name) {
+    return;
+    }
+
+    input.val(name);
+            input.typeahead('getTypeahead').lookup(name);
+            setTimeout(function () {
+            input.typeahead('getTypeahead').select();
+                    input.typeahead('getTypeahead').hide();
+            }, 200);
+            $('#ajaxDial').modal('hide');
+    }
+
+    function processWybranyPrzedmiot(result) {
+    var tg = result.typeaheadElement,
+            zbioryInput = tg.closest('.row').children().eq( - 2).find('input[type=text]').eq(0);
+            zbioryInput
+            .removeAttr('disabled');
+            if (tg.closest('.row').nextAll().size() === 0) {
+    var cloned = tg.closest('.row').clone();
+            cloned
+            .find('input')
+            .each(function () {
+            var tg = $(this),
+                    replaceReg = /[0-9]+$/,
+                    id = tg.attr('id'),
+                    newI = parseInt(id.match(replaceReg)[0]) + 1,
+                    newId = id.replace(replaceReg, newI);
+                    tg
+                    .attr('id', newId)
+                    .val('');
+                    if (tg.attr('type') === 'text') {
+            tg.attr('data-target-element', tg.attr('data-target-element').replace(replaceReg, newI));
+                    if (tg.attr('data-relative-element')) {
+            tg.attr('data-relative-element', tg.attr('data-relative-element').replace(replaceReg, newI))
+            }
+            }
+            })
+            .end()
+            .find('button')
+            .each(function () {
+            var tg = $(this),
+                    replaceReg = /[0-9]+$/,
+                    id = tg.attr('data-dial-process-element'),
+                    newI = parseInt(id.match(replaceReg)[0]) + 1,
+                    newId = id.replace(replaceReg, newI);
+                    tg.attr('data-dial-process-element', tg.attr('data-dial-process-element').replace(replaceReg, newI))
+            })
+            .end()
+            .find('.dropdown-menu')
+            .remove()
+            .end()
+            .find('.processed-typeaheadElement')
+            .removeClass('processed-typeaheadElement')
+            .end()
+            .find('.processed-choose-from-dial')
+            .removeClass('processed-choose-from-dial')
+            .end()
+            .insertAfter(tg.closest('.row'));
+            typeaheadInit();
+            dial.initializer();
+            universalRemoveRowInit();
+    }
+
+    //obsługa formularza przedmiotów z polami i osobami
+    additem('id' + result.targetElement.val());
+            if (result.previousValue) {
+    var items = window[tg.attr('data-source-function')]();
+            $(items).each(function () {
+    if (this.id === result.previousValue) {
+    deleteItem(result.previousValue);
+            return false;
+    }
+    });
+    }
+    }
+</script>

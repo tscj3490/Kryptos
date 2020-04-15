@@ -1,0 +1,45 @@
+{include file='modals/modal.tpl' title="{'Szkolenia- co to jest?'|translate}" content="{'Kolejnym z kluczowych modułów jest moduł szkoleń. Dzięki niemu użytkownicy mają możliwość ukończyć e-szkolenie oraz uzyskać indywidualny certyfikat zdając egzamin. Pamiętajmy, że to jedno z podstawowych zabezpieczeń organizacyjnych. Mając plan szkolenia, listę uczestników oraz wyniki poświadczające przyswojenie wiedzy, mamy pewność o prawidłowej realizacji procedury szkoleniowej zgodnie z normami międzynarodowymi ISO (CZYT. ISO). Kryptos został tak skonfigurowany by szkolenia elektroniczne były skuteczne prawnie, w przeciwieństwie do niektórych systemów elearningowych, z których skorzystanie zostało poddane wątpliwości. Na uwagę zasługuje fakt, że wybierając Kryptos24, otrzymujesz dostęp do bazy około 100 szkoleń z różnej tematyki. Od ochrony danych osobowych, kontroli zarządczej, aż po omówienie aktualnych zmian w ustawie o zamówieniach publicznych. Udostępniamy również szkolenia praktyczne typu „Jak ustrzec moje dziecko przed wykorzystywaniem przez internet?”. Katalog tematyczny jest nieustannie rozbudowywany i aktualizowany. Oprócz szkoleń darmowych w ramach dostępu do usługi, użytkownicy mają również dostęp do specjalistycznych szkoleń dodatkowo płatnych, oferowanych przez ekspertów z różnych dziedzin, którzy są naszymi Partnerami Merytorycznymi. Jak już wiemy, jestem najbardziej elastyczną aplikacją, pozwalającą ograniczyć odpowiedzialność z różnych dziedzin. By umożliwić realizację tego celu, udostępniamy Ci możliwość dodawania i tworzenia własnych szkoleń. Masz możliwość wygenerowania od podstaw kursu o dowolnej tematyce lub załadowania materiałów, które otrzymasz po szkoleniu stacjonarnym, tak by każdy mógł się z nimi w dowolnym miejscu i czasie się zapoznać. Istnieje możliwość segregowania testów i egzaminów w grupach/kategoriach. W łatwy sposób można określić grupę szkoleń tematycznych dla danej komórki w naszej organizacji. Aktualnie budowanie kursu polega na wgrywaniu slajdów w formie graficznej lub załączenia filmu Youtube. Dodatkowo masz możliwość ustalenia szablonu certyfikatu dla użytkowników, którzy taki kurs ukończyli oraz zestaw pytań do egzaminu, wraz z określeniem punktacji oraz progu zdawalności. By opublikować szkolenie, należy dodać nowe Zadanie o typie Szkolenie. System wyśle powiadomienie do wszystkich użytkowników oraz umożliwi monitorowanie poziomu realizacji zadania – w tym przypadku polegającego na ukończeniu szkolenia oraz zdaniu egzaminu. Tylko Kryptos24 posiada możliwość zastosowania elektronicznego podpisu, potwierdzającego skuteczną realizację procedury szkolenia. Pod koniec roku 2016, moi autorzy otrzymali dostęp od Ministerstwa Cyfryzacji do środowiska deweloperskiego EPUAP (CZYT. EPUAP), w celu integracji z Kryptos24. Oznacza to, że w roku 2017 każdy użytkownik będzie mógł podpisywać dokumenty podpisem kwalifikowanym oraz profilem zaufanym EPUAP (CZYT. EPUAP), który jest bezpłatny. Zapewne jesteś sobie w stanie wyobrazić zastosowanie tej funkcjonalności, a wkrótce przekonasz się jak wiele Ci ona daje.'|translate}"}
+<div class="table-operations-header">
+    <a class="btn btn-success" href="{$baseUrl}/update" data-title="{'Dodaj nowe szkolenie'|translate}" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;{'Dodaj'|translate}</a>
+</div>
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="string">{'Temat'|translate}</th>
+        <th data-filter-type="select">{'Kategoria'|translate}</th>
+        <th data-filter-type="select">{'Egzamin'|translate}</th>
+        <th>{'Zaproszenia'|translate}</th>
+        <th>{'Ukończono'|translate}</th>
+        <th>Status</th>
+        <th data-visible="false">Ilość podstron</th>
+        <th>{'Operacje'|translate}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $courses as $course}
+        <tr>
+            <td><span class="{$course.icon}"></span> {$course.topic}</td>
+            <td>{$course.category_name}</td>
+            <td>{if $course.exam_name}{$course.exam_name}{else}BRAK{/if}</td>
+            <td>{$course.sessions_count}</td>
+            <td>{$course.sessions_count_done}</td>
+            <td>{smart_string_select value=$course.status config=Application_Service_Utilities::STATUS_DISPLAY_DUAL}</td>
+            <td>{$course.pages_count}</td>
+            <td class="operations">
+                {if $auth->isGranted('node/courses/join-session', ['id' => $course.id])}
+                    <a class="glyphicon glyphicon-bell" href="/courses/join-session/id/{$course.id}" data-toggle="tooltip" title="{'Rozpocznij'|translate}"></a>
+                {/if}
+                {if $auth->isGranted('node/courses/update', ['id' => $course.id])}
+                <a class="glyphicon glyphicon-pencil" href="/courses/update/id/{$course.id}" data-toggle="tooltip" title="{'Edytuj'|translate}"></a>
+                {/if}
+                {if $auth->isGranted('node/courses/training-report', ['id' => $course.id])}
+                <a class="glyphicon glyphicon-list-alt" href="/courses/training-report/id/{$course.id}" data-toggle="tooltip" title="{'Podsumowanie'|translate}"></a>
+                {/if}
+                {if $auth->isGranted('node/courses/remove', ['id' => $course.id])}
+                    <a class="glyphicon glyphicon-trash modal-confirm" data-href="/courses/remove/id/{$course.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="{'USUŃ'|translate}"></a>
+                {/if}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

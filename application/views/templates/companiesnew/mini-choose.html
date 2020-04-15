@@ -1,0 +1,77 @@
+<h3 class="text-center" style="margin-top:0px;margin-bottom:10px;">Wybór dostępnych firm</h3>
+<div class="modtop">
+    <div class="form-group row">
+        <div class="col-sm-12">
+            <a class="btn btn-success js-anchor" href="#section-add-car">Dodaj firmę</a>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-12">
+            <input type="text" name="searcher" id="searcher" class="form-control" placeholder="Wpisz szukaną frazę" onkeyup="runOptsSearch();" />
+        </div>
+    </div>
+</div>
+<div id="optsSearch">
+    <div class="alert alert-danger optsnodata"><i class="fa fa-4x fa-exclamation-triangle"></i><div class="floathead"><div class="ins">Zmień kryteria wyszukiwania lub skorzystaj z formularza dodawania nowych rekordów znajdującego się poniżej.</div></div><div class="clear"></div></div>
+    {foreach $records as $d}
+        <div class="selopt2bl" id="id{$d.id}">{$d.name}</div>
+    {/foreach}
+</div>
+<div class="modbottom" id="section-add-car">
+    <h3 style="margin-top:0px;">Dodawanie nowej firmy</h3>
+    <form name="f_data_mini" id="f_data_mini" onsubmit="return checkSubmit()">
+        <fieldset>
+            <div class="form-group row">
+                <label for="name" class="col-sm-2">Nazwa:</label>
+                <div class="col-sm-10"><input type="text" name="name" id="name" class="form-control validate[required]" value="{$data['name']}"></div>
+            </div>
+            <div id="globalMessage_mini"></div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <input type="button" value="Zapisz" class="btn btn-info pull-right" onclick="return checkSubmit();">
+                </div>
+            </div>
+        </fieldset>
+        <div class="hiddenElement">
+            <input type="hidden" name="type" id="type" value="{$data.type}"/>
+            <input type="hidden" name="addAnother" id="addAnother" value="0"/>
+            <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+        </div>
+    </form>
+</div>
+{literal}
+    <script type="text/javascript">
+        setTimeout('$(\'#searcher\').focus()',500);
+
+        $('.js-anchor').on('click', function() {
+            var selector = $(this).attr('href');
+            $(selector)
+                .css('background-color', '#68C39F')
+                .animate({backgroundColor: 'transparent'}, 500);
+        });
+
+        $('#optsSearch .selopt2bl').on('click', function() {
+            dial.lastDialProcessFn({
+                id: this.id.replace('id',''),
+                name: this.textContent
+            });
+        });
+
+        function checkSubmit() {
+            var data = $('#f_data_mini').serializeObject();
+
+            $.ajax({
+                url : '/companiesnew/mini-save/',
+                data : data,
+                method : 'POST',
+                dataType: 'json',
+                success: function(result) {
+                    dial.lastDialProcessFn(result.object);
+                }
+            });
+
+            return false;
+        }
+        backendUtilities.addVatidationEngine("f_data_mini");
+    </script>
+{/literal}

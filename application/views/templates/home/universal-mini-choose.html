@@ -1,0 +1,41 @@
+<h3 class="text-center" style="margin-top:0px;margin-bottom:10px;">Wybierz rekord</h3>
+<div class="modtop">
+    <div class="form-group row">
+        <div class="col-sm-12">
+            <input type="text" name="searcher" id="searcher" class="form-control" placeholder="Wpisz szukaną frazę" onkeyup="runOptsSearch();" />
+        </div>
+    </div>
+</div>
+<div style="height:20px"></div>
+<div id="optsSearch">
+    <div class="alert alert-danger optsnodata"><i class="fa fa-4x fa-exclamation-triangle"></i>
+        <div class="floathead">
+            <div class="ins">Zmień kryteria wyszukiwania.</div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    {foreach $records as $d}
+        <div class="selopt2bl" id="id{$d.id}" title="{$d.name}">{if $d.icon}<span class="{$d.icon}"></span>{/if} {$d.name}</div>
+    {/foreach}
+</div>
+<script type="text/javascript">
+    setTimeout('$(\'#searcher\').focus()', 500);
+
+    $('#optsSearch .selopt2bl').on('click', function () {
+        var tg = $(this);
+
+        dial.lastDialProcessFn({
+            id: this.id.replace('id', ''),
+            name: this.textContent,
+            displayName: this.textContent
+        }, !tg.hasClass('active'));
+
+        if (tg.hasClass('active')) {
+            tg.removeClass('active');
+        } else {
+            tg.addClass('active')
+        }
+    });
+
+    dial.lastDialReadyFn();
+</script>

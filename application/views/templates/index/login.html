@@ -1,0 +1,20 @@
+<div id="logging">
+    <center>
+    <img src="/assets/images/kryptos.jpg" style="width: auto; height: 200px;">
+    <h1 style="color: white;">LOGOWANIE DO SYSTEMU KRYPTOS</h1>
+</center>
+    <form method="post" action="/index/prelogin">
+        <input type="text" name="login"  id="login" placeholder="identyfikator">
+        <div style="clear:both"></div>
+        {for $i = 1; $i < 12; $i++}
+        <div style="color: white; width: 20px;margin-right: 10px; loat:left;display: inline-block;text-align: center">
+            <input type="password" name="password[{$i}]" maxlength="1" >
+            <div>{$i}</div>
+        </div>
+        {/for}
+        <input type="submit" name="submit" value="Dalej">
+    </form>
+</div>
+
+
+

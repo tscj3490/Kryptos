@@ -1,0 +1,8 @@
+<div style="text-align: left">
+    {foreach $activities as $activity}
+    <table class="inspections-metadata">
+        <tr><td>Nazwa czynności: {$activity.title}</td></tr>
+        <tr><td>Opis: {$activity.comment nofilter}</td></tr>
+    </table>
+    {/foreach}
+</div>

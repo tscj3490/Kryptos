@@ -1,0 +1,49 @@
+{$message}
+{include file='modals/modal.tpl' title='Podstawowe Informacje - co to jest?' content='W zakładce Podstawowe Informacje zawarte są dane o jednostce, które są np. wykorzystywane później w szablonach dokumentów.'}
+{*<div class="row">
+    <ul class="nav navbar-nav navbar-right">
+        <li><a class="btn btn-default" href="/admin/loghistory">Historia logowań</a></li>
+        <li><a class="btn btn-default" href="/admin/zastepstwa">Zastępstwa</a></li>
+        <li><a class="btn btn-default" href="/komunikat">Komunikaty</a></li>
+    </ul>
+</div>*}
+<form id="f_profile" name="f_profile" method="post" action="">
+    {foreach $fieldsets as $fieldsetName => $settings}
+        <fieldset>
+            <legend>{$fieldsetName}:</legend>
+            {foreach $settings as $setting}
+              {if $setting.class == 'checkbox'}
+                <div class="form-group row">
+                    <div class="col-lg-2">
+                        <label for="setting-{$setting.id}">
+                        {if $setting.description}
+                            {$setting.description}
+                        {else}
+                            {$setting.variable}
+                        {/if}
+                        </label>
+                    </div>
+                    <div class="col-lg-4">
+                       <input type="checkbox" name="setting[{$setting.id}]" value="1" class="ios-switch ios-switch-success ios-switch-sm" {if $setting.value}checked{/if} />
+                    </div>
+                </div>
+              {else}
+                <div class="form-group row">
+                    <div class="col-lg-2"><label for="setting-{$setting.id}">{$setting.variable}</label></div>
+                    <div class="col-lg-4"><input type="text" value="{$setting.value}" name="setting[{$setting.id}]" id="setting-{$setting.id}" class="form-control"/></div>
+                </div>
+              {/if}
+            {/foreach}
+        </fieldset>
+    {/foreach}
+    <div>
+        <input type="submit" value="Zapisz" class="btn btn-info">
+    </div>
+</form>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_profile");
+    /*$("#setting-11").change(function () {
+        alert('Uwaga, po zapisaniu nowej daty oświadczeń/upoważnień zostanie przeładowana dokumentacja.');
+    });*/
+</script>

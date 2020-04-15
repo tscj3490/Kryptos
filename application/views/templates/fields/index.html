@@ -1,0 +1,267 @@
+{$message}
+{include file='modals/modal.tpl' title='Pola danych osobowych - co to jest?' content='W tej zakładce mamy dostęp do pól danych osobowych używanych w elementach zbioru.'}
+{if $userIsKodoOrAbi}
+    <div class="body-action">
+        <a class="btn btn-success" href="/fields/move-all">Przenieś wszystkie</a>
+    </div>
+    <div style="height:10px"></div>
+    <hr class="nomargin"/>
+    <div style="height:10px"></div>
+{/if}
+
+<div class="mysearcher collapse" id="mysearcher">
+    <div class="row ins">
+        <div class="col-md-offset-2 col-md-8">
+            <form action="" method="GET" id="formsearch" onsubmit="return parseVars('form','formsearch',{ page:'0' },'/fields');">
+                <div style="width:0px;height:0px;overflow:hidden;">
+                    <input type="text" name="search" id="search" value="1"/>
+                    <input type="reset" id="mysearchereset"/>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">KOLUMNA</span>
+                            <select name="fieldtype" id="fieldtype" class="form-control input-sm">
+                                {foreach from=$t_fieldtypes key=k item=v}
+                                    <option value="{$k}" {if $requestedParams.fieldtype == $k}selected="selected"{/if}>{$v}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">FRAZA</span>
+                            <input type="text" name="phrase" id="phrase" value="{$requestedParams.phrase|htmlspecialchars}" class="form-control input-sm"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">KATEGORIA</span>
+                            <select name="fieldscategory_id" id="fieldscategory_id" class="form-control input-sm">
+                                <option value="">wszystkie</option>
+                                {foreach from=$t_categories key=k item=v}
+                                    <option value="{$k}" {if $requestedParams.fieldscategory_id == $k}selected="selected"{/if}>{$v}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">GIODO</span>
+                            <select name="giodofield" id="giodofield" class="form-control input-sm">
+                                <option value="">wszystkie</option>
+                                {foreach from=$t_giodofields key=k item=v}
+                                    <option value="{$k}" {if $requestedParams.giodofield == $k AND $requestedParams.giodofield|strlen > 0}selected="selected"{/if}>{$v}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">KOLUMNA</span>
+                            <select name="datetype" id="datetype" class="form-control input-sm">
+                                {foreach from=$t_datetypes key=k item=v}
+                                    <option value="{$k}" {if $requestedParams.datetype == $k}selected="selected"{/if}>{$v}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">OD</span>
+                            <input type="text" name="datefrom" id="datefrom" value="{$requestedParams.datefrom|htmlspecialchars}" class="form-control input-sm datepicker-input"/>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon1">DO</span>
+                            <input type="text" name="dateto" id="dateto" value="{$requestedParams.dateto|htmlspecialchars}" class="form-control input-sm datepicker-input"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <button class="hiddenElement"></button>
+                    <button class="btn btn-danger btn-sm" onclick="$('#mysearchereset').click();" data-toggle="collapse" href="#mysearcher" title="Anulowanie zmian wprowadzonych w formularzu wyszukiwania i zamknięcie wyszukiwarki"><i class="fa fa-rotate-left"></i> &nbsp;Anuluj</button>
+                    <button class="btn btn-warning btn-sm" onclick="$('#mysearchereset').click(); return false;" title="Anulowanie zmian wprowadzonych w formularzu wyszukiwania"><i class="fa fa-eraser"></i> &nbsp;Resetuj</button>
+                    <button class="btn btn-info btn-sm" onclick="return parseVars('form','formsearch',{ page:'0' },'/fields');" title="Wyszukiwanie rekordów spełniających podane kryteria wyszukiwania"><i class="fa fa-search"></i> &nbsp;Szukaj</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<hr class="nomargin"/>
+<div style="height:10px;"></div>
+<div class="row">
+    <div class="col-md-6 mybuttons">
+        <a class="btn btn-default btn-sm" href="/zbiory" title="Powrót do listy zbiorów"><i class="fa fa-backward"></i> &nbsp;Powrót</a>
+        <a class="btn btn-success btn-sm" href="/fields/update" title="Dodawanie nowego rekordu"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+        <button class="btn btn-info btn-sm" onclick="return false;" title="Zamknięcie / otwarcie wyszukiwarki" data-toggle="collapse" href="#mysearcher"><i class="fa fa-search"></i> &nbsp;Szukaj</button>
+        &nbsp;&nbsp;
+        {if $requestedParams.search == 1}
+            <button class="btn btn-warning btn-sm" onclick="return parseVars('unform','formsearch',{ page:'0' },'/fields');" title="Wyczyszczenie kryteriów wyszukiwania"><i class="fa fa-eraser"></i> &nbsp;Wyczyść</button>
+        {/if}
+        &nbsp;&nbsp;
+        {if $requestedParams.search == 1}
+            <span style="white-space:nowrap;">Znaleziono <strong>{$countsearch}</strong> z <strong>{$countall}</strong> rekordów</span>
+        {else}
+            <span style="white-space:nowrap;">Wyświetlanie <strong>{$countsearch}</strong> rekordów</span>
+        {/if}
+    </div>
+    <div class="col-md-6 text-right">
+        <form action="" method="GET" id="formpager">
+            <ul class="list-inline mylist">
+                <li><label for="limit">Rekordów na stronie</label></li>
+                <li>
+                    <select name="limit" id="limit" class="form-control input-sm" onchange="$('#fprmpagersend').click();">
+                        {foreach $t_limits as $limit}
+                            <option value="{$limit}" {if $requestedParams.limit == $limit}selected="selected"{/if}>{$limit}</option>
+                        {/foreach}
+                    </select>
+                </li>
+                <li><label for="page">Strona</label></li>
+                <li>
+                    <button class="btn btn-default btn-sm" {if $requestedParams.page > 1}onclick="return parseVars('',{ page:'1' },'','/fields');" {else}disabled{/if} title="sPierwsza strona"><i class="fa fa-angle-double-left"></i></button>
+                </li>
+                <li>
+                    <button class="btn btn-default btn-sm" {if $requestedParams.page > 1}onclick="return parseVars('',{ page:'{$requestedParams.page-1}' },'','/fields');" {else}disabled{/if} title="Poprzednia strona"><i class="fa fa-angle-left"></i></button>
+                </li>
+                <li>
+                    <select name="page" id="page" class="form-control input-sm" style="display:inline;width:70px;" onchange="parseVars('',{ page:$(this).val() },'','/fields');">
+                        {foreach $t_pages as $page}
+                            <option value="{$page}" {if $requestedParams.page == $page}selected="selected"{/if}>{$page}</option>
+                        {/foreach}
+                    </select>
+                </li>
+                <li>
+                    <button class="btn btn-default btn-sm" {if $requestedParams.page < $pagescount}onclick="return parseVars('',{ page:'{$requestedParams.page+1}' },'','/fields');" {else}disabled{/if} title="Następna strona"><i class="fa fa-angle-right"></i></button>
+                </li>
+                <li>
+                    <button class="btn btn-default btn-sm" {if $requestedParams.page < $pagescount}onclick="return parseVars('',{ page:'{$pagescount}' },'','/fields');" {else}disabled{/if} title="Ostatnia strona"><i class="fa fa-angle-double-right"></i></button>
+                </li>
+            </ul>
+            <div style="width:0px;height:0px;overflow:hidden;">
+                <input type="submit" value="Przełącz" id="fprmpagersend" class="btn btn-default" onclick="return parseVars('form','formpager','','/fields');"/>
+            </div>
+        </form>
+    </div>
+</div>
+<form method="post" action="/fields/delChecked/" class="table-form">
+    <div class="table-responsive" style="padding:0px;border:0px;">
+        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+            <thead class="ui-widget-header">
+            <tr>
+                <th style="width:22px;white-space:nowrap;"></th>
+                {foreach from=$t_sorters key=k item=v}
+                    <th data-filter-type="string" style="white-space:nowrap;">{if $requestedParams.sort == $k}{if $requestedParams.order == 'asc'}<a href="#" onclick="return parseVars('',{ sort:'{$k}',order:'desc' },'','/fields');">{$v} &nbsp;<i class="fa fa-sort-down"></i></a>{else}<a href="#" onclick="return parseVars('',{ sort:'{$k}',order:'asc' },'','/fields');">{$v} &nbsp;<i class="fa fa-sort-up"></i></a>{/if}{else}<a href="#" onclick="return parseVars('',{ sort:'{$k}',order:'asc' },'','/fields');">{$v} &nbsp;<i class="fa fa-sort"></i></a>{/if}</th>
+                {/foreach}
+                <th style="width:93px">Opcje</th>
+            </tr>
+            </thead>
+            <tbody class="ui-widget-content">
+            {foreach $t_data as $d}
+                <tr>
+                    <td style="padding:8px 8px;">
+                        <div style="width:22px"><input type="checkbox" name="id{$d.id}" id="id{$d.id}" value="1"/></div>
+                    </td>
+                    <td class="text-right" style="width:70px;">{$d.id}</td>
+                    <td><span class="{$d.icon}"></span> {$d.name}</td>
+                    <td style="white-space:nowrap;">{$d.categoryname}</td>
+                    {assign var="giodofield" value=$d.giodofield}
+                    <td style="white-space:nowrap;">{$t_giodofields.$giodofield}</td>
+                    <td>{if $d.usedInElements}tak{else}nie{/if}</td>
+                    <td class="text-center">{smart_date value=$d.created_at}</td>
+                    <td class="text-center">{smart_date value=$d.updated_at}</td>
+                    <td class="text-center" style="white-space:nowrap;">
+                        {if $auth->isGranted('node/fields/update', ['id' => $d.id])}
+                        <a class="glyphicon glyphicon-pencil" href="/fields/update/id/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                        {/if}
+                        {if $auth->isGranted('node/fields/unlock', ['id' => $d.id])}
+                        <a class="glyphicon glyphicon-lock" href="/fields/unlock/id/{$d.id}" data-toggle="tooltip" title="Odblokuj"></a>
+                        {/if}
+                        {if $auth->isGranted('node/fields/update')}
+                        <a class="glyphicon glyphicon-star" href="/fields/update/copy/{$d.id}" data-toggle="tooltip" title="Duplikuj"></a>
+                        {/if}
+                        {if $auth->isGranted('node/fields/del', ['id' => $d.id])}
+                        <a class="glyphicon glyphicon-trash modal-confirm" data-href="/fields/del/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                        {/if}
+                        {if $auth->isGranted('node/fields/delMove', ['id' => $d.id])}
+                        <a class="glyphicon glyphicon-transfer choose-from-dial" data-dial-url="/fields/delMove/id/{$d.id}" data-toggle="tooltip" title="USUŃ i PRZENIEŚ DANE"></a>
+                        {/if}
+                    </td>
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mybuttons">
+            <button type="submit" class="btn btn-danger confirm-delete" data-toggle="tooltip" data-title="Usuń zaznaczone" data-confirmation-title="Czy na pewno chcesz usunąć zaznaczone pozycje?"><i class="fa fa-remove"></i></button>
+            <button type="button" class="btn btn-default runCategoryChangeSelected" data-toggle="tooltip" data-title="Zmień kategorię zaznaczonym"><i class="fa fa-edit"></i></button>
+        </div>
+        <div class="col-md-6 text-right">
+            <form action="" method="GET" id="formpager">
+                <ul class="list-inline mylist">
+                    <li><label for="limit">Rekordów na stronie</label></li>
+                    <li>
+                        <select name="limit" id="limit" class="form-control input-sm" onchange="$('#fprmpagersend2').click();">
+                            {foreach $t_limits as $limit}
+                                <option value="{$limit}" {if $requestedParams.limit == $limit}selected="selected"{/if}>{$limit}</option>
+                            {/foreach}
+                        </select>
+                    </li>
+                    <li><label for="page">Strona</label></li>
+                    <li>
+                        <button class="btn btn-default btn-sm" {if $requestedParams.page > 1}onclick="return parseVars('',{ page:'1' },'','/fields');" {else}disabled{/if} title="Pierwsza strona"><i class="fa fa-angle-double-left"></i></button>
+                    </li>
+                    <li>
+                        <button class="btn btn-default btn-sm" {if $requestedParams.page > 1}onclick="return parseVars('',{ page:'{$requestedParams.page-1}' },'','/fields');" {else}disabled{/if} title="Poprzednia strona"><i class="fa fa-angle-left"></i></button>
+                    </li>
+                    <li>
+                        <select name="page" id="page" class="form-control input-sm" style="display:inline;width:70px;" onchange="parseVars('',{ page:$(this).val() },'','/fields');">
+                            {foreach $t_pages as $page}
+                                <option value="{$page}" {if $requestedParams.page == $page}selected="selected"{/if}>{$page}</option>
+                            {/foreach}
+                        </select>
+                    </li>
+                    <li>
+                        <button class="btn btn-default btn-sm" {if $requestedParams.page < $pagescount}onclick="return parseVars('',{ page:'{$requestedParams.page+1}' },'','/fields');" {else}disabled{/if} title="Następna strona"><i class="fa fa-angle-right"></i></button>
+                    </li>
+                    <li>
+                        <button class="btn btn-default btn-sm" {if $requestedParams.page < $pagescount}onclick="return parseVars('',{ page:'{$pagescount}' },'','/fields');" {else}disabled{/if} title="Ostatnia strona"><i class="fa fa-angle-double-right"></i></button>
+                    </li>
+                </ul>
+                <div style="width:0px;height:0px;overflow:hidden;">
+                    <input type="submit" value="Przełącz" id="fprmpagersend2" class="btn btn-default" onclick="return parseVars('form','formpager','','/fields');"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    var getjson = JSON.parse('{$getjson nofilter}');
+
+    {literal}
+    $(function () {
+        $('.runCategoryChangeSelected').on('click', runCategoryChangeSelected);
+    });
+
+    function runCategoryChangeSelected() {
+        var ids = [],
+                data = $('.table-form').serializeObject();
+
+        $.each(data, function (index) {
+            var m = index.toString().match(/^id([0-9]+)$/);
+            if (m) {
+                ids.push(m[1]);
+            }
+        });
+
+        showDial('/fields/change-category/', '', {rowSelect: ids});
+        return false;
+    }
+    {/literal}
+</script>

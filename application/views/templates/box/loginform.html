@@ -1,0 +1,21 @@
+<h1>Formularz logowania</h1>
+{if $error}
+		<div class="ui-widget error">
+				<div style="padding: 0pt 0.7em;" class="ui-state-error ui-corner-all"> 
+					<p><span style="float: left; margin-right: 0.3em;" class="ui-icon ui-icon-alert"></span> 
+					<strong>Błąd:</strong> Złe dane logowania.</p>
+				</div>
+			</div>
+			<br />
+{/if}
+<div class="clear"></div>
+<div style="width:700px; margin-left:313px; margin-top:73px;">
+	<form method="post" action="{$url}user/login">
+		<input type="text" name="login" placeholder="login" required pattern="[a-zA-Z0-9]+" />
+		<input type="password"  name="password" placeholder="hasło" required />
+        <div style="clear:both;">{$recaptcha->getHtml()}</div>
+		<input class="button" type="submit" value="zaloguj" style="margin-top:5px;width:317px; padding-left:20px; padding-right:20px;" />
+	</form>
+</div>
+
+    <small style="float:left; clear:both; margin-top:10px; line-height:200%;">Podczas prób logowania zapisywana są takie informacje jak: adres IP, przeglądarka, przybliżona lokalizacja, czas oraz inne informacje pomocne w ewentualnym ustaleniu osób, próbujących uzyskać nieautoryzowany dostęp do panelu.</small>

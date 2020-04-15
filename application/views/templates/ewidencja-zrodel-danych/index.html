@@ -1,0 +1,58 @@
+<style>
+.modal .modal-body {
+    max-height: 500px;
+    overflow-y: auto;
+}
+.modal .modal-body button{
+    float: right;
+}
+</style>
+{$message}
+<link rel="stylesheet" href="/assets/plugins/bootstrap-switch/css/bootstrap-switch.min.css">
+<div class="body-action">
+    <a class="btn btn-info" href="/ewidencja-zrodel-danych/create">Dodaj nową</a>
+</div>
+<table class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>Firma</th>
+        <th>Opcja</th>
+        <th>Cel Przetwarzania</th>
+        <th>Szczegóły</th>
+        <th>Akcje</th>
+    </tr>
+    </thead>
+    <tbody class="ui-widget-content">
+    {foreach $paginator as $item}
+    <tr>
+        <td>{$item.id}</td>
+        <td>{$item.company_name}</td>
+        <td>{$item.opcja}</td>
+        <td>{$item.cel_przetwarzania}</td>
+        <td>
+            <button class="btn btn-primary btn-xs js-fields" data-url="/ewidencja-zrodel-danych/get-index-fields/id/{$item.id}" data-toggle="modal" data-target="#fieldsModal"><i
+                    class="glyphicon glyphicon-eye-open"> Pola</i></button>
+            <button class="btn btn-primary btn-xs js-person" data-url="/ewidencja-zrodel-danych/get-index-Person/id/{$item.id}" data-toggle="modal" data-target="#personModal"><i
+                    class="glyphicon glyphicon-eye-open"> Podmiot</i></button>
+        </td>
+        <td>
+            <a class="glyphicon glyphicon-pencil" href="/ewidencja-zrodel-danych/edit/id/{$item.id}"></a>
+            <a class="glyphicon glyphicon-trash" href="/ewidencja-zrodel-danych/delete/id/{$item.id}"></a>
+        </td>
+    </tr>
+    {/foreach}
+    </tbody>
+</table>
+
+<div id="modalresult"></div>
+
+
+<script src="/assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+<script src="/_gfx/js/controllers/zbiory/ui-zbiory.js"></script>
+<script src="/assets/plugins/mustache/mustache.min.js"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        UIZbiory.init();
+    });
+</script>

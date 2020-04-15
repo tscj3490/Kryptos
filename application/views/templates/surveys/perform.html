@@ -1,0 +1,169 @@
+{if $alreadyPerformed}
+<p>Ankieta już została przez Ciebie wypełniona</p>
+Udzielone odpowiedzi:
+{foreach $answers as $k=>$d}
+<p><b>{$k} </b>: {$d}</p>
+{/foreach}
+
+{else}
+<link href="/assets/plugins/surveyjs/survey.css" type="text/css" rel="stylesheet" />
+
+<div class="surveyjs">
+    <div id="surveyContainer"></div>
+</div>
+<div id="answersDiv" style="display: none">
+<div id="summary"></div>
+<p><i>Odpowiedzi nie zostały jeszcze zapisane. Aby dokończyć potwierdź:</i></p>
+<button class="btn btn-primary btn-approve">Wyślij odpowiedzi</button>
+</div>
+<form method="post" action="/surveys/perform-save" id="surveyForm">
+    <input type="hidden" name="id" value="{$data.id}" />
+    <input type="hidden" name="set_id" value="{$setid}" />
+    <input type="hidden" id="answers" name="answers" />
+</form>
+
+<form name="f_accept" id="f_accept" class="form-horizontal" role="form">
+        <span class="md-trigger hidden trigger-confirmation" data-modal="confirmation-modal"></span>
+        <input type="hidden" name="vid" id="vid" value=""/>
+</form>
+
+<div class="md-modal md-just-me modal-signature" id="confirmation-modal">
+    <div class="md-content">
+        <div>
+            <div>
+                <h2><strong>{'ELEKTRONICZNY PODPIS'|translate}</strong></h2>
+                <div>
+                    <p class="text-center">{'By podpisać ankiete przy pomocy podpisu elektronicznego KRYPTOS, zgodnie z Dyrektywą o Wspólnotowej Infrastrukturze Podpisów Elektronicznych (1999/93/EC), zaloguj się ponownie.'|translate}</p>
+
+                    <div class="alert alert-danger hidden">{'Nieprawidłowe hasło'|translate}</div>
+
+                    <div class="password-confirmation">
+                        <form>
+                            <input type="hidden" name="taskId" id="confirmationTaskId" value="{$storageTask.id}"/>
+                            {for $i = 0, $empty = 0; $i < $length; $i++}
+                                {$j = $i+1}
+                                <div class="password-char confirmationPassword">
+                                    <input type="password" class="password" maxlength="1" {if $gwiazdki[$i]} placeholder="*" disabled{else}data-key="{$empty++}" name="password[{$i}]"{/if} value>
+                                    <div>{$j}</div>
+                                </div>
+                            {/for}
+                        </form>
+                    </div>
+                    <div class="footer-buttons">
+                        <button class="btn btn-danger md-close">{'ANULUJ!'|translate}</button>
+                        <button class="btn btn-success pull-right"><i id="modalSpinner" class="fa fa-spinner fa-spin" aria-hidden="true"></i> {'PODPISZ SIĘ'|translate}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#f_accept').validationEngine('attach', {
+            onValidationComplete: function (form, status) {
+                if (status) {
+                    $('.trigger-confirmation').click();
+                }
+                return false;
+            }
+        });
+
+        if (document.location.href.toString().match('complete=1')) {
+            
+        }
+    });
+
+    $(function () {
+        var modal = $('#confirmation-modal');
+         modal.find('#modalSpinner').hide();
+        modal.insertBefore($('.md-overlay'));
+
+        modal.on('md-modal-show', function (e, params) {
+            var tg = $(this),
+                callerButton = $(params.callerButtonEvent.target);
+
+            tg.attr('data-confirmation-process', callerButton.attr('data-confirmation-process'));
+
+            setTimeout(function () {
+                tg.find('input[type=password]').not(':disabled').eq(0).focus();
+            }, 400);
+        });
+
+        modal.find("input[type='password']").keyup(function (event) {
+            if (event.keyCode == 18 || event.keyCode == 17 || event.keyCode == 16 || event.keyCode == 20) {
+                return;
+            }
+
+            var position = $(this).attr('data-key');
+            position = parseInt(position);
+
+            if (event.keyCode == 8) {
+                if (modal.find('.password[data-key="' + (position - 1) + '"]').length) {
+                    $('.password[data-key="' + (position - 1) + '"]').focus();
+                }
+            } else {
+                if (modal.find('.password[data-key="' + (position + 1) + '"]').length) {
+                    modal.find('.password[data-key="' + (position + 1) + '"]').focus();
+                }
+            }
+        });
+        
+        $('.btn-approve').click(function(e){
+            $('#vid').val($(this).data("vid"));
+            e.preventDefault();
+            $('.trigger-confirmation').click();
+        });
+
+        modal.find('.footer-buttons .btn-success').on('click', function () {
+
+            var submitData = { password: []};
+
+            $.each($('.confirmationPassword').find('input'), function (index, input) {
+                if ($(input).val() !== '') {
+                    submitData.password[index] = $(input).val();
+                }
+            });
+            modal.find('#modalSpinner').show();
+            $.ajax({
+                method: "POST",
+                url: '/index/ajax-password-prompt',
+                data: submitData,
+                success: function (result) {
+                    if (result === '1') {
+                        $('#surveyForm').submit();
+                    } else {
+                         modal.find('#modalSpinner').hide();
+                        modal.find('.password-confirmation input[name*=password]').val('');
+                        modal.find('.alert-danger').removeClass('hidden');
+                    }
+                }
+            });
+        });
+    });
+</script>
+<script>
+
+    function sendDataToConfirm(survey) {
+        var resultAsString = JSON.stringify(survey.data);
+        $('#answers').val(resultAsString);
+        $('#answersDiv').show();
+
+        var arr = JSON.parse(resultAsString);
+        $.each(arr, function (key, entry) {
+            $('#summary').append("<p><b>" + key + "</b>: " + JSON.stringify(entry) + "</p>");
+        });
+
+    }
+
+    var survey = new Survey.Model({$data.content nofilter});
+    survey.locale = "pl";
+    $("#surveyContainer").Survey({
+        model: survey,
+        onComplete: sendDataToConfirm
+    });
+
+
+</script>
+{/if}

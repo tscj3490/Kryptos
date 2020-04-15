@@ -1,0 +1,1297 @@
+<link rel="stylesheet" href="/assets/plugins/gritter/css/jquery.gritter.css">
+<link rel="stylesheet" href="/assets/plugins/angular/plugins/xeditable/css/xeditable.css">
+
+
+<script src="/assets/plugins/angular/angular.min.js" type="text/javascript"></script>
+<script src="/assets/plugins/angular/angular-route.min.js" type="text/javascript"></script>
+<script src="/assets/plugins/angular/angular-resource.min.js" type="text/javascript"></script>
+<script src="/assets/plugins/angular/angular-messages.min.js" type="text/javascript"></script>
+<script src="/assets/plugins/angular/i18n/angular-locale_pl-pl.js" type="text/javascript"></script>
+<script src="/assets/plugins/underscorejs/underscore-min.js" type="text/javascript"></script>
+<script src="/assets/plugins/gritter/js/jquery.gritter.min.js" type="text/javascript"></script>
+
+
+<div class="errors"></div>
+{$message}
+<div ng-app="app">
+   <div>
+       <form method="post" action="/zbiory/save" class="form-horizontal" name="formItem">
+           <div role="tabpanel" style="min-height: 500px;">
+               <ul class="nav nav-tabs" role="tablist">
+                   <li role="presentation" class="active"><a href="#base" data-toggle="tab" aria-controls="base" role="tab">Informacje ogólne</a></li>
+                   {if !$zbiorIsGroup}
+                   <li role="presentation"><a href="#authorizations" data-toggle="tab" aria-controls="authorizations" role="tab">Autoryzacja</a></li>
+                   <li role="presentation"><a href="#places" data-toggle="tab" aria-controls="places" role="tab">Miejsca</a></li>
+                   <li role="presentation"><a href="#secure" data-toggle="tab" aria-controls="secure" role="tab">Zabezpieczenia</a></li>
+                   {/if}
+                   {if !$zbiorHasParent}
+                   <li role="presentation"><a href="#registry" data-toggle="tab" aria-controls="registry" role="tab">Rejestry GIODO</a></li>
+                   {/if}
+                   {if !$zbiorIsGroup}
+                   <li role="presentation"><a href="#dpi-items" data-toggle="tab" aria-controls="dpi-items" role="tab">Elementy zbioru</a></li>
+                   <li role="presentation"><a href="#dpi-sensitive" data-toggle="tab" aria-controls="dpi-sensitive" role="tab">Elementy wrażliwe</a></li>
+                   {/if}
+                   <li role="presentation"><a href="#relatives" data-toggle="tab" aria-controls="relatives" role="tab">Powiązania</a></li>
+                   <li role="presentation"><a href="#data-transfered" data-toggle="tab" aria-controls="data-transfered" role="tab">Czynności przetwarzania</a>
+                   <li role="presentation"><a href="#changelog" data-toggle="tab" aria-controls="changelog" role="tab">Rejestr zmian</a>
+                   </li>
+                   {Application_Service_Ui::getInstance()->getSectionByName('zbiory_update_tabs') nofilter}
+               </ul>
+
+           <div class="tab-content">
+                <div class="tab-pane active" id="base">
+                    <div class="col-sm-12 portlets">
+                        <div class="widget">
+                            <div class="widget-content">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <label for="nazwa_zbior">Nazwa</label>
+                                                    <input class="form-control" type="text" id="nazwa_zbior" name="nazwa_zbior" value="{$zbior.nazwa}">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <label for="description">Opis zbioru</label>
+                                                    <textarea class="form-control " name="description" id="description">{$zbior.opis_zbioru}</textarea>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                 <div class="col-sm-12">
+                                                    <label for="description">Data utworzenia zbioru</label>
+                                                    <input class="form-control datepicker-input" name="dateAdded" id="dateAdded" value="{$zbior.data_stworzenia}">
+                                                </div>
+                                                <input type="hidden" name="date_edit_custom" id="dataEdycji" value="{$zbior.data_edycji}" />
+                                            </div>
+                                            {if !$zbiorIsGroup}
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <label for="forma">Forma zbioru:</label>
+                                                        <select class="form-control" id="forma" name="forma">
+                                                            <option {if $zbior.formaGromadzeniaDanych == 'papierowa'}selected{/if} value="papierowa">papierowa</option>
+                                                            <option {if $zbior.formaGromadzeniaDanych == 'elektroniczna'}selected{/if} value="elektroniczna">elektroniczna</option>
+                                                            <option {if $zbior.formaGromadzeniaDanych == 'papierowa i elektroniczna'}selected{/if} value="papierowa i elektroniczna">papierowa i elektroniczna</option>
+                                                        </select>
+                                                        <div id="formaExtended">
+                                                            <label for="formaExtendedType">Zbiór jest prowadzony:</label>
+                                                            <select class="form-control" name="prowadzenie_danych[]" id="formaExtendedType">
+                                                                <option {if in_array(2, (array)json_decode($zbior.prowadzenie_danych))}selected{/if} value="2" title="w architekturze rozproszonej">w architekturze rozproszonej</option>
+                                                                <option {if in_array(1, (array)json_decode($zbior.prowadzenie_danych))}selected{/if} value="1" title="centralnie">centralnie</option>
+                                                            </select>
+                                                            <select class="form-control" name="prowadzenie_danych[]" id="formaExtendedInformatic">
+                                                                <option {if in_array(5, (array)json_decode($zbior.prowadzenie_danych))}selected{/if} value="5" rel="informatic" title="z użyciem co najmniej jednego urządzenia systemu informatycznego służącego do przetwarzania danych osobowych połączonego z siecią publiczną (np. Internetem)">z użyciem co najmniej jednego urządzenia systemu informatycznego służącego do przetwarzania danych osobowych połączonego z siecią publiczną (np. Internetem)</option>
+                                                                <option {if in_array(6, (array)json_decode($zbior.prowadzenie_danych))}selected{/if} value="6" rel="informatic" title="bez użycia żadnego z urządzeń systemu informatycznego służącego do przetwarzania danych osobowych połączonego z siecią publiczną (np. Internetem)">bez użycia żadnego z urządzeń systemu informatycznego służącego do przetwarzania danych osobowych połączonego z siecią publiczną (np. Internetem)</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <label for="poziom_bezpieczenstwa">Poziom bezpieczeństwa</label>
+                                                        <select class="form-control" id="poziom_bezpieczenstwa" name="poziomBezpieczenstwa">
+                                                            <option {if $zbior.poziomBezpieczenstwa == 'A'}selected{/if} value="A">A</option>
+                                                            <option {if $zbior.poziomBezpieczenstwa == 'B'}selected{/if} value="B">B</option>
+                                                            <option {if $zbior.poziomBezpieczenstwa == 'C'}selected{/if} value="C">C</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            {/if}
+                                        </div>
+                                        <div class="col-sm-6">
+                                            {if !$zbiorIsGroup}
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <label for="cel">Cel przetwarzania</label>
+                                                        <textarea class="form-control " name="cel" id="cel">{$zbior.cel}</textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <label for="comment">Komentarz</label>
+                                                        <textarea class="form-control " name="comment" id="comment">{$zbior.comment}</textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <label>Podstawa prawna upoważniająca do prowadzenia zbioru danych</label>
+                                                        <div>
+                                                            <label>
+                                                                <input class="form-control" type="checkbox" {if $zbior.zgoda_zainteresowanego == 1}checked="checked"{/if} name="zgoda_zainteresowanego" id="zgoda_zainteresowanego" value="1"> zgoda osoby, której dane dotyczą, na przetwarzanie danych jej dotyczących
+                                                            </label>
+                                                        </div>
+                                                        <div>
+                                                            <label>
+                                                                <input class="form-control" type="checkbox" {if $zbior.wymogi_przepisow_prawa == 1}checked="checked"{/if} name="wymogi_przepisow_prawa" id="wymogi_przepisow_prawa" value="1"> przetwarzanie jest niezbędne do zrealizowania uprawnienia lub spełnienia obowiązku wynikającego z przepisu prawa
+                                                            </label>
+                                                        </div>
+                                                        <div>
+                                                            <label>
+                                                                <input class="form-control" type="checkbox" {if $zbior.realizacja_umowy == 1}checked="checked"{/if} name="realizacja_umowy" id="realizacja_umowy" value="1"> przetwarzanie jest konieczne do realizacji umowy, gdy osoba, której dane dotyczą, jest jej stroną lub gdy jest to niezbędne do podjęcia działań przed zawarciem umowy na żądanie osoby, której dane dotyczą
+                                                            </label>
+                                                        </div>
+                                                        <div>
+                                                            <label>
+                                                                <input class="form-control" type="checkbox" {if $zbior.wykonywanie_zadan == 1}checked="checked"{/if} name="wykonywanie_zadan" id="wykonywanie_zadan" value="1"> przetwarzanie jest niezbędne do wykonania określonych prawem zadań realizowanych dla dobra publicznego - w przypadku odpowiedzi twierdzącej, należy opisać te zadania
+                                                            </label>
+                                                            <div id="zadaniatext" {if $zbior.wykonywanie_zadan <> 1}style="display:none;"{/if}>
+                                                                <label>Zadania:</label>
+                                                                <textarea name="zadania" id="zadania" class="form-control">{$zbior.zadania}</textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <label>
+                                                                <input class="form-control" type="checkbox" {if $zbior.prawnie_usprawiedliwione_cele == 1}checked="checked"{/if} name="prawnie_usprawiedliwione_cele" id="prawnie_usprawiedliwione_cele" value="1"> przetwarzanie jest niezbędne do wypełnienia prawnie usprawiedliwionych celów realizowanych przez administratorów danych albo odbiorców danych, a przetwarzanie nie narusza praw i wolności osoby, której dane dotyczą
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div>
+                                                            <label>
+                                                                <input class="form-control" type="checkbox" {if $zbior.show_in_public_registry == 1}checked="checked"{/if} name="show_in_public_registry" id="show_in_public_registry" value="1"> Udostępnij zbiór w jawnym rejestrze zbiorów
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {/if}
+                                        </div>
+                                    </div>
+                                </div>
+                                {if !$zbiorIsGroup}
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="panel-group accordion-toggle" id="accordiondemo">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading">
+                                                            <h4 class="panel-title">
+                                                                <a class="toggle-collapse" data-target="#accordion3">
+                                                                    ZZD &nbsp;
+                                                                    <button class="btn btn-xs btn-info choose-from-dial" data-dial-url="/osoby/addmini/?useProcess=1" data-dial-ready-fn="filterOsobyPopup" data-dial-process-fn="configAddOsoba" type="button">Dodaj</button>
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div id="accordion3" class="panel-collapse collapse in">
+                                                            <div class="panel-body">
+                                                                <div id="responsible_persons">
+                                                                    {foreach $responsiblePersons as $a}
+                                                                        <div class="seloptmin"><span>{$a.osoba.display_name}</span><i title="Usuń" class="glyphicon glyphicon-trash remove-element" data-closest-target=".seloptmin"></i><input type="hidden" name="responsive_persons[]" value="{$a.osoba_id}"></div>
+                                                                    {/foreach}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="panel panel-default" id="applicationscont">
+                                                        <div class="panel-heading">
+                                                            <h4 class="panel-title">
+                                                                <a class="toggle-collapse" data-target="#accordion1">
+                                                                    Aplikacje &nbsp;
+                                                                    <input type="button" class="btn btn-xs btn-info" value="Dodaj" onclick="showDial('/aplikacje/addmini/','','');"/>
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div id="accordion1" class="panel-collapse collapse in">
+                                                            <div class="panel-body">
+                                                                <div id="apps"></div>
+                                                                <div id="appscheck" style="width:0px;height:0px;overflow:hidden;">
+                                                                    {foreach $apps as $a}
+                                                                        <label>
+                                                                            <input class="form-control" type="checkbox" {if array_key_exists('assigned', $a) && $a.assigned}checked{/if} name="apps[]" value="{$a.id}" title="{$a.nazwa}">{$a.nazwa}
+                                                                        </label>
+                                                                    {/foreach}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="panel panel-default" id="legalactscont" {if $zbior.wymogi_przepisow_prawa <> 1}style="display:none;"{/if}>
+                                                        <div class="panel-heading">
+                                                            <h4 class="panel-title">
+                                                                <a class="toggle-collapse" data-target="#accordion2">
+                                                                    Akty prawne upoważniające do prowadzenia zbioru &nbsp;
+                                                                    <input type="button" class="btn btn-xs btn-info" value="Dodaj" onclick="showDial('/legalacts/addmini/?num=2','modal-lg','');"/>
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div id="accordion2" class="panel-collapse collapse in">
+                                                            <div class="panel-body">
+                                                                <div style="width:0px;height:0px;overflow:hidden;">
+                                                                    <div id="aktyprawne_inputs">
+                                                                        {assign "aktyprawneDecoded" json_decode($zbior.aktyprawne, true)}
+                                                                        {foreach $legalacts as $a}
+                                                                            {if in_array($a.id, $aktyprawneDecoded)}
+                                                                                <input type="hidden" value="{$a.id}" name="aktyprawne[]" data-name="{$a.name}" rel="{$a.type}">
+                                                                            {/if}
+                                                                        {/foreach}
+                                                                    </div>
+                                                                    <div id="aktyprawne_desc_inputs">
+                                                                        {assign "aktyprawneDescDecoded" json_decode($zbior.aktyprawne_desc, true)}
+                                                                        {foreach $legalactsDesc as $key => $a}
+                                                                                <input type="hidden" value="{$a}" name="aktyprawneDesc[{$key}]" data-name="{$key}">
+                                                                        {/foreach}
+                                                                    </div>
+                                                                </div>
+                                                                <div id="legalacts2a"></div>
+                                                                <div id="legalacts2b"></div>
+                                                                <div id="legalacts2c"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+               <div class="tab-pane" id="authorizations">
+                   <div id="authorizationsData"></div>
+                   {if $userIsSuperadmin}
+                  <button type="button" class="btn" onclick="javascript:$('#authorizations .icheckbox_square-aero').not('.action-select-all').not('.checked').click()">Zaznacz wszystkie</button>
+                  <button type="button" class="btn" onclick="javascript:$('#authorizations .icheckbox_square-aero').not('.action-select-all').filter('.checked').click()">Odznacz wszystkie</button>
+                   {/if}
+
+                  <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+                     <thead>
+                        <tr>
+                           <th data-filter-type="string">imię i nazwisko</th>
+                           <th data-filter-type="string">login</th>
+                           <th data-filter-type="select-items">pomieszczenia</th>
+                           <th data-disable-sort>czytanie</th>
+                           <th data-disable-sort>pozyskiwanie</th>
+                           <th data-disable-sort>wprowadzanie</th>
+                           <th data-disable-sort>modyfikacja</th>
+                           <th data-disable-sort>usuwanie</th>
+                           <th data-disable-sort>wszystkie</th>
+                        </tr>
+                     </thead>
+                      <tbody class="unpack-into">
+                      </tbody>
+                  </table>
+                  <div class="row">
+                     <div class="col-md-4">
+                       <input type="text" name="logins" id="logins" class="form-control" />
+                     </div>
+                     <div class="col-md-4">
+                       <input type="button" class="btn btn-default" value="Dodaj wg podanych identyfikatorów" onclick="idsidents();" />
+                     </div>
+                  </div>
+                  <script type="text/javascript">
+                      upowaznioneOsobyPack = {$upowaznioneOsobyPack nofilter};
+                      var unpacked2 = unpacked = '';
+                      $(upowaznioneOsobyPack).each(function() {
+                          unpacked += '<tr class="new_os">\n<td>'+this[3]+'</td>\n<td>'+this[1]+'</td>\n<td>'+this[2]+'</td>\n<td class="text-center">\n<div class="icheckbox_square-aero js-checkbox" aria-checked="false" aria-disabled="false" data-target-id="u_'+this[0]+'[czytanie]">\n<ins class="iCheck-helper"></ins>\n</div>\n</td>\n' +
+                              '<td class="text-center">\n<div class="icheckbox_square-aero js-checkbox" aria-checked="false" aria-disabled="false" data-target-id="u_'+this[0]+'[pozyskiwanie]">\n<ins class="iCheck-helper"></ins>\n</div>\n</td>\n' +
+                              '<td class="text-center">\n<div class="icheckbox_square-aero js-checkbox" aria-checked="false" aria-disabled="false" data-target-id="u_'+this[0]+'[wprowadzanie]">\n<ins class="iCheck-helper"></ins>\n</div>\n</td>' +
+                              '<td class="text-center">\n<div class="icheckbox_square-aero js-checkbox" aria-checked="false" aria-disabled="false" data-target-id="u_'+this[0]+'[modyfikacja]">\n<ins class="iCheck-helper"></ins>\n</div>\n</td>' +
+                              '<td class="text-center">\n<div class="icheckbox_square-aero js-checkbox" aria-checked="false" aria-disabled="false" data-target-id="u_'+this[0]+'[usuwanie]">\n<ins class="iCheck-helper"></ins>\n</div>\n</td>' +
+                              '<td class="text-center">\n<div class="icheckbox_square-aero action-select-all" aria-checked="false" aria-disabled="false">\n<ins class="iCheck-helper"></ins>\n</div>\n</td>\n</tr>';
+
+                          unpacked2 += '<input value="'+this[4][0]+'" type="hidden" data-id="102" name="u_'+this[0]+'[czytanie]">' +
+                              '<input value="'+this[4][1]+'" type="hidden" data-id="102" name="u_'+this[0]+'[pozyskiwanie]">' +
+                              '<input value="'+this[4][2]+'" type="hidden" data-id="102" name="u_'+this[0]+'[wprowadzanie]">' +
+                              '<input value="'+this[4][3]+'" type="hidden" data-id="102" name="u_'+this[0]+'[modyfikacja]">' +
+                              '<input value="'+this[4][4]+'" type="hidden" data-id="102" name="u_'+this[0]+'[usuwanie]">';
+                      });
+                      $(unpacked).appendTo('.unpack-into');
+                      $('.unpack-into').removeClass('unpack-into');
+                      $(unpacked2).appendTo('#authorizationsData');
+
+                     function idsidents() {
+                       var value = $('#logins').val();
+                       var val_sp = value.split(';');
+                       $.each(val_sp, function( k,v ) {
+                         var el = $('*[rel="'+v+'"]');
+                         if ( el ) {
+                           $('*[rel="'+v+'"]').iCheck('check');
+                         }
+                       });
+                       $('#logins').val('');
+                     }
+                  </script>
+               </div>
+
+               <div class="tab-pane" id="places">
+                  <div class="col-sm-12">
+                     <div class="checkout-list">
+                         <div class="row">
+                      {assign var="naglowek" value=""}
+                        {foreach $pomieszczenia as $p}
+                        {assign var="budynek_id" value=$p.budynki_id}
+                        {assign var="nazwa" value=$budynki.$budynek_id}
+                        {if $naglowek <> {$nazwa}}
+                         {assign var="naglowek" value=$nazwa}
+                            </div>
+                         <hr>
+                        <div class="row">
+                           <h3>{$naglowek}</h3>
+                        {/if}
+                            <div class="checkbox col-lg-4 col-md-6">
+                                <label>
+                                    <input class="form-control pomieszczenieChk" type="checkbox" {if (is_array($pomieszczenia_zbioru) && in_array($p.p_id, $pomieszczenia_zbioru))}checked{/if} name="pomieszczenia[]" data-security="{$p.lista_zabezpieczen}" value="{$p.p_id}">{$p.nazwa_pomieszczenia}{if $p.nr}, P.{$p.nr}{/if}
+                                </label>
+                            </div>
+
+                        {/foreach}
+                           </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="tab-pane" id="secure">
+                   <div class="row">
+                       <div class="col-sm-12">
+                           <div class="hiddenElement">
+                               <select class="form-control" name="zabezpieczenia[]" id="zabezpieczenia" multiple="multiple" style="height:450px;">
+                                   {foreach $t_zabezpieczenia as $opcja}
+                                       <option value="{$opcja.id}"
+                                               {if $opcja.id|in_array:$safeguardsAll}selected="selected"{/if}
+                                               {if $opcja.id|in_array:$safeguardsInherited}data-origin="inherited"{/if}
+                                               title="{$opcja.nazwa}"
+                                               rel="{$opcja.typ}">{$opcja.nazwa}</option>
+                                   {/foreach}
+                               </select>
+                           </div>
+                           {element tag='button' route='zabezpieczenia/addmini' routeParams=[] attributes=[
+                           'dialog' => [
+                           'ready' => 'filterZabezpieczeniaPopup'
+                           ],
+                           'class' => 'btn btn-info',
+                           'icon' => 'add',
+                           'type' => 'button',
+                           'tooltip' => 'Wybierz zabezpieczenia',
+                           'value' => 'Dodaj',
+                           'data-dial-url' => '/zabezpieczenia/addmini?useProcess=1',
+                           'innerHtml' => 'Dodaj'
+                           ]}
+                           <br />
+                           <br />
+                           <div id="zabezpieczeniaa"></div>
+                           <div id="zabezpieczeniab"></div>
+                           <div id="zabezpieczeniac"></div>
+                           <hr />
+                           <script type="text/javascript">
+                               zabezpieczenia = {$zabezpieczeniaPack nofilter};
+
+                               filterZabezpieczeniaPopup = function() {
+                                   $('#zabezpieczenia').children().filter(':selected').each(function () {
+                                       if (this.getAttribute('data-origin') === 'inherited') {
+                                           $('#optsSearch').find('#id' + this.value).addClass('locked');
+                                       }
+                                   });
+                               };
+                               function runZabezpieczeniaSel(){
+                                   setZabezpieczeniaSel() ;
+                                   $('.selopt2bl').click(function(){
+                                       if ($(this).hasClass('locked')) {
+                                           return;
+                                       }
+                                       var ide = $(this).attr('id').replace('id','');
+                                       if ( $('#zabezpieczenia option[value="'+ide+'"]').is(':selected') ) { $('#zabezpieczenia option[value="'+ide+'"]').prop('selected',false); }
+                                       else { $('#zabezpieczenia option[value="'+ide+'"]').prop('selected',true); }
+                                       setZabezpieczeniaSel();
+                                       setZabezpieczenia();
+                                       runOptsSearch();
+                                   });
+                                   $('#checkall').click(function() {
+                                       $('.selopt2bl').each(function() {
+                                           var ide = $(this).attr('id').replace('id','');
+                                           if ( !$(this).hasClass('active') && $(this).css('display') != 'none' ) { $('#zabezpieczenia option[value="'+ide+'"]').prop('selected',true); }
+                                       });
+                                       setZabezpieczeniaSel();
+                                       setZabezpieczenia();
+                                       runOptsSearch();
+                                   });
+                                   $('#uncheckall').click(function() {
+                                       $('.selopt2bl').each(function() {
+                                           var ide = $(this).attr('id').replace('id','');
+                                           if ( $(this).hasClass('active') && $(this).css('display') != 'none' ) { $('#zabezpieczenia option[value="'+ide+'"]').prop('selected',false); }
+                                       });
+                                       setZabezpieczeniaSel();
+                                       setZabezpieczenia();
+                                       runOptsSearch();
+                                   });
+                               }
+                               function addzabezpieczenia(id, html, type, origin) {
+                                   if (!origin) {
+                                       origin = 'manual';
+                                   }
+                                   if (!$('#zabezpieczenia option[value="' + id + '"]').length > 0) {
+                                       $('#zabezpieczenia').append('<option value="' + id + '" title="' + html + '" rel="' + type + '" data-origin="' + origin + '">' + html + '</option>');
+                                   }
+                                   $('#zabezpieczenia option[value="' + id + '"]').prop('selected', true);
+                               }
+                               function setZabezpieczeniaSel() {
+                                   $('.selopt2bl').removeClass('active');
+                                   $('#zabezpieczenia option').each(function () {
+                                       if ($(this).is(':selected')) {
+                                           $('.selopt2bl[id="id' + $(this).attr('value') + '"]').addClass('active');
+                                       }
+                                   });
+                               }
+                               function setZabezpieczenia() {
+                                   $('.tooltip').remove();
+                                   $('#zabezpieczeniaa').html('');
+                                   $('#zabezpieczeniab').html('');
+                                   $('#zabezpieczeniac').html('');
+                                   var organizacyjne = '';
+                                   var fizyczne = '';
+                                   var informatyczne = '';
+
+                                   $('#zabezpieczenia option').each(function(){
+                                       var tg = $(this),
+                                               tgRel = tg.attr('rel'),
+                                               tgExternal = tg.attr('data-origin') === 'inherited',
+                                               tgHtml = tg.html();
+
+                                       if (tg.is(':selected')) {
+                                           var button = !tgExternal
+                                                   ? '<i title="Usuń" class="glyphicon glyphicon-trash" onclick="$(\'#zabezpieczenia option[value=\\\''+$(this).attr('value')+'\\\']\').prop(\'selected\',false); setZabezpieczenia();" data-toggle="tooltip"></i>'
+                                                   : '<i title="Odziedziczone" class="glyphicon glyphicon-info-sign seloptmin-info" data-toggle="tooltip"></i>';
+
+                                           if (tgRel == '1') {
+                                               organizacyjne = organizacyjne + '<div class="seloptmin" title="'+tgHtml+'"><span>'+tgHtml+'</span>'+button+'</div>';
+                                           } else if (tgRel == '2') {
+                                               fizyczne = fizyczne + '<div class="seloptmin" title="'+tgHtml+'"><span>'+tgHtml+'</span>'+button+'</div>';
+                                           } else if (tgRel == '3') {
+                                               informatyczne = informatyczne + '<div class="seloptmin" title="'+tgHtml+'"><span>'+tgHtml+'</span>'+button+'</div>';
+                                           }
+                                       }
+                                   });
+
+                                   if ( organizacyjne != '' ) { $('#zabezpieczeniaa').append('<h4>Organizacyjne</h4>'+organizacyjne); }
+                                   if ( fizyczne != '' ) { $('#zabezpieczeniab').append('<h4>Fizyczne</h4>'+fizyczne); }
+                                   if ( informatyczne != '' ) { $('#zabezpieczeniac').append('<h4>Informatyczne</h4>'+informatyczne); }
+                                   if ( organizacyjne == '' && fizyczne == '' && informatyczne == '' ) { $('#zabezpieczeniaa').append('<div class="alert alert-danger">Nie dokonano wyboru. Aby dodać nowe zabezpieczenia kliknij przycisk DODAJ znajdujący się powyżej.</div>'); }
+                               }
+                               setZabezpieczenia();
+                           </script>
+                       </div>
+                   </div>
+               </div>
+               <div class="tab-pane" id="registry">
+                   <div class="col-sm-12 portlets">
+                       <div class="widget">
+                           <div class="widget-content padding">
+                               <div class="form-group">
+                                   <div class="row">
+                                       <div class="col-sm-3">
+                                           <label for="podlega_rejestracji">Czy zbiór podlega rejestracji?</label>
+                                           <select name="podlega_rejestracji" id="podlega_rejestracji" class="form-control toggle-relative">
+                                               <option value="0">Nie</option>
+                                               <option value="1" {if $zbior.podlega_rejestracji == 1}selected="selected"{/if}>Tak</option>
+                                           </select>
+                                       </div>
+                                       <div class="col-sm-3">
+                                           <label for="data_wpisania" class="control-label">Data wpisania zbioru danych</label>
+                                           <input class="form-control datepicker-input" type="text" id="data_wpisania" name="data_wpisania" value="{$zbior.data_wpisania}">
+                                       </div>
+                                       <div class="col-sm-3">
+                                           <label for="data_stworzenia" class="control-label">Data utworzenia</label>
+                                           <input class="form-control datepicker-input" type="text" id="data_stworzenia" name="data_stworzenia" value="{$zbior.data_stworzenia}">
+                                       </div>
+                                       <div class="col-sm-3">
+                                           <label for="data_aktualizacji" class="control-label">Data ostatniej aktualizacji</label>
+                                           <input class="form-control datepicker-input" type="text" id="data_aktualizacji" name="data_aktualizacji" value="{$zbior.data_aktualizacji}">
+                                       </div>
+                                   </div>
+                               </div>
+
+
+                               <div class="form-group" data-relation-base="podlega_rejestracji" data-relation-id="0">
+                                   <div class="row">
+                                       <div class="col-sm-4">
+                                           <label for="podstawa_prawna_braku_rejestracji">Podstawa prawna braku rejestracji w GIODO</label>
+                                           <select class="form-control" name="podstawa_prawna_braku_rejestracji" id="podstawa_prawna_braku_rejestracji">
+                                               {foreach $t_nonreg as $key=>$opcja}
+                                                   <option value="{$key}" {if $key == $zbior.podstawa_prawna_braku_rejestracji}selected="selected"{/if} title="{$opcja}">{$opcja}</option>
+                                               {/foreach}
+                                           </select>
+                                       </div>
+                                   </div>
+                               </div>
+
+                               <div class="form-group" data-relation-base="podlega_rejestracji" data-relation-id="1">
+                                   <div class="row">
+                                       <div class="col-sm-3">
+                                           <label for="giodo_nr_ksiegi">Nr księgi</label>
+                                           <input class="form-control" type="text" id="giodo_nr_ksiegi" name="giodo_nr_ksiegi" value="{$zbior.giodo_nr_ksiegi}">
+                                       </div>
+                                       <div class="col-sm-3">
+                                           <label for="giodo_data_zatw_aktual">Data zatw./aktual.</label>
+                                           <input class="form-control datepicker-input" type="text" id="giodo_data_zatw_aktual" name="giodo_data_zatw_aktual" value="{$zbior.giodo_data_zatw_aktual}">
+                                       </div>
+                                       <div class="col-sm-3">
+                                           <label for="giodo_nr_zgloszenia">Nr zgłoszenia</label>
+                                           <input class="form-control" type="text" id="giodo_nr_zgloszenia" name="giodo_nr_zgloszenia" value="{$zbior.giodo_nr_zgloszenia}">
+                                       </div>
+                                       <div class="col-sm-3">
+                                           <label for="giodo_data_wplyniecia">Data wpłynięcia</label>
+                                           <input class="form-control datepicker-input" type="text" id="giodo_data_wplyniecia" name="giodo_data_wplyniecia" value="{$zbior.giodo_data_wplyniecia}">
+                                       </div>
+                                   </div>
+                               </div>
+
+                               <div class="form-group" data-relation-base="podlega_rejestracji" data-relation-id="1">
+                                   <div class="row">
+                                       <div class="col-sm-4">
+                                           <label for="status_rejestracji">Status rejestracji</label>
+                                           <select class="form-control" name="status_rejestracji" id="status_rejestracji">
+                                               <option value="0">niekompletna</option>
+                                               <option value="1" {if $zbior.status_rejestracji == 1}selected="selected"{/if}>kompletna</option>
+                                           </select>
+                                       </div>
+                                       <div class="col-sm-4">
+                                           <label for="po_raz_pierwszy">Czy zbiór jest zgłaszany po raz pierwszy?</label>
+                                           <select name="po_raz_pierwszy" id="po_raz_pierwszy" class="form-control">
+                                               <option value="0">Nie</option>
+                                               <option value="1" {if $zbior.po_raz_pierwszy == 1}selected="selected"{/if}>Tak</option>
+                                           </select>
+                                       </div>
+                                   </div>
+                               </div>
+
+                               <div class="form-group" data-relation-base="podlega_rejestracji" data-relation-id="1">
+                                   <div class="row">
+                                       <div class="col-sm-6">
+                                           <label for="dane_do_zbioru_beda_zbierane_status">Dane do zbioru będą zbierane:</label>
+                                           <select size=2 style='height: 100%;' multiple="multiple" class="form-control" id="dane_do_zbioru_beda_zbierane_status" name="dane_do_zbioru_beda_zbierane_status[]">
+                                               <option {if in_array(1, (array)json_decode($zbior.dane_do_zbioru_beda_zbierane_status))}selected{/if} value="1">od osób, których dotyczą</option>
+                                               <option {if in_array(2, (array)json_decode($zbior.dane_do_zbioru_beda_zbierane_status))}selected{/if} value="2">z innych źródeł niż osoba, której dane dotyczą</option>
+                                           </select>
+                                       </div>
+                                       <div class="col-sm-6">
+                                           <label for="dane_ze_zbioru_beda_udostepniane_status">Dane ze zbioru będą udostępniane</label><br/>
+                                           <label>
+                                               <input class="form-control" type="checkbox" {if $zbior.dane_ze_zbioru_beda_udostepniane_status == 1}checked{/if} name="dane_ze_zbioru_beda_udostepniane_status" id="dane_ze_zbioru_beda_udostepniane_status" value="1"> podmiotom innym, niż upoważnione na podstawie przepisów prawa
+                                           </label>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <div class="tab-pane" id="dpi-items">
+                  
+                  <div class="dpiTabs">
+                     <div class="dpiTab active" rel="items">
+                         Elementy zbioru
+                     </div>
+                  </div>
+                  <div class="dpiContent">
+                     <div class="dpiIns active" rel="items">
+                       <div class="input-group">
+                        <select class="form-control" name="itemsList" id="itemsList"></select>
+                        <span class="input-group-btn">
+                          <button class="btn btn-default" id="addItem" type="button">Dodaj &nbsp;<i class="fa fa-plus"></i></button>
+                        </span>
+                       </div>
+                       <div class="optsitems"></div>
+                     </div>
+                  </div>
+                  <script type="text/javascript">
+                     var activeitem = '';
+                     var activepersons = { };
+                     var t_opts = {if $jsonoptions <> ''}jQuery.parseJSON('{$jsonoptions nofilter}');{else}{ldelim}t_items:new Array(),t_itemsdata:{ldelim}{rdelim}{rdelim};{/if};
+                     $('#itemsList').change(function(){ activeitem = $(this).children('option:selected').html(); setOptsView(); });
+                  </script>
+                  <script type="text/javascript" src="/_gfx/js/zbiory.js"></script>
+               </div>
+               <div class="tab-pane" id="dpi-sensitive">
+                  <div class="row">
+                     <div class="col-sm-12">
+                        <label for="dane_wrazliwe">Czy zbiór zawiera dane wrażliwe?</label>
+                        <select name="dane_wrazliwe" id="dane_wrazliwe" class="form-control toggle-relative" disabled="disabled">
+                           <option value="0">Nie</option>
+                           <option value="1" {if $zbior.dane_wrazliwe == 1}selected="selected"{/if}>Tak</option>
+                        </select>
+                     </div>
+                  </div>
+                  <div class="row" data-relation-base="dane_wrazliwe" data-relation-id="1">
+                     <div class="col-sm-12">
+                        <label>Elementy, które zawierają dane wrażliwe:</label>
+                        <div id="elementy-wrazliwe-list"></div>
+                     </div>
+                  </div>
+                  <div class="row" id="show_dane_wrazliwe_podstawa" style="display:none;">
+                     <div class="col-sm-12">
+                        <label>Podstawa prawna do przetwarzania danych wrażliwych</label>
+                        <select class="form-control" onchange="showSens();" multiple="multiple" name="dane_wrazliwe_podstawa[]" id="dane_wrazliwe_podstawa" style="height:250px;">
+                           {foreach $t_sensitive_arg as $key=>$opcja}
+                             <option value="{$key}" {if in_array($key, (array)json_decode($zbior.dane_wrazliwe_podstawa))}selected="selected"{/if} title="{$opcja}">{$opcja}</option>
+                           {/foreach}
+                        </select>
+                     </div>
+                  </div>
+                  <div class="row" id="show_dane_wrazliwe_podstawa_ustawa" style="display:none;">                              
+                     <div class="col-sm-12">
+                        <div style="width:0px;height:0px;overflow:hidden;">
+                            <div id="dane_wrazliwe_podstawa_ustawa_inputs">
+                                {foreach $legalacts_sensitive as $a}
+                                    <input type="hidden" value="{$a.id}" data-name="{$a.name}" rel="{$a.type}">
+                                {/foreach}
+                            </div>
+                        </div>
+                        <hr />
+                        <strong>Akty prawne upoważniające do przetwarzania danych wrażliwych:</strong> &nbsp;<input type="button" class="btn btn-info" value="Dodaj" onclick="showDial('/legalacts/addmini/?num=1','modal-lg','');" /><br />
+                        <br />
+                        <div id="legalacts1a"></div>
+                        <div id="legalacts1b"></div>
+                        <div id="legalacts1c"></div>
+                        <hr />
+                        <script type="text/javascript">
+                           function runlegalacts1Sel(){
+                              setlegalacts1Sel() ;
+                              $('.selopt2bl').click(function(){
+                                 var ide = $(this).attr('id').replace('id',''),
+                                     rel = $(this).attr('rel').replace('category', ''),
+                                     name = $(this).text(),
+                                     input = $('#dane_wrazliwe_podstawa_ustawa_inputs input[value="'+ide+'"]');
+
+                                 if (input.size()) {
+                                     input.remove();
+                                 }
+                                 else {
+                                     $('#dane_wrazliwe_podstawa_ustawa_inputs').append('<input type="hidden" name="dane_wrazliwe_podstawa_ustawa[]" value="'+ide+'" rel="'+rel+'" data-name="'+name+'">');
+                                 }
+                                 setlegalacts1Sel();
+                                 setlegalacts1();
+                              });
+                           }
+
+                           function addlegalacts1(id, html, type) {
+                               if (!$('#dane_wrazliwe_podstawa_ustawa_inputs input[value="' + id + '"]').length > 0) {
+                                   $('#dane_wrazliwe_podstawa_ustawa').append('<input type="hidden" name="dane_wrazliwe_podstawa_ustawa[]" value="'+id+'" rel="'+type+'" data-name="'+html+'">');
+                               }
+                           }
+                           function setlegalacts1Sel() {
+                               $('.selopt2bl').removeClass('active');
+                               $('#dane_wrazliwe_podstawa_ustawa_inputs input').each(function () {
+                                   $('.selopt2bl[id="id'+$(this).attr('value')+'"]').addClass('active');
+                               });
+                           }
+                           function setlegalacts1() {
+                               $('#legalacts1a').html('');
+                               $('#legalacts1b').html('');
+                               $('#legalacts1c').html('');
+                               var ustawy = '';
+                               var rozporzadzenia = '';
+                               var inne = '';
+                               $('#dane_wrazliwe_podstawa_ustawa_inputs input').each(function () {
+                                   if ($(this).attr('rel') == 'ustawa') {
+                                       ustawy = ustawy + '<div class="seloptmin" title="' + $(this).attr('data-name') + '"><span>' + $(this).attr('data-name') + '</span><i title="Usuń" class="glyphicon glyphicon-trash" onclick="$(\'#dane_wrazliwe_podstawa_ustawa_inputs input[value=\\\'' + $(this).attr('value') + '\\\']\').remove(); setlegalacts1();"></i></div>';
+                                       console.log();
+                                   } else if ($(this).attr('rel') == 'rozporządzenie') {
+                                       rozporzadzenia = rozporzadzenia + '<div class="seloptmin" title="' + $(this).attr('data-name') + '"><span>' + $(this).attr('data-name') + '</span><i title="Usuń" class="glyphicon glyphicon-trash" onclick="$(\'#dane_wrazliwe_podstawa_ustawa_inputs input[value=\\\'' + $(this).attr('value') + '\\\']\').remove(); setlegalacts1();"></i></div>';
+                                   } else /*if ($(this).attr('rel') == 'inne') */{
+                                       inne = inne + '<div class="seloptmin" title="' + $(this).attr('data-name') + '"><span>' + $(this).attr('data-name') + '</span><i title="Usuń" class="glyphicon glyphicon-trash" onclick="$(\'#dane_wrazliwe_podstawa_ustawa_inputs input[value=\\\'' + $(this).attr('value') + '\\\']\').remove(); setlegalacts1();"></i></div>';
+                                   }
+                               });
+                               if (ustawy != '') {
+                                   $('#legalacts1a').append('<h4>Ustawy</h4>' + ustawy);
+                               }
+                               if (rozporzadzenia != '') {
+                                   $('#legalacts1b').append('<h4>Rozporządzenia</h4>' + rozporzadzenia);
+                               }
+                               if (inne != '') {
+                                   $('#legalacts1c').append('<h4>Inne</h4>' + inne);
+                               }
+                               if (ustawy == '' && rozporzadzenia == '' && inne == '') {
+                                   $('#legalacts1a').append('<div class="alert alert-danger">Nie dokonano wyboru. Aby dodać nowe akty prawne kliknij przycisk DODAJ znajdujący się powyżej.</div>');
+                               }
+                           }
+                           setlegalacts1();
+                        </script>
+                     </div>
+                  </div>
+                  <div class="row" id="show_dane_wrazliwe_opis" style="display:none;">  
+                     <div class="col-sm-12">
+                        <label>Podaj jakie</label>
+                        <textarea class="form-control" name="dane_wrazliwe_opis"   id="dane_wrazliwe_opis">{$zbior.dane_wrazliwe_opis}</textarea>
+                     </div>
+                  </div>
+               </div>
+               <div class="tab-pane" id="relatives">
+                   <div class="nestable dd">
+                       <ol class="dd-list">
+                           <li class="dd-item">
+                               <div class="dd-handle dd-nodrag">POŁĄCZENIA Z INNYMI ZBIORAMI</div>
+                               <ol class="dd-list">
+                                   {foreach from=$polaczenia key=polaczonyZbiorId item=polaczoneOsoby}
+                                       <li class="dd-item">
+                                           <div class="dd-handle dd-nodrag">{$zbioryNames[$polaczonyZbiorId]}</div>
+                                           <ol class="dd-list">
+                                               {foreach from=$polaczoneOsoby key=osoba item=polaczonePola}
+                                               <li class="dd-item">
+                                                   <div class="dd-handle dd-nodrag">{$personsNames[$osoba]}</div>
+                                                   <ol class="dd-list">
+                                                       {foreach from=$polaczonePola item=pole}
+                                                           <li class="dd-item">
+                                                               <div class="dd-handle dd-nodrag">{$pole}</div>
+                                                           </li>
+                                                       {/foreach}
+                                                   </ol>
+                                               </li>
+                                               {/foreach}
+                                           </ol>
+                                       </li>
+                                   {/foreach}
+                               </ol>
+                           </li>
+                       </ol>
+                   </div>
+               </div>
+               <div class="tab-pane" id="data-transfered">
+                   <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+                       <thead class="ui-widget-header">
+                       <tr>
+                           <th>Nr</th>
+                           <th>Rodzaj</th>
+                           <th>Data transferu</th>
+                           <th>Osoba odpowiedzialna</th>
+                           <th>Podmiot</th>
+                           <th>Pracownik podmiotu</th>
+                           <th>Operacje</th>
+                       </tr>
+                       </thead>
+                       <tbody class="ui-widget-content">
+                       {foreach $transfers as $d}
+                           <tr>
+                               <td>{$d.id}</td>
+                               <td>{$transferTypes[$d.type].name}</td>
+                               <td>{$d.transfer_date}</td>
+                               <td>{$d.osoba_name}</td>
+                               <td>{$d.source_company_name}</td>
+                               <td>{$d.source_employee_name}</td>
+                               <td>
+                                   <a class="btn btn-default choose-from-dial" title="szczegóły" data-dial-url="/data-transfers/mini-preview/id/{$d.id}">szczegóły</a>
+                               </td>
+                           </tr>
+                       {/foreach}
+                       </tbody>
+
+                   </table>
+               </div>
+               <div class="tab-pane" id="changelog">
+                   {include file="zbiory/changelog.html"}
+               </div>
+               {Application_Service_Ui::getInstance()->getSectionByName('zbiory_update_content', ['zbior' => $zbior]) nofilter}
+            </div>
+         </div>
+         <div style="clear:both;"></div>
+         <br />
+         <div id="globalMessage"></div>
+         <div class="row">
+            <div class="col-sm-12">
+                  <input type="hidden" ng-model="zbiory_id" name="id" id="zbiory_id" value="{$id}" >
+                  <input type="hidden" name="options" id="options" value="{$zbior.options}" >
+                  <input type="hidden" name="type" id="type" value="{$zbior.type}" >
+
+                  <a href="/zbiory" class="btn btn-default">Powrót</a>
+                  <input type="button" class="btn btn-info" value="Zapisz" onclick="$('#options').val(JSON.stringify(t_opts));return checkSubmit();" />
+                  <input type="button" value="Zapisz i dodaj następny"  class="btn btn-info" onclick="$('#options').val(JSON.stringify(t_opts)); $('#addAnother').val('1');return checkSubmit();"  >
+            </div>
+         </div>
+         <div style="width:0px;height:0px;overflow:hidden;">
+            <input type="text" name="addAnother" id="addAnother" value="0" />
+            <input type="submit" value="Zapisz" id="formSubmit"  class="btn btn-info"  >
+         </div>
+      </form>
+   </div>
+</div>
+	
+
+<script type="text/javascript">
+    function checkSubmit() {
+        var error = false;
+        if (typeof chooseApplicationValidateEntry !== 'undefined' && chooseApplicationValidateEntry) {
+            if ($('#appscheck input:checked').size() === 0) {
+                error = true;
+                $('#globalMessage').html('<div class="alert alert-danger">Musisz wybrać co najmniej jedną aplikację</div>');
+            }
+        }
+
+        if (!error) {
+            $.ajax({
+                dataType: 'html',
+                url: '/zbiory/checkExist/',
+                data: 'nazwa_zbior=' + $('#nazwa_zbior').val() + '&id={$id}',
+                method: 'POST',
+                success: function (mess, textStatus, xhr) {
+                    if (mess == 1) {
+                        if($('#show_in_public_registry').prop('checked')){
+                            showDial('/zbiory/edit-date-ajax/?id={$zbior.id}','modal-lg','');
+                            return;
+                        }
+                        $('#formSubmit').click();
+                    } else {
+                        $('#globalMessage').html('<div class="alert alert-danger">Rekord z podaną nazwą już istnieje. Proszę zmienić nazwę.</div>');
+                        setTimeout('$(\'#globalMessage\').html(\'\')', 5000);
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                }
+            });
+        }
+        
+
+    }
+</script>
+
+<div class="modal fade bs-example-modal-lg" id="polaModal">
+   <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Wybierz</h4>
+            <br/>
+         </div>
+         <div class="modal-body">
+            <div class="form-horizontal col-md-12">
+               <div class="row">
+                  <div class="col-md-6">
+                     <div class="form-group">
+                        <label for="type">Usaw Typ:</label>
+                        <select class="form-control" multiple>
+                           {foreach $opcje_pol as $opcja}
+                           <option value="{$opcja}" title="{$opcja}">{$opcja}</option>
+                           {/foreach}
+                        </select>
+                     </div>
+                  </div>
+                  <div class="col-md-5">
+                     <button type="button" class="btn btn-default" style="margin-top: 25px;"><i
+                           class="glyphicon glyphicon-plus"></i></button>
+                  </div>
+               </div>
+               <div class="row">
+                  <form class="form-inline" action="/zbiory/add-type">
+                     <div class="col-md-12">
+                        <div class="form-group">
+                           <p class="form-control-static">Dodaj Typ pola</p>
+                        </div>
+                        <div class="form-group">
+                           <label class="sr-only">Typ pola</label>
+                           <input type="text" class="form-control" name="nazwa"
+                                 placeholder="Typ pola">
+                        </div>
+                        <button type="submit" class="btn btn-default"><i
+                              class="glyphicon glyphicon-plus"></i></button>
+                     </div>
+                  </form>
+               </div>
+               <br/>
+
+               <div class="row">
+                  <form class=" form-inline" action="/zbiory/add-fields">
+                     <div class="col-md-12">
+                        <div class="form-group">
+                           <p class="form-control-static">Dodaj pole</p>
+                        </div>
+                        <div class="form-group" style="margin-left: 15px;">
+                           <label class="sr-only">Nazwa</label>
+                           <input type="text" class="form-control" placeholder="Nazwa"
+                                 name="nazwa">
+                        </div>
+                        <div class="form-group">
+                           <label class="sr-only">Typ</label>
+                           <select class="form-control" placeholder="Typ"
+                                 name="s_zbiory_pola_typ_id">
+                              {foreach $typ as $opcja}
+                              <option value="{$opcja.id}">{$opcja.nazwa}</option>
+                              {/foreach}
+                           </select>
+                        </div>
+                        <button type="submit" class="btn btn-default" style="margin-left: 10px;"><i class="glyphicon glyphicon-plus"></i></button>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+         </div>
+      </div>
+   </div>
+</div>
+
+{if !$zbiorIsGroup}
+    <script type="text/javascript">
+        function appendOrReplace(appended, appending){
+            if(appended == ''){
+                return appending;
+            } else {
+                return appended.add(appending);
+            }
+        }
+        function appendAktyPrawneInput(id, type, name, desc){
+            $('#aktyprawne_inputs').append('<input type="hidden" name="aktyprawne[]" value="'+id+'" rel="'+type+'" data-name="'+name+'">');
+            $('#aktyprawne_desc_inputs').append('<input type="hidden" name="aktyprawneDesc['+id+']" value="'+desc+'" rel="'+type+'" data-name="'+id+'">');
+        }
+        function runlegalacts2Sel() {
+            setlegalacts2Sel();
+            $('.selopt2bl').click(function () {
+                var ide = $(this).attr('id').replace('id', ''),
+                    rel = $(this).attr('rel').replace('category', ''),
+                    name = $(this).find('.selopt2blname').text(),
+                    input = $('#aktyprawne_inputs').find('[value="'+ide+'"]'),
+                    desc = $(this).find('.selopt2bltextarea>div>textarea').val();
+
+                if (input.size()) {
+                    $("#aktyprawne_desc_inputs>input[name='aktyprawneDesc["+input.val()+"]']").remove();
+                    input.remove();
+                }
+                else {
+                    appendAktyPrawneInput(ide, rel, name, desc);
+                }
+                setlegalacts2Sel();
+                setlegalacts2();
+            });
+            $('.selopt2bltextarea>div>textarea').on('input propertychange', function (event) {
+                $("#aktyprawne_desc_inputs>input[name='aktyprawneDesc["+$(this).attr('id')+"]']").val($(this).val());
+                $('.panel#legalactscont textarea#'+$(this).attr('id')).text($(this).val());
+            });
+        }
+        function addlegalacts2(id, html, type) {
+            if (!$('#aktyprawne_inputs input[value="' + id + '"]').length > 0) {
+                appendAktyPrawneInput(id, type, html);
+            }
+        }
+        function setlegalacts2Sel() {
+            $('.selopt2bl').removeClass('active');
+            $('#aktyprawne_inputs input').each(function () {
+                $('.selopt2bl[id="id' + $(this).attr('value') + '"]').addClass('active');
+            });
+            $('#aktyprawne_desc_inputs input').each(function () {
+                $('.selopt2bl[id="id' + $(this).attr('data-name') + '"]').find('.selopt2bltextarea>div>textarea').val($(this).val());
+            });
+        }
+        function legalacts2Remove(val){
+            $('#aktyprawne_inputs input[value=\'' + val + '\']').remove();
+            $('#aktyprawne_desc_inputs input[name=\'aktyprawneDesc[' + val + ']\']').remove();
+            setlegalacts2();
+        }
+        function setlegalacts2() {
+            $('#legalacts2a').html('');
+            $('#legalacts2b').html('');
+            $('#legalacts2c').html('');
+            var ustawy = '';
+            var rozporzadzenia = '';
+            var inne = '';
+            $('#aktyprawne_inputs input').each(function () {
+                var $input = $('#aktyprawne_desc_inputs>input[name=\'aktyprawneDesc['+$(this).val()+']\']'),
+                $textArea = $('<textarea id="'+$(this).attr('value')+'">'+$input.val()+'</textarea>');
+                $textArea.on('input propertychange', function(){
+                    $input.val($(this).val());
+                });
+                var appended = $('<div class="seloptmin" title="' + $(this).attr('data-name') + '"></div>').append('<span>' + $(this).attr('data-name') + '</span>')
+                        .append('<i title="Usuń" class="glyphicon glyphicon-trash" onclick="legalacts2Remove(' + $(this).attr('value') + ')"></i>')
+                        .append($textArea);
+                if ($(this).attr('rel') == 'ustawa') {
+                    ustawy = appendOrReplace(ustawy, appended);
+                } else if ($(this).attr('rel') == 'rozporządzenie') {
+                    rozporzadzenia = appendOrReplace(rozporzadzenia, appended);
+                } else /*if ($(this).attr('rel') == 'inne')*/ {
+                    inne = appendOrReplace(inne, appended);
+                }
+            });
+            if (ustawy != '') {
+                $('#legalacts2a').append('<h4>Ustawy</h4>').append(ustawy);
+            }
+            if (rozporzadzenia != '') {
+                $('#legalacts2b').append('<h4>Rozporządzenia</h4>').append(rozporzadzenia);
+            }
+            if (inne != '') {
+                $('#legalacts2c').append('<h4>Inne</h4>').append(inne);
+            }
+            if (ustawy == '' && rozporzadzenia == '' && inne == '') {
+                $('#legalacts2a').append('<div class="alert alert-danger">Nie dokonano wyboru. Aby dodać nowe akty prawne kliknij przycisk DODAJ znajdujący się powyżej.</div>');
+            }
+        }
+        setlegalacts2();
+
+        function runaplikacjeSel() {
+            setaplikacjeSel();
+            $('.selopt2bl').click(function () {
+                var ide = $(this).attr('id').replace('id', '');
+                if ($('#appscheck input[value="' + ide + '"]').is(':checked')) {
+                    $('#appscheck input[value="' + ide + '"]').iCheck('uncheck');
+                }
+                else {
+                    $('#appscheck input[value="' + ide + '"]').iCheck('check');
+                }
+                setaplikacjeSel();
+                setaplikacje();
+                runOptsSearch();
+            });
+            $('#checkall').click(function () {
+                $('.selopt2bl').each(function () {
+                    var ide = $(this).attr('id').replace('id', '');
+                    if (!$(this).hasClass('active') && $(this).css('display') != 'none') {
+                        $('#appscheck input[value="' + ide + '"]').iCheck('check');
+                    }
+                });
+                setaplikacjeSel();
+                setaplikacje();
+                runOptsSearch();
+            });
+            $('#uncheckall').click(function () {
+                $('.selopt2bl').each(function () {
+                    var ide = $(this).attr('id').replace('id', '');
+                    if ($(this).hasClass('active') && $(this).css('display') != 'none') {
+                        $('#appscheck input[value="' + ide + '"]').iCheck('uncheck');
+                    }
+                });
+                setaplikacjeSel();
+                setaplikacje();
+                runOptsSearch();
+            });
+        }
+        function setaplikacjeSel() {
+            $('.selopt2bl').removeClass('active');
+            $('#appscheck input').each(function () {
+                if ($(this).is(':checked')) {
+                    $('.selopt2bl[id="id' + $(this).attr('value') + '"]').addClass('active');
+                }
+            });
+        }
+        function setaplikacje() {
+            var $apps = $('#apps');
+            $apps.html('');
+            $('#appscheck input').each(function () {
+                if ($(this).is(':checked')) {
+                    $apps.append('<div class="seloptmin" title="' + $(this).attr('title') + '"><span>' + $(this).attr('title') + '</span><i title="Usuń" class="glyphicon glyphicon-trash" onclick="$(\'#appscheck input[value=\\\'' + $(this).attr('value') + '\\\']\').iCheck(\'uncheck\'); setaplikacje();"></i></div>');
+                }
+            });
+//            if ($apps.html() == '') {
+//                $apps.append('<div class="alert alert-danger">Nie dokonano wyboru. Aby dodać aplikacje kliknij przycisk DODAJ znajdujący się powyżej.</div>');
+//            }
+
+            applicationsSecurityUpdate();
+        }
+        $(function () {
+            setaplikacje();
+        });
+        chooseApplicationValidateEntry = false;
+        function setPoziomBezpieczenstwa() {
+            var level = 'A';
+            chooseApplicationValidateEntry = false;
+
+            if ($('#forma').val() !== 'papierowa') {
+                if ($('#formaExtendedInformatic').val() === '5') {
+                    level = 'C';
+                    chooseApplicationValidateEntry = false;
+                } else {
+                    level = 'B';
+                }
+            }
+            $('#poziom_bezpieczenstwa')
+                    .children()
+                    .show()
+                    .not('[value="' + level + '"]')
+                    .hide()
+                    .end()
+                    .end()
+                    .val(level);
+        }
+        function setProwadzenieDanych() {
+            if ($('#forma').val() == 'papierowa') {
+                setPoziomBezpieczenstwa();
+                $('#formaExtended').hide();
+                $('#applicationscont').hide();
+            } else {
+
+                setPoziomBezpieczenstwa();
+                $('#formaExtended').show();
+                $('#applicationscont').show();
+            }
+        }
+
+        function setZadania() {
+            if ($('#wykonywanie_zadan').is(':checked')) {
+                $('#zadaniatext').css('display', '');
+            } else {
+                $('#zadaniatext').css('display', 'none');
+                $('#zadania').val('');
+            }
+        }
+
+        $(function () {
+            $('#wykonywanie_zadan').on('ifChanged', function () {
+                setZadania();
+            });
+        });
+        setZadania();
+
+        $('#forma').change(function () {
+            setProwadzenieDanych();
+        });
+        $('#formaExtendedInformatic').change(setProwadzenieDanych);
+        setProwadzenieDanych();
+
+        function celText() {
+            var text1 = 'Przetwarzanie danych na mocy zgody udzielanej przez osoby, której dane dotyczą.';
+            var text2 = 'Wypełnienie obowiązków wynikających z obowiązującego prawa.';
+            var textins = '';
+            if ($('#zgoda_zainteresowanego').is(':checked')) {
+                textins = textins + text1;
+            }
+            if ($('#wymogi_przepisow_prawa').is(':checked')) {
+                if (textins != '') {
+                    textins = textins + ' ';
+                }
+                textins = textins + text2;
+            }
+            if ($('#cel').val() != textins) {
+                addFixedAlert('info', 'Zmieniono wartość w polu "Cel przetwarzania".');
+            }
+            $('#cel').val(textins);
+        }
+
+        $('#zgoda_zainteresowanego').on('ifChanged', function () {
+            celText();
+        });
+    </script>
+{/if}
+
+<script src="/_gfx/js/controllers/zbiory/ui-rejestrZbiorow.js"></script>
+<script src="/_gfx/js/controllers/zbiory/ui-search.js"></script>
+<script src="/assets/plugins/mustache/mustache.min.js"></script>
+<script src="/assets/plugins/angular/plugins/xeditable/xeditable.min.js"></script>
+<script type="text/javascript">
+   jQuery(document).ready(function () {
+      UISearch.init();
+   });
+   var zbioryUpdate = {
+      'legal_basis_data_cols' : {$legal_basis_data_cols nofilter},
+      'basicNonRegistrationGodio' : {$basicNonRegistrationGodio nofilter},
+      'templateType': {$templateType nofilter},
+      'templateField': {$templateField nofilter}
+   };
+</script>
+
+<script src="/_gfx/js/app/zbiory/app.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    function checkChecked(rel) {
+        var checke = 0;
+        var datakey = '';
+        $('[rel="' + rel + '"]').each(function () {
+            if ($(this).prop('checked') == true) {
+                checke++;
+                datakey = $(this).attr('data-key');
+            }
+        });
+        if (checke == 4) {
+            $('.chbx_zbior_all[data-key="' + datakey + '"]').prop('checked', true);
+        }
+        else {
+            $('.chbx_zbior_all[data-key="' + datakey + '"]').prop('checked', false);
+        }
+        $('input:not(.ios-switch, .angular)').iCheck('update');
+    }
+    $(document).ready(function () {
+        $('input[name="wymogi_przepisow_prawa"]').on('ifChecked', function (event) {
+            setlegalacts2();
+            $('#legalactscont').css('display', 'block');
+            celText();
+        });
+        $('input[name="wymogi_przepisow_prawa"]').on('ifUnchecked', function (event) {
+            $('#legalactscont').css('display', 'none');
+            $('#aktyprawne').val([]);
+            celText();
+        });
+
+        $('.poz,.wpr,.mod,.usu').on('ifChanged', function () {
+            checkChecked($(this).attr('rel'));
+        });
+
+        $('.chbx_zbior_all').on('ifChanged', function () {
+            var key = $(this).attr('data-key');
+            if ($(this).is(':checked')) {
+                $('[data-key="' + $(this).attr('data-key') + '"]').prop('checked', true);
+            }
+            else {
+                $('[data-key="' + $(this).attr('data-key') + '"]').prop('checked', false);
+            }
+            $('input:not(.ios-switch, .angular)').iCheck('update');
+        });
+        function roomsSecurityUpdate() {
+            var roomsSecurities = [];
+            $('.pomieszczenieChk').each(function() {
+                var tg = $(this);
+                if (tg.is(':checked')) {
+                    var securityData = this.getAttribute('data-security');
+                    if (securityData && securityData.toUpperCase !== 'NULL') {
+                        var security = securityData.split(',');
+                        roomsSecurities = roomsSecurities.concat(security);
+                    }
+                }
+            });
+            removeSecurityByOrigin('security');
+            $(roomsSecurities).each(function() {
+                var sec = zabezpieczenia[this];
+                addzabezpieczenia(sec.id, sec.nazwa, sec.typ, 'security');
+            });
+            setZabezpieczeniaSel();
+            setZabezpieczenia();
+            addFixedAlert('info','Zaktualizowano zabeczpieczenia.');
+        }
+
+        $('.pomieszczenieChk').on('ifChecked', applicationsSecurityUpdate);
+    });
+    var removeSecurityByOrigin = function(origin) {
+        $('#zabezpieczenia').find('[data-origin=' + origin + ']').remove();
+    };
+
+    var applicationsSecurityUpdate = function() {
+        return;
+        var applicationsSecurities = [];
+        $('#appscheck :checkbox:checked').each(function() {
+            var tg = $(this);
+            if (tg.is(':checked')) {
+                var securityData = this.getAttribute('data-security');
+                if (securityData && securityData.toUpperCase !== 'NULL') {
+                    var security = securityData.split(',');
+                    roomsSecurities = roomsSecurities.concat(security);
+                }
+            }
+        });
+        removeSecurityByOrigin('security');
+        $(roomsSecurities).each(function() {
+            var sec = zabezpieczenia[this];
+            addzabezpieczenia(sec.id, sec.nazwa, sec.typ, 'security');
+        });
+        setZabezpieczeniaSel();
+        setZabezpieczenia();
+        addFixedAlert('info','Zaktualizowano zabeczpieczenia.');
+    };
+
+    function filterOsobyPopup() {
+        $('#responsible_persons').find('input').each(function() {
+            $('#optsSearch').find('#id'+this.value).addClass('active');
+        });
+    }
+    function configAddOsoba(id, object, status) {
+        if (status) {
+            var newTag = $('<div class="seloptmin">');
+            newTag.append($('<span></span>').text(object.displayName));
+            newTag.append($('<i title="Usuń" class="glyphicon glyphicon-trash remove-element" data-closest-target=".seloptmin">'));
+            newTag.append($('<input type="hidden" name="responsive_persons[]" value="'+object.id+'">'));
+            $('#responsible_persons').append(newTag);
+
+            systemAssignHandlers();
+        } else {
+            $('#responsible_persons').find('input[value="'+object.id+'"]').closest('.seloptmin').remove();
+        }
+    }
+
+</script>

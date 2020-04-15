@@ -1,0 +1,39 @@
+<ul>
+    {foreach $navigation as $item}
+        <li{if !empty($item.children)} class="has_sub"{/if}>
+            <a {if !$item.nohref}href="{$item.path}" {/if}class="{if !empty($item.active)}active{/if}">
+                <i class="{$item.icon}"></i>
+                <span class="title">{$item.label|translate}</span>
+                {if !empty($item.children)}
+                    <span class="pull-right" onclick="return false"><i class="fa fa-angle-down"></i></span>
+                {/if}
+            </a>
+            {if !empty($item.children)}
+                <ul>
+                    {foreach $item.children as $childItem}
+                        <li>
+                            <a {if !$childItem.nohref}href="{$childItem.path}" {/if}class="{if !empty($childItem.active)}active{/if}">
+                                <i class="{$childItem.icon}"></i> {$childItem.label|translate}
+                            </a>
+                        </li>
+                    {/foreach}
+                </ul>
+            {/if}
+        </li>
+    {/foreach}
+</ul>
+<script>
+    // NAVIGATION HIGHLIGHT & OPEN PARENT
+    $("#sidebar-menu ul a.active")
+            .parents("li:last")
+            .children("a:first")
+            .addClass("active")
+            .addClass('subdrop')
+            .find('i.fa-angle-down')
+            .removeClass('fa-angle-down')
+            .addClass('fa-angle-up')
+            .end()
+            .next()
+            .show();
+    $("#sidebar-menu > ul > li > a.active").parent().insertAfter($("#sidebar-menu > ul > li:first"));
+</script>

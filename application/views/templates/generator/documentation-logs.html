@@ -1,0 +1,54 @@
+{$message}
+<form name="f_data" id="f_data" method="POST" action="/generator/documentation-logs-generate">
+    <fieldset>
+        {foreach from=$types key=typeId item=typeName}
+        <div class="page-header">
+            <h4>{$typeName}</h4>
+            {if isset($typesComments[$typeId])}
+                <p class="text-success">{$typesComments[$typeId]}</p>
+            {/if}
+        </div>
+            {foreach from=$generatorValues item=generatorValue}{if $generatorValue.type == $typeId}
+            <div class="form-group row">
+                <div class="col-sm-1">{$generatorValue.weight}</div>
+                <div class="col-sm-11">{$generatorValue.value}</div>
+            </div>
+            {/if}{/foreach}
+        {/foreach}
+        <div class="page-header">
+            <h4>Dane dodatkowe</h4>
+        </div>
+        <div class="form-group row">
+            <label for="date_from" class="col-sm-2">Data od:</label>
+            <div class="col-sm-4"><input type="text" name="date_from" id="date_from" class="form-control validate[required] datepicker-input"></div>
+        </div>
+        <div class="form-group row">
+            <label for="date_to" class="col-sm-2">Data do:</label>
+            <div class="col-sm-4"><input type="text" name="date_to" id="date_to" class="form-control validate[required] datepicker-input"></div>
+        </div>
+        <div class="form-group row">
+            <label for="count" class="col-sm-2">Ilość danych do wygenerowania:</label>
+            <div class="col-sm-4"><input type="text" name="count" id="count" class="form-control validate[required]"></div>
+        </div>
+        <div class="form-group row">
+            <label for="average_count" class="col-sm-2">Średnio dziennie:</label>
+            <div class="col-sm-4"><input type="text" name="average_count" id="average_count" class="form-control validate[required]"></div>
+        </div>
+        <div class="form-group row">
+            <label for="average_count" class="col-sm-2">Średnio dni na zdarzenie:</label>
+            <div class="col-sm-4"><input type="text" name="average_event_time" id="average_event_time" class="form-control validate[required]"></div>
+        </div>
+        <div id="globalMessage"></div>
+        <div class="">
+            <a href="/generator/"><input type="button" value="Powrót" class="btn"></a>
+            <input type="button" value="Generuj" class="btn btn-info" onclick="$('#formSubmit').click();">
+        </div>
+    </fieldset>
+    <div style="width:0px;height:0px;overflow:hidden;">
+        <input type="text" name="addAnother" id="addAnother" value="0"/>
+        <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+    </div>
+</form>
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+</script>

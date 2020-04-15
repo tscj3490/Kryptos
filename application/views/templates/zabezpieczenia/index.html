@@ -1,0 +1,30 @@
+{include file='modals/modal.tpl' title='Zabezpieczenia - co to jest?' content='Zgodnie z obowiązującymi przepisami, jesteśmy zobligowani do prowadzenia ewidencji zabezpieczeń, by móc odpowiedzieć na pytanie w jaki sposób chronimy dany zbiór. Dzięki Kryptos24 w łatwy i szybki sposób możemy taką ewidencję wykonać. Nie jest sztuką wypisać jakimi zabezpieczeniami dysponuje organizacja w formie listy, ale wyobraźmy sobie, że jesteśmy Administratorami Bezpieczeństwa Informacji i mamy opracować taki wykaz dla 150 zbiorów, a następnie go aktualizować np. ewidencjonując, że w danym tygodniu nie było jeszcze alarmu, potem był, a następnie szef zdecydował by jednak go nie było. Takie zmiany należałoby odnotować 150 razy! Jak to wygląda z Kryptos? Zaczynamy od przejścia do zakładki Zbiory, a następnie Pomieszczenia i budynki. Dodając lub edytując, poszczególne wpisy określamy listę zabezpieczeń dotyczących budynków, wskazując takie informacje jak monitoring, system kontroli dostępu, czy drzwi wejściowe są wzmacniane itp. System automatycznie przypisuje zabezpieczenia z budynku do pomieszczeń, ponieważ jeśli sekretariat znajduje się w budynku monitorowanym przez ochronę, to samo pomieszczenie sekretariatu również pośrednio jest monitorowane przez służby ochrony. Teraz analogicznie dookreślamy indywidualne zabezpieczenia danych pomieszczeń. Najczęściej pomieszczenie kasy, serwera, archiwum i kadr, posiadają unikalny zestaw zabezpieczeń jak szafy metalowe, kraty w oknach lub sejf. Co się stało? Kryptos24 korzystając z funkcji automatycznego dziedziczenia przypisał wybrane zabezpieczenia do wszystkich zbiorów danych osobowych znajdujących się w wybranych obszarach przetwarzania. Kontynuujmy… Przechodzimy następnie do zakładki Zasoby Informatyczne, a dalej Wykaz aplikacji i modułów. Analogicznie wskazujemy zabezpieczenia informatyczne dla danych aplikacji, które również są dziedziczone do zbiorów prowadzonych w formie elektronicznej, korzystających z wybranych programów. Powyższy przykład obrazuje najlepiej w jaki sposób Kryptos24 optymalizuje czas w prowadzeniu dokumentacji. Jeśli teraz chcemy wprowadzić jakąkolwiek zmianę np. w  liście zabezpieczeń danej aplikacji np. w ramach Systemu Zintegrowanego, to zmianę wpływającą na około 20 zbiorów, wykonamy w około 30s. W skali roku wg naszych obliczeń zmian w zakresie zabezpieczeń jest średnio 30 (fizyczne, informatyczne i organizacyjne), zakładając stABI (czyt. ABI)lne funkcjonowanie bez szczególnych zmian. Załóżmy, że mamy 50 zbiorów, a jedna zmiana dotyczy około 3 zbiorów. Daje to 90 zmian do odnotowania wraz z aktualizacją listy zabezpieczeń. Otwórzmy plik, dopiszmy, wydrukujmy, wepnijmy do segregatora… To około 4h pracy w ciągu roku. Z Kryptos24 oszczędzasz! Pomyśl jak wielką oszczędność przyniesie Ci Kryptos24 od roku 2018, gdy będziesz zobligowany do prowadzenia analizy ryzyka i rozpatrywania, jak wpłynęło na ryzyko przetwarzania danego zbioru zmiana konkretnego zabezpieczenia. Stworzenie takiej dokumentacji będzie trwać bez użycia Kryptos24 nawet 40h. Z Kryptos24 przygotujesz ją w mniej niż jedną godzinę!'}
+<div class="table-operations-header">
+    <a class="btn btn-success" href="/zabezpieczenia/update" data-title="Dodaj nowe zabezpieczenie" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+</div>
+<table cellpadding="0" cellspacing="0" border="0"
+       class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="string">nazwa</th>
+        <th data-filter-type="select">typ</th>
+        <th>operacje</th>
+    </tr>
+    </thead>
+    <tbody class="ui-widget-content">
+    {foreach $paginator as $d}
+        <tr>
+            <td>{$d.nazwa}</td>
+            <td>{$model->getTypeName($d.typ)}</td>
+            <td class="operations">
+                {if $auth->isGranted('node/zabezpieczenia/update', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-pencil" href="/zabezpieczenia/update/id/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                {/if}
+                {if $auth->isGranted('node/zabezpieczenia/remove', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="/zabezpieczenia/remove/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

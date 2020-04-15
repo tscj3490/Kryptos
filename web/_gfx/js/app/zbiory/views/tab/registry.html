@@ -1,0 +1,66 @@
+<div class="col-sm-12 portlets">
+    <div class="widget">
+        <div class="widget-header transparent">
+            <h2><strong>GIODO registry</strong></h2>
+        </div>
+        <div class="widget-content padding">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label class="control-label"><i class="fa fa-calendar"></i> Date of register</label>
+                        <input type="text" class="form-control" data-mask="9999-99-99" placeholder="yyyy-mm-dd"
+                               name="date_register" ng-model="form.registry.date_register">
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="control-label"><i class="fa fa-calendar"></i>Date of last modified</label>
+                        <input type="text" class="form-control" data-mask="9999-99-99" placeholder="yyyy-mm-dd"
+                               name="date_register" ng-model="form.registry.date_modified">
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Status of register</label>
+                        <select class="form-control" name="country" ng-model="form.registry.status">
+                            <option value="">-- Select --</option>
+                            <option value="A">COMPLETED</option>
+                            <option value="B">UNCOMPLETED</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <label>Basis on non-registration in GIODO</label>
+                        <select class="form-control" name="nazwa" ng-model="form.registry.giodo" multiple="multiple">
+                            <option value="<%item.id%>"  ng-repeat="item in basicNonRegistrationGodio">
+                                <% item.val%> 
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label>Czy zbiór jest zgłaszany po raz pierwszy?</label>
+                        <select name="col_reported_first_time">
+                            <option>Tak</option>
+                            <option>Nie</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <label>Czy zbiór podlega rejestracji?</label>
+                        <select class="form-control" name="is_col_under_registrn" ng-model="form.registry.is_col_under_registrn" >
+                            <option value="<%item.id%>"  ng-repeat="item in [{id:'1',val:'Tak'}, {id:'2',val:'Nie'}]">
+                                <% item.val%> 
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

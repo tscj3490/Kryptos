@@ -1,0 +1,25 @@
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example" >
+            	<thead>
+                	<tr>
+                    	<th>Name</th>
+                    	<th>Street</th>
+                    	<th>Number</th>
+                    	<th>Address</th>
+                    	 <th>Country</th>
+						 <th>Computer</th>
+                    </tr>
+                </thead>
+                <tbody class="ui-widget-content">
+                	{foreach $paginator as $d}
+                	<tr>
+                        <td>{$d.name|ucfirst}</td>
+                        <td>{$d.street|ucfirst}</td>
+                        <td>{$d.number|ucfirst}</td>
+                        <td>{$d.address}</td>
+						<td>{$d.country}</td>
+						<td>{$d.computername}</td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+
+</table>

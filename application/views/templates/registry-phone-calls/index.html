@@ -1,0 +1,57 @@
+{include file='modals/modal.tpl' title='Rejestr rozmów - co to jest?' content='Jesteśmy w stanie wdrożyć dla Twojej organizacji moduły dodatkowe, dzięki którym system Kryptos24 będzie działał jeszcze lepiej, a efektywność prowadzenia dokumentacji będzie jeszcze większa. Dla przykładu pragniemy zaprezentować moduł zrealizowany dla szkół jednej z polskich gmin – Rejestr rozmów telefonicznych. Wykaz został wprowadzony by odnotowywać fakt poproszenia do telefonu ucznia, by mieć jakikolwiek dowód w tej sprawie. Wraz z funkcją prezentacji numeru można szybko zweryfikować czy rozmówca z danego numeru telefonu jest upoważniony do kontaktu z dzieckiem przez rodzica lub opiekuna prawnego. System umożliwia wprowadzenie danych osoby odbierającej, dzwoniącej oraz wywoływanej, datę i godzinę rozmowy, temat rozmowy oraz ewentualne uwagi. Analogicznie w przypadku rozmów wychodzących. Na koniec Kryptos24 umożliwia wygenerowanie raportu oraz jego eksport w formacie .XLS, dedykowanym aplikacji Microsoft Excel.'}
+<div class="table-operations-header">
+    {if $auth->isGranted('node/registry-phone-calls/update-incoming')}
+    <a class="btn btn-success" href="/registry-phone-calls/update-incoming" data-title="Dodaj rozmowę przychodzącą" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Przychodząca</a>
+    {/if}
+    {if $auth->isGranted('node/registry-phone-calls/update-outgoing')}
+    <a class="btn btn-success" href="/registry-phone-calls/update-outgoing" data-title="Dodaj rozmowę wychodzącą" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Wychodząca</a>
+    {/if}
+    {if $auth->isGranted('node/registry-phone-calls/report')}
+    <a class="btn btn-success dt-report" data-href="/registry-phone-calls/report" data-title="Raport na podstawie filtrów" data-toggle="tooltip"><i class="fa icon-print-2"></i> &nbsp;Raport</a>
+    {/if}
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-name="date" data-filter-type="date-range">Data</th>
+        <th data-filter-name="direction" data-filter-type="select-items">Rodzaj</th>
+        <th data-filter-name="receive_user_name" data-filter-type="string">Odbierający</th>
+        <th data-filter-name="source_user_name" data-filter-type="string">Dzwoniący</th>
+        <th data-filter-name="destination_name" data-filter-type="string">Wywoływany</th>
+        <th data-filter-name="topic" data-filter-type="string">Temat</th>
+        <th data-filter-name="comment" data-filter-type="string">Komentarz</th>
+        <th>Operacje</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $paginator as $arrival}
+        <tr>
+            <td>{smart_date value=$arrival.date class="timeago"}</td>
+            <td class="text-center">{smart_string_select value=$arrival.direction config=$destination_display}</td>
+            <td>{$arrival.receive_user_name}</td>
+            <td>{$arrival.source_user_name}</td>
+            <td>{$arrival.destination_name}</td>
+            <td>{$arrival.topic}</td>
+            <td>{$arrival.comment|strip_tags|truncate:20:"…":true}</td>
+            <td class="operations">
+                {if $arrival.direction == 1}
+                    {if $auth->isGranted('node/registry-phone-calls/update-incoming', ['id' => $arrival.id])}
+                    <a class="glyphicon glyphicon-pencil" href="/registry-phone-calls/update-incoming/id/{$arrival.id}" title="EDYTUJ" data-toggle="tooltip"></a>
+                    {/if}
+                {else}
+                    {if $auth->isGranted('node/registry-phone-calls/update-outgoing', ['id' => $arrival.id])}
+                    <a class="glyphicon glyphicon-pencil" href="/registry-phone-calls/update-outgoing/id/{$arrival.id}" title="EDYTUJ" data-toggle="tooltip"></a>
+                    {/if}
+                {/if}
+                {if $auth->isGranted('node/registry-phone-calls/mini-preview', ['id' => $arrival.id])}
+                <a class="fa fa-eye choose-from-dial" data-dial-url="/registry-phone-calls/mini-preview/id/{$arrival.id}" title="SZCZEGÓŁY" data-toggle="tooltip"></a>
+                {/if}
+                {if $auth->isGranted('node/registry-phone-calls/remove', ['id' => $arrival.id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="/registry-phone-calls/remove/id/{$arrival.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

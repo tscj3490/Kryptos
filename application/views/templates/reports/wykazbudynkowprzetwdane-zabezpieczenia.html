@@ -1,0 +1,31 @@
+<h1>Wykaz budynków, pomieszczeń lub części pomieszczeń oraz zabezpieczeń, tworzących obszar, w którym przetwarzane są dane osobowe</h1>
+
+{foreach $data as $d}
+    <h2>Budynek: {$d.nazwa}</h2>
+    <p>Opis: {$d.opis}</p>
+    <p>Adres: {$d.adres}</p>
+    <p>Zabezpieczenia:<br>{join from=[$d.safeguards, 'safeguard.nazwa']}</p>
+
+    <div>Pomieszczenia:</div>
+    <div>
+        <table>
+            <tr>
+                <th>Nr</th>
+                <th>Piętro</th>
+                <th>Nazwa</th>
+                <th>Wydział</th>
+                <th>Zabezpieczenia</th>
+            </tr>
+            {foreach $d.pomieszczenia as $pomieszczenie}
+            <tr>
+                <td>{$pomieszczenie.nr}</td>
+                <td>{$pomieszczenie.pietro}</td>
+                <td>{$pomieszczenie.nazwa}</td>
+                <td>{$pomieszczenie.wydzial}</td>
+                <td>{join from=[$pomieszczenie.safeguards, 'safeguard.nazwa']}</td>
+            </tr>
+            {/foreach}
+        </table>
+    </div>
+    <p>&nbsp;</p>
+{/foreach}

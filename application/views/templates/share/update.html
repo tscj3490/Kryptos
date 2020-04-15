@@ -1,0 +1,69 @@
+<form name="f_profile" id="f_profile" action="/share/save" method="post" class="form-horizontal" role="form">
+    <div class="form-group row">
+        <label  class="col-sm-2 ">Nazwa podmiotu:</label>
+        <div class="col-sm-4"><textarea class="form-control validate[required]" id="podmiot" name="podmiot" cols="80" rows="5">
+        {$data.podmiot}
+        </textarea></div>
+    </div>
+    <div class="form-group row">
+        <label  class="col-sm-2 ">Data od:</label>
+        <div class="col-sm-4"><input class="form-control datepicker-input validate[required]" type="date" id="data_od" name="data_od" value="{$data['data_od']}" /></div>
+    </div>
+    <div class="form-group row">
+        <label  class="col-sm-2 ">Data do:</label>
+        <div class="col-sm-4"><input class="form-control datepicker-input validate[required]" type="date" id="data_do" name="data_do" value="{$data['data_do']}" /></div>
+    </div>
+    <div class="form-group row">
+        <label  class="col-sm-2 ">Zakres:</label>
+        <div class="col-md-12 checkout-list">
+            {foreach $zbiory as $id => $zbior}
+            <input class="form-control" type="checkbox" name="zbior[{$zbior['id']}]" id="zbior[{$zbior['id']}]" value="{$zbior['id']}"
+            {if (in_array($zbior['id'], explode(',', $data.zbiory)))}
+              checked
+            {/if}
+            />
+            {$zbior['nazwa']}
+            {/foreach}
+        </div>
+    </div>
+    <div class="form-group row">
+        <label  class="col-sm-2 ">Cel:</label>
+        <div class="col-sm-4"><textarea class="form-control validate[required]" name="cel" id="cel" cols="80" rows="5">
+            {$data['cel']}
+        </textarea></div>
+    </div>
+    <div class="form-group row">
+        <label  class="col-sm-2 ">Umowa:</label>
+        <div class="col-sm-4"><input class="form-control validate[required]" type="text" name="umowa" id="umowa" value="{$data.umowa}" /></div>
+    </div>
+    <div class="form-group row">
+        <label  class="col-sm-2 ">Uwagi:</label>
+        <div class="col-sm-4"><textarea class="form-control validate[required]" name="uwagi" id="uwagi" cols="80" rows="5">
+            {$data.uwagi}
+        </textarea></div>
+    </div>
+    <div class="form-group row">
+        <label  class="col-sm-2 ">Osoba:</label>
+        <div class="col-sm-4"><select class="form-control validate[required]" name="osoba" id="osoba">
+        {foreach $osoby as $osoba}
+            <option value="{$osoba.osoba_id}"
+                {if !$data.osoba && $osoba.rola_name == 'ADO'}selected{/if}
+                {if $osoba.osoba_id == $data.osoba}selected{/if}>{$osoba.nazwisko} {$osoba.imie} ({$osoba.rola_name})
+            </option>
+        {/foreach}
+        </select></div>
+    </div>
+    <div class="form-group row">
+        <label  class="col-sm-2 ">Wzor umowy</label>
+        <div class="col-sm-4"><a href="">Wozr.doc</a></div>
+    </div>
+    <div class="">
+        <input class="btn btn-info" type="submit" value="Zapisz" />
+    </div>
+    <input type="hidden" name="id" id="id" value="{$data.id}" />
+</form>
+
+
+<script type="text/javascript">
+	backendUtilities.addVatidationEngine("f_profile");
+</script>

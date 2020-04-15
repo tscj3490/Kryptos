@@ -1,0 +1,32 @@
+{$message}
+<div class="body-action">
+    <a class="btn btn-default" href="/zbiory">Powrót</a>
+    <a class="btn btn-info" href="/fieldgroups/update">Dodaj nową grupę pól</a>
+</div>
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+            	<thead class="ui-widget-header">
+                	<tr>
+                    	<th>nr</th>
+                        <th>nazwa</th>
+                        <th>data utworzenia</th>
+                        <th>data edycji</th>
+                        <th>opcje</th>
+                    </tr>
+                </thead>
+                <tbody class="ui-widget-content">
+                	{foreach $paginator as $d}
+                	<tr>
+
+                    	<td>{$d@iteration}</td>
+                        <td>{$d.name|ucfirst}</td> 
+                        <td>{$d.created_at}</td>
+                        <td>{if $d.updated_at}{$d.updated_at}{else}brak{/if}</td>
+                        <td>
+                            <a  class="glyphicon glyphicon-pencil"  href="/fieldgroups/update/id/{$d.id}"></a>
+                            <a  class="glyphicon glyphicon-trash" onclick="if(confirm('Usunąć?')) window.location.href='/fieldgroups/del/id/{$d.id}'" href="javascript:;"></a>
+                        </td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+
+</table>

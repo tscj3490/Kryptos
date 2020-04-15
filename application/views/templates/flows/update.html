@@ -1,0 +1,65 @@
+<div class="row">
+    <div class="col-lg-6">
+        <form name="f_data" id="f_data" method="POST" action="{$baseUrl}/save" enctype="multipart/form-data">
+            <fieldset>
+                {if $data.id}
+                <input type="hidden" name="id" value="{$data.id}"/>
+                {/if}
+
+                <div class="form-group row">
+                    <label for="name" class="col-sm-4">Nazwa:</label>
+                    <div class="col-sm-8">
+                        <input type="text" name="name" id="name" class="form-control validate[required]" value="{$data.name}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="description" class="col-sm-4">Opis:</label>
+                    <div class="col-sm-8">
+                        <textarea  name="description" id="description" class="form-control">{$data.description}</textarea>
+                    </div>
+                </div>
+                  <div class="form-group row">
+                    <label for="description" class="col-sm-4">Zakres przepływu</label>
+                    <div class="col-sm-8">
+                        <textarea  name="description_scope" id="description_scope" class="form-control">{$data.description_scope}</textarea>
+                    </div>
+                </div>
+                  <div class="form-group row">
+                    <label for="description" class="col-sm-4">Cel przepływu:</label>
+                    <div class="col-sm-8">
+                        <textarea  name="description_target" id="description_target" class="form-control">{$data.description_target}</textarea>
+                    </div>
+                </div>
+                 <div class="form-group row">
+                    <label for="description" class="col-sm-4">Dane wejściowe:</label>
+                    <div class="col-sm-8">
+                        <textarea  name="description_input" id="description_input" class="form-control">{$data.description_input}</textarea>
+                    </div>
+                </div>
+                 <div class="form-group row">
+                    <label for="description" class="col-sm-4">Dane wyjściowe:</label>
+                    <div class="col-sm-8">
+                        <textarea  name="description_output" id="description_output" class="form-control">{$data.description_output}</textarea>
+                    </div>
+                </div>
+                {element tag="bs.typeahead" attributes=[
+                'name' => 'type_id',
+                'label' => 'Typ przepływu',
+                'model' => 'FlowsTypes',
+                'value' => $data.type_id
+                ]}
+                <div>
+                    <a href="{$baseUrl}"><input type="button" value="Powrót" class="btn"></a>
+                    <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+                </div>
+            </fieldset>
+            <div class="hiddenElement">
+                <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+</script>

@@ -1,0 +1,61 @@
+<script>
+{literal}
+$(function (){
+	 
+	$("#mail_form").submit(function (){
+		 $.ajax({
+		  type: "POST",
+		  url: "/index/sendmail",
+		  dataType: 'json',
+		  data: { content: $("#cf_content").val() , name: $("#cf_cname").val(), email : $("#cf_email").val(), subject : $("#cf_subject").val()}
+		}).done(function( msg ) {
+			if(msg.error == '0')
+			{
+		  		$("#mail_form_div").html(msg.html);
+			}
+			else
+			{
+				alert(msg.error);
+			}
+		}).fail(function(xhRequest, ErrorText, thrownError){ alert("error" + ErrorText + xhRequest.status + xhRequest.responseText  ); });
+		return false;	
+	});	
+});
+</script>
+{/literal}
+<aside class="sidebar left">
+	        		<h2>{$tr->_('contact with us')}</h2>
+	        		<p>
+	        			{$tr->_('cf_mateusz_bajer')}
+	        		</p>
+	        		<p>
+	        			{$tr->_('cf_mateusz_bajercd')}
+	        		</p>
+	        		<div id="mail_form_div">
+	        		<form action="#contact" method="post" id="mail_form">
+	        			<div class="field">
+	        				<input id="cf_cname" required type="text" name="name" placeholder="{$tr->_('name_lastname')}">
+	        			</div>
+	        			<div class="field">
+	        				<input id="cf_email" required type="email" name="mail" placeholder="Email">
+	        			</div>
+	        			<div class="field">
+	        				<select name="subject" id="cf_subject" class="replace-me" title="">
+	        					<option value="{$tr->_('interesed in')|ucfirst}">{$tr->_('interesed in')|ucfirst}?</option>
+                                <option value="{$tr->_('dystrybucja')|ucfirst}">{$tr->_('dystrybucja')|ucfirst}</option>
+	        					<option value="{$tr->_('cooperation')|ucfirst}">{$tr->_('cooperation')|ucfirst}</option>
+	        					<option value="{$tr->_('offer')|ucfirst}">{$tr->_('offer')|ucfirst}</option>
+	        					<option value="{$tr->_('training')|ucfirst}">{$tr->_('training')|ucfirst}</option>
+                                <option value="{$tr->_('other matter')|ucfirst}">{$tr->_('other matter')|ucfirst}</option>
+	        				</select>
+	        			</div>
+	        			<div class="field">
+	        				<textarea name="message" required="required" id="cf_content" placeholder="{$tr->_('message')}"></textarea>
+	        			</div>
+	        			
+	        			<div class="submit">
+	        				<input type="submit" value="{$tr->_('send_request')}">
+	        			</div>
+	        		</form>
+                    </div>
+</aside>

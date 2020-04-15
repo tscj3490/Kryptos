@@ -1,0 +1,35 @@
+<div class="table-operations-header">
+    {if $auth->isGranted('node/verifications/update')}
+    <a class="btn btn-success" href="{$baseUrl}/update" data-title="Dodaj sprawdzenie" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj sprawdzenie</a>
+    {/if}
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+        <tr>
+             <th style="width:15px;">ID</th>
+             <th data-filter-type="string">Nazwa</th>
+            <th data-filter-type="date-range">Data dodania</th>
+            <th data-filter-type="date-range">Data edycji</th>
+
+            <th>Operacje</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach $paginator as $d}
+        <tr>
+            <td>{$d.id}</td>
+            <td>{$d.name}</td>
+            <td>{smart_date value=$d.date_added}</td>
+            <td>{smart_date value=$d.date_edited}</td>
+            <td class="operations">
+                <a class="glyphicon glyphicon-eye-open" href="/verifications/details/id/{$d.id}" data-toggle="tooltip" title="Szczegóły"></a>
+                {if $auth->isGranted('node/verifications/del', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="/verifications/del/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>
+

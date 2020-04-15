@@ -1,0 +1,27 @@
+<h1>Przypisz pracownika</h1>
+
+<form name="f_assignee" id="f_assignee" action="/tickets/save-mini-add-assignee/id/{$ticket.id}/user_id/{$user.id}" class="ajax-form form-horizontal" role="form" data-process-fn="processAddAssignee">
+    <div class="row">
+        <label for="user_label" class="col-sm-4">Pracownik</label>
+        <div class="col-sm-8">
+            {$user.display_name|upper}
+        </div>
+    </div>
+
+    <div class="row">
+        <label for="role_id" class="col-sm-4">Rola</label>
+        <div class="col-sm-8">
+            <select name="role_id" id="role_id" class="form-control">
+                {foreach $ticket.type.roles as $role}
+                    {if $role.aspect != 1}
+                        <option value="{$role.id}">{$role.name}</option>
+                    {/if}
+                {/foreach}
+            </select>
+        </div>
+    </div>
+</form>
+
+<div class="footer-actions">
+    <a class="btn btn-success pull-right dialog-form-submit">Dodaj</a>
+</div>

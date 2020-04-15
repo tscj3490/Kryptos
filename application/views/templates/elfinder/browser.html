@@ -1,0 +1,68 @@
+{assign var="filenameUri" value="/assets/plugins/elFinder.2.1.14/build/"}<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>elFinder 2.1.x source version with PHP connector</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+
+    <!-- jQuery and jQuery UI (REQUIRED) -->
+    <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+    <!-- elFinder CSS (REQUIRED) -->
+    <link rel="stylesheet" type="text/css" href="{$filenameUri}css/elfinder.full.css">
+    <link rel="stylesheet" type="text/css" href="{$filenameUri}css/theme.css">
+    <link rel="stylesheet" type="text/css" href="{$filenameUri}themes/windows-10/css/theme.css">
+
+    <link rel="stylesheet" type="text/css" href="/_gfx/elfinder.css">
+
+    <style>
+        .elfinder .elfinder-contextmenu,
+        .elfinder .elfinder-contextmenu-sub {
+
+        }
+    </style>
+
+    <!-- elFinder JS (REQUIRED) -->
+    <script src="{$filenameUri}js/elfinder.min.js"></script>
+
+    <!-- GoogleDocs Quicklook plugin for GoogleDrive Volume (OPTIONAL) -->
+    <!--<script src="js/extras/quicklook.googledocs.js"></script>-->
+
+    <!-- elFinder translation (OPTIONAL) -->
+    <!--<script src="js/i18n/elfinder.ru.js"></script>-->
+
+    <!-- elFinder initialization (REQUIRED) -->
+    <script type="text/javascript" charset="utf-8">
+        // Helper function to get parameters from the query string.
+        function getUrlParam(paramName) {
+            var reParam = new RegExp('(?:[\?&]|&amp;)' + paramName + '=([^&]+)', 'i') ;
+            var match = window.location.search.match(reParam) ;
+
+            return (match && match.length > 1) ? match[1] : '' ;
+        }
+
+        $().ready(function() {
+            var funcNum = getUrlParam('CKEditorFuncNum');
+
+            var elf = $('#elfinder').elfinder({
+                url : '{$connectorUrl}',  // connector URL (REQUIRED)
+                lang: 'pl',
+                getFileCallback : function(file) {
+                    window.opener.CKEDITOR.tools.callFunction(funcNum, file.url);
+                    elf.destroy();
+                    window.close();
+                },
+                resizable: false
+            }).elfinder('instance');
+        });
+    </script>
+</head>
+<body>
+
+<!-- Element where elFinder will be created (REQUIRED) -->
+<div id="elfinder"></div>
+
+</body>
+</html>

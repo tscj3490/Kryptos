@@ -1,0 +1,49 @@
+<style>
+    #personModal .modal-body{
+        min-height: 150px;
+        max-height: 600px;
+        overflow-y: auto;
+    }
+</style>
+<div class="modal fade" id="personModal" ng-controller="PersonIndex">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Kategorie osób w syatemie</h4>
+                <br/>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                         <div class="container-fluid checkbox-inline col-md-12">
+                             <div class="checkbox" >
+                                <label class="col-md-6"  ng-repeat="person in persons">
+                                    <input type="checkbox" ng-model="form.person[person.nazwa]" ng-true-value="<%person.id%>" ng-change="templateChecker(person.nazwa)"><% person.nazwa %>
+                                </label>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                            <div class="col-md-6 form-inline">
+                                <div class="form-group">
+                                    <label class="sr-only">Nazwa</label>
+                                    <input class="form-control" placeholder="Podaj nazwe" type="text" ng-model="newPerson">
+                                </div>
+                                <button type="button" class="btn btn-default" style="margin-left: 10px;" ng-click="addNewPerson()"><i class="glyphicon glyphicon-plus"></i></button>
+                            </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" ng-click="clearPerson()">Wyczyść</button>
+            </div>
+        </div>
+    </div>
+</div>

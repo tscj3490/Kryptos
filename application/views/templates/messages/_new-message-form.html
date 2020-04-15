@@ -1,0 +1,39 @@
+{if $data.type}
+<input type="hidden" id="type" name="type" value="{$data.type}">
+{/if}
+
+{if $data.object_id}
+<input type="hidden" id="object_id" name="object_id" value="{$data.object_id}">
+{/if}
+
+{if isset($data.recipient_id)}
+    {if $data.recipient_id}
+        <input type="hidden" id="recipient_id" name="recipient_id" value="{$data.recipient_id}">
+    {/if}
+{else}
+<div class="form-group">
+    <label class="col-sm-2" for="recipient_id">{'Osoba'|translate}:</label>
+    <div class="col-sm-4">
+        <select id="recipient_id" name="recipient_id" class="form-control validate[required]">
+            {foreach $users as $user}
+                <option value="{$user.id}" {if $user.id == $data.recipient_id}selected{/if}>{$user.name}</option>
+            {/foreach}
+        </select>
+    </div>
+</div>
+{/if}
+
+{if $data.topic}
+<input type="hidden" id="topic" name="topic" value="{$data.topic}">
+{else}
+<div class="form-group">
+    <label class="col-sm-2" for="topic">{Application_Service_MessagesConst::getConfig($data.type, 'title.label.title')|translate}:</label>
+    <div class="col-sm-4">
+        <input type="text" id="topic" name="topic" placeholder="{Application_Service_MessagesConst::getConfig($data.type, 'title.label.placeholder')|translate}" value="{$data.topic}" class="form-control validate[required] allow-lowercase" />
+    </div>
+</div>
+{/if}
+
+{include file='messages/_element-content.html'}
+<hr>
+{include file='messages/_element-attachments.html'}

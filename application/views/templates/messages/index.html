@@ -1,0 +1,148 @@
+<div class="widget transparent box-messages">
+    {include file='messages/_top.html'}
+    <div class="row">
+        <div class="col-md-3">
+            {include file='messages/_menu.html'}
+        </div>
+
+        <div class="col-md-9">
+            <div class="mail-list">
+                <div class="clearfix"></div>
+                <form method="post">
+                    <!-- Toolbar message -->
+                    <div class="data-table-toolbar">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                {if $section !== 'outbox'}
+                                    <div class="btn-toolbar" role="toolbar">
+                                        <div class="btn-group">
+                                            <div class="rows-check-cont">
+                                                <input type="hidden" name="select-all-hidden">
+                                                <div class="icheckbox_square-aero js-checkbox select-all-checkbox" data-target-id="select-all-hidden" data-target=".table-message">
+                                                    <ins class="iCheck-helper"></ins>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="btn-group">
+                                            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="fa fa-tag"></i> <span class="caret"></span></button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                {foreach from=$tags item=tag}
+                                                    <li>
+                                                        <a class="messages-add-tag" data-id="{$tag.id}">
+                                                            <i class="fa fa-circle" style="color: {$tag.color}"></i> &nbsp;
+                                                            <span class="tag-name">{$tag.name|translate}</span>
+                                                        </a>
+                                                    </li>
+                                                {/foreach}
+                                            </ul>
+                                        </div>
+                                        <div class="btn-group">
+                                            {if $section != 'trash'}<a data-toggle="tooltip" title="{'Usuń zaznaczone'|translate}" class="btn btn-primary message-selection-status" data-status="trash"><i class="fa fa-trash-o"></i></a>{/if}
+                                        </div>
+                                        <div class="btn-group">
+                                            <a data-toggle="tooltip" title="Refresh" class="btn btn-primary" onclick="document.location.reload()"><i class="fa fa-undo"></i></a>
+                                        </div>
+                                        {*<div class="btn-group">
+                                            <a data-toggle="tooltip" title="Move to folder" class="btn btn-primary"><i class="fa fa-folder"></i> <span class="caret"></span></a>
+                                        </div>*}
+                                        <div class="btn-group">
+                                            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">{'Więcej'|translate} <span class="caret"></span></button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a class="message-selection-status" data-status="read">{'Oznacz zaznaczone jako przeczytane'|translate}</a></li>
+                                                <li><a class="message-selection-status" data-status="unread">{'Oznacz zaznaczone jako nieprzeczytane'|translate}</a></li>
+                                                <li class="divider"></li>
+                                                <li><a class="message-all-status" data-status="read">{'Oznacz wszystkie jako przeczytane'|translate}</a></li>
+                                                <li><a class="message-all-status" data-status="unread">{'Oznacz wszystkie jako nieprzeczytane'|translate}</a></li>
+                                                {*<li><a href="#fakelink">Move all to Archive</a></li>*}
+                                                <li class="divider"></li>
+                                                {if $section != 'trash'}
+                                                    <li><a class="message-selection-status" data-status="trash">{'Przenieś wszystkie do kosza'|translate}</a></li>
+                                                {else}
+                                                    <li><a class="message-selection-status" data-status="untrash">{'Przenieś wszystkie do odebranych'|translate}</a></li>
+                                                {/if}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                {/if}
+                            </div>
+                            {if $pages->pageCount}
+                            <div class="col-sm-4 hidden-xs">
+                                <div class="pull-right">
+                                    <span class="paging-status"> {'strona %s z %s'|translate|sprintf:{$pages->current}:{$pages->pageCount}}</span>
+                                    <div class="btn-group">
+                                        {if $pages->previous}<a href="/komunikacja/index/page/{$pages->previous}" class="btn btn-default"><i class="fa fa-chevron-left"></i></a>{/if}
+                                        {if $pages->next}<a href="/komunikacja/index/page/{$pages->next}" class="btn btn-default"><i class="fa fa-chevron-right"></i></a>{/if}
+                                    </div>
+                                    {*<div class="btn-group">
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-cog"></i>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a href="#fakelink">Action</a></li>
+                                            <li><a href="#fakelink">Another action</a></li>
+                                            <li><a href="#fakelink">Something else here</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="#fakelink">Separated link</a></li>
+                                        </ul>
+                                    </div>*}
+                                </div>
+                            </div><!-- End div .col-sm-3 -->
+                            {/if}
+                        </div><!-- End div .row -->
+                    </div><!-- End div .data-table-toolbar -->
+                    <!-- End toolbar message -->
+
+
+                    <!-- Message table -->
+                    <div class="table-responsive">
+                        <table class="table table-hover table-message">
+                            <tbody>
+                            {foreach $paginator as $msg}
+                                <tr class="{if $msg.read_status==0}unread{/if} message-row" data-id="{$msg.id}">
+                                    {if $section !== 'outbox'}
+                                    <td style="width: 20px">
+                                        <input type="hidden" name="ids[{$msg.id}]" value="0">
+                                        <div class="icheckbox_square-aero js-checkbox" data-target-id="ids[{$msg.id}]">
+                                            <ins class="iCheck-helper"></ins>
+                                        </div>
+                                    </td>
+                                    <td style="width: 20px;"><a class="message-mark-favourite"><i class="icon-star-{if !in_array(1, $msg.tags_ids)}empty-{/if}1 warning" data-toggle="tooltip" title="{'Oznacz jako ulubione'|translate}"></i></a></td>
+                                    {/if}
+                                    <td>
+                                        <a href="{$baseUrl}/view/id/{$msg.id}" class="tags-container">
+                                            {foreach from=$msg.tags item=msgTag}
+                                                {if $msgTag.id != 1}
+                                                <span class="label label-xs" data-id="{$msgTag.id}" style="background-color: {$msgTag.color};">{$msgTag.name}</span>
+                                                {/if}
+                                            {/foreach}
+                                            {$msg.topic}
+                                        </a>
+                                    </td>
+                                    <td><a href="{$baseUrl}/view/id/{$msg.id}">{$msg.nazwisko} {$msg.imie}</a></td>
+                                    <td>{if $msg.attachments_count}<i class="icon-attach-3" data-toggle="tooltip" title="{'Ilość załączników'|translate}: {$msg.attachments_count}"></i>{/if}</td>
+                                    <td><span class="timeago" title="{$msg.created_at}">{$msg.created_at|substr:0:10}</span></td>
+                                </tr>
+                            {/foreach}
+                            </tbody>
+                        </table>
+                    </div><!-- End div .table-responsive -->
+                    <!-- End message table -->
+
+                    {if $pages->pageCount}
+                    <!-- Footer message toolbar -->
+                    <div class="data-table-toolbar-footer">
+                        <div class="pull-right">
+                            <span class="paging-status"> {'strona %s z %s'|translate|sprintf:{$pages->current}:{$pages->pageCount}}</span>
+                            <div class="btn-group">
+                                {if $pages->previous}<a href="{$baseUrl}/{$action}/page/{$pages->previous}" class="btn btn-default"><i class="fa fa-chevron-left"></i></a>{/if}
+                                {if $pages->next}<a href="{$baseUrl}/{$action}/page/{$pages->next}" class="btn btn-default"><i class="fa fa-chevron-right"></i></a>{/if}
+                            </div>
+                        </div>
+                    </div>
+                    {/if}
+                    <!-- End Footer message toolbar -->
+                </form>
+            </div>
+        </div><!-- End div .col-md-10 -->
+    </div><!-- End div .row -->
+</div><!-- End div .box-info -->

@@ -1,0 +1,24 @@
+<h1>Przenieś do grupy zbiorów</h1>
+
+<div class="row" id="section-pending-document-new-comment">
+    <div class="col-sm-12">
+        <form name="f_profile" id="f_profile" action="/zbiory/move-to-group-go" class="ajax-form form-horizontal" role="form" data-process-fn="formProcessCloseModal">
+            <input type="hidden" name="idss" value="{$ids|implode:","}"/>
+            <div class="form-group">
+                <label for="group_id" class="col-sm-4">Wybierz grupę</label>
+                <div class="col-sm-8">
+                    <select class="form-control" name="group_id" id="group_id">
+                        <option value="-1">Usuń przypisanie do grupy</option>
+                        {foreach $groups as $group}
+                            <option value="{$group.id}">{$group.nazwa}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="footer-actions">
+    <a class="btn btn-success pull-right dialog-form-submit">Przenieś</a>
+</div>

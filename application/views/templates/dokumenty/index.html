@@ -1,0 +1,47 @@
+{$message}
+<div class="body-action">
+    <a class="btn btn-info" href="/dokumenty/drukujfull">Drukuj całą dokumentację</a>
+    <a class="btn btn-info" onclick="if (confirm('UWAGA! generate documents)?'))
+                window.location = '/dokumenty/reload'" href="javascript:;">Przeładuj dokumentację</a>
+  <!--  <a class="btn btn-info" onclick="if (confirm('UWAGA! Operacja spowoduje nadpisanie dokumentów aktualnymi danymi. Przeładować (operacja może potrwać dłuższa chwilę)?'))
+                window.location = '/dokumenty/przeladuj'" href="javascript:;">Przeładuj dokumentację</a> -->
+   <!-- <a class="btn btn-info" onclick="if (confirm('UWAGA! Operacja spowoduje nadpisanie dokumentów aktualnymi danymi - usunięte zostaną dokumenty wycofań. Resetować (operacja może potrwać dłuższa chwilę)?'))
+                window.location = '/dokumenty/resetuj'" href="javascript:;">Resetuj dokumentację</a> -->
+   
+    <a class="btn btn-info" href="/dokumenty/szablony">Pokaż szablony dokumentów</a>
+    <a class="btn btn-info" href="/dokumenty/wersje">Wersje dokumentów</a>
+    <a class="btn btn-info" href="/dokumenty/pliki">Pliki prywatne</a>
+    <a class="btn btn-info" href="/dokumenty/serie">Serie</a>
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+    <thead>
+        <tr>
+            <th>imię</th>
+            <th>nazwisko</th>
+            <th>dział</th>
+            <th>stanowisko</th>
+            <th>login do systemu</th>
+            <th width="115px"></th>
+        </tr>
+    </thead>
+    <tbody >
+        {foreach $paginator as $d}
+        <tr>
+            <td>{$d.imie|ucfirst}</td>
+            <td>{$d.nazwisko|ucfirst}</td>
+            <td>{$d.dzial|ucfirst}</td>
+            <td>{$d.stanowisko|ucfirst}</td>
+            <td>{$d.login_do_systemu}</td>
+            <td>
+                {foreach $d.docs as $doc}
+                {php}if (file_exists($_SERVER["DOCUMENT_ROOT"].'/files/docs/icons/{$doc.type}.png')) { echo '<a target="_blank" title="{$doc.type}" href="/dokumenty/pobierz/id/{$d.id}/dok_id/{$doc.id}"><img src="/files/docs/icons/{$doc.type}.png"/></a>'; } else { echo '<a class="glyphicon glyphicon-download-alt" target="_blank" title="{$doc.type}" href="/dokumenty/pobierz/id/{$d.id}/dok_id/{$doc.id}"></a>'; }{/php}
+                {/foreach}
+                <div>
+                <!--<a href="/dokumenty/zobacz/id/{$d.id}">Zobacz</a> -->
+                </div>
+            </td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>

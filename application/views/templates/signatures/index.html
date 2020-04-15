@@ -1,0 +1,27 @@
+{include file='modals/modal.tpl' title='Podpisy - co to jest?' content='Użytkownik może zobaczyć złożone podpisy elektroniczne w systemie przechodząc do zakładki „Podpisy”, w których gromadzone są dane odnośnie podpisów danego użytkownika lub jeśli użytkownik ma do tego uprawnienia do wszystkich podpisów w systemie. Każdy ma dostęp, by mieć bieżący wgląd w złożone przez siebie podpisy. Dzięki temu, mamy kolejny argument zwiększający wiarygodność i zaangażowanie kierownictwa.'}
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    {include file='modals/modal.tpl' title='Podpisy - co to jest?' content='Użytkownik może zobaczyć złożone podpisy elektroniczne w systemie przechodząc do zakładki „Podpisy”, w których gromadzone są dane odnośnie podpisów danego użytkownika lub jeśli użytkownik ma do tego uprawnienia do wszystkich podpisów w systemie. Każdy ma dostęp, by mieć bieżący wgląd w złożone przez siebie podpisy. Dzięki temu, mamy kolejny argument zwiększający wiarygodność i zaangażowanie kierownictwa.'}
+    <thead class="ui-widget-header">
+    <tr>
+        <th class="text-center min-width" data-filter-type="string">ID</th>
+        <th width="25%" data-filter-type="date-range">{'Data podpisu'|translate}</th>
+        <th data-filter-type="string">{'Tytuł dokumentu'|translate}</th>
+        <th class="text-center min-width">{'Operacje'|translate}</th>
+    </tr>
+    </thead>
+    <tbody class="ui-widget-content">
+    {foreach $paginator as $d}
+        <tr{if $d@iteration > 10} style="display:none"{/if}>
+            <td>{$d.id}</td>
+            <td>{smart_date value=$d.sign_date}</td>
+            <td>{if $d.document}{$d.document.template_name}{else}{$d.task_title}{/if}</td>
+            <td class="operations">
+                {if $auth->isGranted('node/signatures/preview-signature', ['id' => $d.id])}
+                <a class="choose-from-dial" data-toggle="tooltip" title="{'Szczegóły'|translate}" data-dial-url="/signatures/preview-signature/id/{$d.id}"><i class="fa fa-eye"></i></a>
+                {/if}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>
+{include file='modals/modal.tpl' title='Podpisy - co to jest?' content='Użytkownik może zobaczyć złożone podpisy elektroniczne w systemie przechodząc do zakładki „Podpisy”, w których gromadzone są dane odnośnie podpisów danego użytkownika lub jeśli użytkownik ma do tego uprawnienia do wszystkich podpisów w systemie. Każdy ma dostęp, by mieć bieżący wgląd w złożone przez siebie podpisy. Dzięki temu, mamy kolejny argument zwiększający wiarygodność i zaangażowanie kierownictwa.'}

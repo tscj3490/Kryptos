@@ -1,0 +1,40 @@
+<h1>Wykaz zbiorów danych osobowych wraz ze wskazaniem programów zastosowanych do przetwarzania danych</h1>
+<table>
+	<thead>
+    	<tr>
+        	<th>lp</th>
+            <th>nazwa</th>
+            <th>forma</th>
+            <th>poziom bezpieczeństwa</th>
+            <th>System/program</th>
+            <th>identyfikatory osób upoważnionych</th>
+            <th>fizyczna lokalizacjazbioru</th>
+        </tr>
+    </thead>
+    <tbody>
+    	{foreach $zbiory as $z}
+    	<tr>
+        	<td>{$z@iteration}</td>
+            <td>{$z.nazwa}</td>
+            <td>{$z.formaGromadzeniaDanych}</td>
+            <td>{$z.poziomBezpieczenstwa}</td>
+            <td>
+            	{foreach $z.programy as $p}
+                {$p.producent} {$p.nazwa} {$p.wersja}{if !$p@last}, {/if}
+                {foreachelse}
+                brak 
+                {/foreach}
+            </td>
+            <td>
+            	{foreach $z.osoby_up as $o}
+                {$o}{if !$o@last}, {/if}
+                {foreachelse}
+                brak 
+                {/foreach}
+            </td>
+            <td>{$z.pomieszczenie nofilter}</td>
+        </tr>
+        {/foreach}
+    </tbody>
+
+</table>

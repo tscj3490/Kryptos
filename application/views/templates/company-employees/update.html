@@ -1,0 +1,45 @@
+{$message}
+<form name="f_data" id="f_data" method="POST" action="{$baseUrl}/save">
+    <fieldset>
+        <div class="form-group row">
+            <label for="first_name" class="col-sm-1">Imię:</label>
+            <div class="col-sm-8"><input type="text" name="first_name" id="first_name" class="form-control validate[required]" value="{$data.first_name}"></div>
+        </div>
+        <div class="form-group row">
+            <label for="last_name" class="col-sm-1">Nazwisko:</label>
+            <div class="col-sm-8"><input type="text" name="last_name" id="last_name" class="form-control validate[required]" value="{$data.last_name}"></div>
+        </div>
+        <div id="globalMessage"></div>
+        <div class="">
+            <a href="{$baseUrl}"><input type="button" value="Powrót" class="btn"></a>
+            <input type="button" value="Zapisz" class="btn btn-info" onclick="return checkSubmit();">
+            <input type="button" value="Zapisz i dodaj następny" class="btn btn-info" onclick="$('#addAnother').val('1');return checkSubmit();">
+            <input type="hidden" name="id" id="id" value="{$data.id}"/>
+        </div>
+    </fieldset>
+    <div class="hiddenElement">
+        <input type="hidden" name="addAnother" id="addAnother" value="0"/>
+        <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+    </div>
+</form>
+<script type="text/javascript">
+    function checkSubmit() {
+        $.ajax({
+            dataType: 'html',
+            url: '{$baseUrl}/check-exist/{$data.id}',
+            data: 'firstName=' + $('#first_name').val() + '&lastName=' + $('#last_name').val(),
+            method: 'POST',
+            success: function (mess, textStatus, xhr) {
+                if (mess == 1) {
+                    $('#formSubmit').click();
+                } else {
+                    $('#globalMessage').html('<div class="alert alert-danger">Rekord z podaną nazwą już istnieje. Proszę zmienić nazwę.</div>');
+                    setTimeout('$(\'#globalMessage\').html(\'\')', 5000);
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+            }
+        });
+    }
+    backendUtilities.addVatidationEngine("f_data");
+</script>

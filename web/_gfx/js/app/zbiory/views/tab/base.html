@@ -1,0 +1,122 @@
+<div class="col-sm-12 portlets">
+    <div class="widget">
+        <div class="widget-header transparent">
+            <h2><strong>Base informations</strong></h2>
+        </div>
+        <div class="widget-content padding">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>Nazwa</label>
+                        <input type="text" class="form-control" name="nazwa" ng-model="form.basic.nazwa">
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Poziom bezpieczeństwa</label>
+                        <select class="form-control" name="country" ng-model="form.basic.poziomBezpieczenstwa">
+                            <option value="">-- Select --</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>Opis zbioru</label>
+                        <textarea class="form-control" name="opis_zbioru" ng-model="form.basic.opis_zbioru"></textarea>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Zbiór jest prowadzony:</label>
+                        <select class="form-control" name="country" ng-model="form.basic.is_collection_carried">
+                            <option value="">-- Select --</option>
+                            <option value="A">w architekturze rozproszonej</option>
+                            <option value="B">prowadzony centralnie</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>Podstawa prawna</label>
+                        <select class="form-control" name="country" ng-model="form.basic.poziomBezpieczenstwa">
+                            <option value="">-- Select a country --</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <label>Forma zbioru:</label>
+                        <select class="form-control" name="country" ng-model="form.basic.form_collection_type">
+                            <option value="">-- Select --</option>
+                            <option value="A">Papierowa</option>
+                            <option value="B">Elektroniczna</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label>Aplikacje</label>
+                        <select class="form-control" name="apps" ng-repeat="item in apps" ng-model="form.basic.apps">                            
+                            <option value="<%item.id%>"><% item.nazwa%> <%item.wersja%></option>
+                        </select>
+                    </div>
+                </div>
+            </div> 
+            <div class="form-group">
+                <div class="row">                                       
+                    <div class="col-sm-12">
+                        <label>Podstawa prawna do prowadzenie zbioru danych</label>
+                        <select multiple="multiple" class="form-control" name="apps" ng-model="form.basic.legal_basis_data_col" >
+                            <option value="<%item.id%>"  ng-repeat="item in legal_basis_data_cols">
+                                <% item.val%> 
+                            </option>                            
+                        </select>
+                    </div>
+                    
+                </div>
+            </div> 
+            <div class="form-group">
+                <div class="row">                    
+                    <div class="col-sm-12">
+                        <label>Zbiór danych jest prowadzony</label>  
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">                    
+                    <div class="col-sm-12">                                            
+                        <label  class="checkbox-inline icheckbox col-sm-12">
+                            <input class="col-sm-1 checkbox" type="checkbox" id="inlineCheckbox1" ng-model="form.basic.places" ng-true-value="<%item.id%>"> 
+                            z użyciem co najmniej jednego urządzenia systemu informatycznego służącego do przetwarzania danych osobowych połączonego z siecią publiczną (np. Internetem)
+                        </label>                       
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">                    
+                    <div class="col-sm-12">  
+                        <label class="checkbox-inline icheckbox col-sm-12">
+                            <input class="col-sm-1 checkbox"  type="checkbox" id="inlineCheckbox1" ng-model="form.basic.places" ng-true-value="<%item.id%>"> 
+                            z użyciem co najmniej jednego urządzenia systemu informatycznego służącego do przetwarzania danych osobowych połączonego z siecią publiczną (np. Internetem)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label>Target of processing DPI</label>
+                        <input type="text" class="form-control"  name="nazwa" ng-model="form.basic.target_of_dpi">
+                    </div>
+                </div>
+            </div>     
+            
+        </div>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+<h1>Uwagi</h1>
+
+<div class="row">
+    <div class="col-sm-12">
+        {include file='messages/_element-conversation.html' messages=$comments}
+    </div>
+</div>
+
+<div class="row{if !empty($comments)} hidden{/if}" id="section-pending-document-new-comment">
+    <div class="col-sm-12">
+        <form name="f_profile" id="f_profile" action="/messages/ajax-save" class="ajax-form form-horizontal" role="form" data-process-fn="formProcessCloseModal">
+            {include file='messages/_new-message-form.html' data=$comment}
+
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input type="submit" value="Wyślij wiadomość" class="btn btn-info pull-right" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        {if !empty($comments)}
+        <button type="button" class="btn btn-default show-section" data-target="#section-pending-document-new-comment">Dodaj komentarz</button>
+        &nbsp;
+        {/if}
+    </div>
+</div>
+
+<div class="footer-actions">
+    {if $document.status == 1}
+        <a href="/documents/pending-change-status/id/{$document.id}/status/2" class="btn btn-green-2 pull-right">Akceptuj dokument</a>
+    {else}
+        <a href="/documents/pending-change-status/id/{$document.id}/status/1" class="btn btn-danger pull-right">Wycofaj akceptacje dokumentu</a>
+    {/if}
+</div>

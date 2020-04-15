@@ -1,0 +1,341 @@
+{$message}
+<form id="f_profile" name="f_profile" action="/info" method="POST" class="form-horizontal" role="form">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#home" data-toggle="tab">Ogólnie informacja</a></li>
+        <li><a href="#doc" data-toggle="tab">Dokumenty Aktywne</a></li>
+        <li><a href="#doc_archiwalne" data-toggle="tab">Dokumenty Archiwalne</a></li>
+        <li><a href="#rola" data-toggle="tab">Rola</a></li>
+        <li><a href="#keys" data-toggle="tab">Klucze</a></li>
+        <li><a href="#rights" data-toggle="tab">Uprawnienia</a></li>
+        <li><a href="#zbiory" data-toggle="tab">Zbiory</a></li>
+        <li><a href="#comp" data-toggle="tab">Sprzęt komputerowy</a></li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane active form-horizontal" id="home" style="padding:15px 5px">
+          {if $data['login_do_systemu']}
+          <div class="form-group row">
+              <label for="dzial" class="col-sm-2">Login do systemu:</label>
+              <div class="col-sm-4">{$data['login_do_systemu']}</div>
+          </div>
+          {/if}
+          <div class="form-group row">
+              <label for="password" class="col-sm-2">Hasło:</label>
+              <div class="col-sm-4"><input type="password"   id="new_pass1" placeholder="Hasło" name="password" class="form-control validate[  minSize[10], maxSize[15]]"></div>
+          </div>
+          <div class="form-group row">
+              <label for="password_repeat" class="col-sm-2">Hasło:</label>
+              <div class="col-sm-4"><input type="password" id="new_pass2"  placeholder="Hasło powtórzone" name="password_repeat" class="form-control validate[minSize[10], maxSize[15]]"></div>
+          </div>
+          <div class="form-group row">
+              <label for="umowa" class="col-sm-2">Rodzaj umowy:</label>
+			  <div class="col-sm-4">
+				  {$data.rodzajUmowy}
+				</div>
+          </div>
+          <div class="form-group row">
+              <label for="stanowisko" class="col-sm-2">Stanowisko:</label>
+              <div class="col-sm-4">{$data['stanowisko']}</div>
+          </div>
+          <div class="form-group row">
+              <label for="imie" class="col-sm-2">Imię:</label>
+              <div class="col-sm-4">{$data['imie']}</div>
+          </div>
+          <div class="form-group row">
+              <label for="nazwisko" class="col-sm-2">Nazwisko:</label>
+              <div class="col-sm-4">{$data['nazwisko']}</div>
+          </div>
+          <div class="form-group row">
+              <label for="dzial" class="col-sm-2">Dział:</label>
+              <div class="col-sm-4">{$data['dzial']}</div>
+          </div>
+
+          <div class="form-group row">
+              <label>
+                  <div class="col-sm-12"><input disabled type="checkbox" name="zgodaNaPrzetwarzaniePozaFirma" id="zgodaNaPrzetwarzaniePozaFirma" {if $data.zgodaNaPrzetwarzaniePozaFirma}checked{/if}>
+                  czy osoba wyraziła zgodę na przetwarzania danych poza firma</div>
+              </label>
+          </div>
+          <div class="form-group row">
+              <label>
+                  <div class="col-sm-12"><input disabled type="checkbox"  id="zapoznanaZPolityka"  name="zapoznanaZPolityka" {if $data.zapoznanaZPolityka}checked{/if}>
+                  czy osoba jest zapoznana z polityką bezpieczeństwa</div>
+              </label>
+          </div>		  
+		  <div class="form-group row">
+			<label>
+				<div class="col-sm-12"><input disabled type="checkbox"  id="zgodaUdostepnienieWizerunku"  name="zgodaUdostepnienieWizerunku" {if $data.zgodaUdostepnienieWizerunku}checked{/if}>
+				czy osoba wyraziła zgodę na udostępnianie wizerunku</div>
+			</label>
+		</div>
+		<div class="form-group row">
+			<label>
+				<div class="col-sm-12"><input disabled type="checkbox"  id="zgodaPrzetwarzanieMarketing"  name="zgodaPrzetwarzanieMarketing" {if $data.zgodaPrzetwarzanieMarketing}checked{/if}>
+				czy osoba wyraziła zgodę na przetwarzanie danych w celach marketingowych</div>
+			</label>
+		</div>
+      </div>
+      <div class="tab-pane" id="doc" style="padding:15px 5px">
+          <div class="form-group row">
+              <div class="col-md-8 checkout-list">
+                  <table cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered">
+					<thead>
+						<tr>
+							<th width="90%">Dokument</th>
+							<th>Akcja</th>
+						</tr>
+					</thead>
+					<tbody>						
+						{foreach $doc_enable as $z}
+						<tr>
+							<td>{$z['type']}</td>
+							<td>
+								<a class="glyphicon glyphicon-download-alt" href="/info/pobierz/id/1/dok_id/{$z['id']}" title="{$z['type']}" target="_blank"></a>
+							</td>
+														
+						</tr>
+						{/foreach}													
+					</tbody>
+				</table>
+              </div>
+          </div>
+      </div>
+      <div class="tab-pane" id="doc_archiwalne" style="padding:15px 5px">
+          <div class="form-group row">
+              <div class="col-md-8 checkout-list">
+                  <table cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered">
+					<thead>
+						<tr>
+							<th width="90%">Dokument</th>
+							<th>Akcja</th>
+						</tr>
+					</thead>
+					<tbody>						
+						{foreach $doc_disable as $z}
+						<tr>
+							<td>{$z['type']}</td>
+							<td>
+                                {if $auth->isGranted('node/info/pobierz', ['id' => $d.id])}
+								<a class="glyphicon glyphicon-download-alt" href="/info/pobierz/id/1/dok_id/{$z['id']}" title="{$z['type']}" target="_blank"></a>
+                                {/if}
+							</td>
+														
+						</tr>
+						{/foreach}													
+					</tbody>
+				</table>
+              </div>
+          </div>
+      </div>
+      <div class="tab-pane" id="comp" style="padding:15px 5px">
+          <div class="form-group row">
+              <div class="col-md-8 checkout-list">
+                  <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" >
+                    <thead>
+                    <tr>
+                        <td>Nazwa</td>
+                        <td>Lokalizacja</td>
+                        <td>Typ</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $computers as $computer}
+                    <tr>
+                        <td>{$computer.identity}</td>
+                        <td>
+                            {$pomieszczenia[$computer.location]['nazwa_budynku']}
+                            {$pomieszczenia[$computer.location]['nazwa']}
+                        </td>
+                        <td>{$typy[$computer.typ]}</td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+              </div>
+          </div>
+      </div>
+      <div class="tab-pane" id="rola" style="padding:15px 5px">
+          <div class="form-group row">
+              <label for="data" class="col-sm-2">Role:</label>
+              <div class="col-md-8 checkout-list">
+                  {foreach $role as $r}
+                    {if ($r.id==5 || (is_array($roles) && in_array($r.id, $roles)))}
+                  <label class="col-sm-12">
+                      {$r.nazwa} ({$r.opis})
+                  </label>
+                    {/if}
+                  {/foreach}
+              </div>
+          </div>
+      </div>
+      <div class="tab-pane" id="keys" style="padding:15px 5px">
+          <div class="form-group row">
+              <label for="data" class="col-sm-2">Klucze do pomieszczeń:</label>
+              <div class="col-md-8 checkout-list">
+                  {foreach $pomieszczenia as $p}
+                  {if (is_array($klucze) && in_array($p->p_id,$klucze))}
+                  <label class="col-sm-12">
+                      {$p.nazwa_pomieszczenia}
+                      {if $p.nr}(nr {$p.nr}){/if}
+                      
+                  </label>
+                  {/if}
+                  {/foreach}
+              </div>
+          </div>
+      </div>
+      <div class="tab-pane" id="rights" style="padding:15px 5px">
+        <div class="form-group row">
+            <label for="data" class="col-sm-2">Uprawnienia:</label>
+            <div class="col-md-8 checkout-list">
+                  {foreach $navigation as $p}
+                  {if $rights[$p['rel']]}
+                  <label class="col-sm-12">
+                      {$p['label']}
+                      
+                  </label>
+                  {/if}
+                  {/foreach}
+              </div>
+					
+        </div>
+      </div>
+	  <div class="tab-pane" id="zbiory" style="padding:15px 5px">
+        <div class="form-group row">
+			<div class="col-md-8">
+				<table cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered">
+					<thead>
+						<tr>
+							<th width="60%">Zbiór</th>
+							<th>czytanie</th>
+							<th>pozyskiwanie</th>
+							<th>wprowadzanie</th>
+							<th>modyfikowanie</th>
+							<th>usuwanie</th>
+						</tr>
+					</thead>
+					<tbody>						
+						{foreach $zbiory as $z}
+                                                {if $upowaznienia[$z['id']]['czytanie'] ||  $upowaznienia[$z['id']]['pozyskiwanie'] ||  $upowaznienia[$z['id']]['wprowadzanie'] || $upowaznienia[$z['id']]['modyfikacja'] || $upowaznienia[$z['id']]['usuwanie']}
+						<tr>
+							<td>{$z['nazwa']}</td>
+							<td>
+								<input disabled type="checkbox" class="chbx_zbior" data-key="{$z['id']}" value="1" {if $upowaznienia[$z['id']]['czytanie']}checked{/if} name="upowaznienia[{$z['id']}][czytanie]">
+							</td>
+							<td>
+								<input disabled type="checkbox" class="chbx_zbior" data-key="{$z['id']}" value="1" {if $upowaznienia[$z['id']]['pozyskiwanie']}checked{/if} name="upowaznienia[{$z['id']}][pozyskiwanie]">
+							</td>
+							<td>
+								<input disabled type="checkbox" class="chbx_zbior" data-key="{$z['id']}" value="1" {if $upowaznienia[$z['id']]['wprowadzanie']}checked{/if} name="upowaznienia[{$z['id']}][wprowadzanie]">
+							</td>
+							<td>
+								<input disabled type="checkbox" class="chbx_zbior" data-key="{$z['id']}" value="1" {if $upowaznienia[$z['id']]['modyfikacja']}checked{/if} name="upowaznienia[{$z['id']}][modyfikacja]">
+							</td>
+							<td>
+								<input disabled type="checkbox" class="chbx_zbior" data-key="{$z['id']}" value="1" {if $upowaznienia[$z['id']]['usuwanie']}checked{/if} name="upowaznienia[{$z['id']}][usuwanie]">
+							</td>							
+						</tr>
+                                                {/if}
+						{/foreach}													
+					</tbody>
+				</table>
+			</div>			
+        </div>
+      </div>
+    <div class="">
+      <input type="submit" value="Zapisz"  class="btn btn-info"  >
+      <input type="hidden" name="id" id="id" value="{$data.id}" />
+      <input type="hidden" name="login_do_systemu" id="login_do_systemy" value="{$data.login_do_systemu}" />
+    </div>
+</form>
+
+<script type="text/javascript">
+
+function czy_jest_znak(haslo,male_litery){		
+	var jest_mala_litera=false;			
+	for (var i=0; i<haslo.length; i++){			
+		//var litera_hasla=haslo.substring(i, 1);
+		litera_hasla=haslo.charAt(i);				
+		if (male_litery.indexOf(litera_hasla)!=-1){				
+			var jest_mala_litera=true;
+			break;
+		}				
+	}		
+	if (jest_mala_litera==true){
+		return true;
+	}else {
+		return false;
+	}		
+}
+
+
+	$(document).ready(function() {
+		
+
+		backendUtilities.addVatidationEngine("f_profile");
+						
+		$('#f_profile').submit(function(){		
+			
+			
+			if ($('#new_pass1').val()!='' ||  $('#new_pass2').val()!=""){
+			
+				if($('#new_pass1').val() != $('#new_pass2').val()) {
+					alert('Wprowadzone nowe hasła różnią się.');
+					return false;			
+				}
+				
+				
+				var haslo=$('#new_pass1').val();
+				var male_litery="qwertyuiopasdfghjklzxcvbnmęóąśłżźćń";	
+				
+				if (czy_jest_znak(haslo,	male_litery)){
+				} else {
+					alert('Wymagana jest co najmniej jedna mała litera');
+					return false;
+				}
+				
+				var wielkie_litery=	male_litery.toUpperCase()
+				
+				
+				if (czy_jest_znak(haslo,	wielkie_litery)){
+				} else {
+					alert('Wymagana jest co najmniej jedna wielka litera');
+					return false;
+				}		
+				
+			
+				if (czy_jest_znak(haslo,	'1234567890')){
+				} else {
+					alert('Wymagana jest co najmniej cyfra');
+					return false;
+				}	
+				
+				if (czy_jest_znak(haslo,	{literal}'`~!@#$%^&*()_+|[];\',./{}:">?_-=\\"'{/literal})){
+	
+				} else {
+					alert('Wymagany jest co najmniej jeden znak specjalny');
+					return false;
+				}				
+			}
+			
+			
+
+		})
+		
+		
+	
+		
+		
+		$('.chbx_zbior_all').on('ifChanged', function(){
+			var key = $(this).attr('data-key');
+			
+			if($(this).is(':checked'))
+			{
+				App.checkChbx($('.chbx_zbior[data-key="' + key + '"]'));
+			}
+			else
+			{
+				App.uncheckChbx($('.chbx_zbior[data-key="' + key + '"]'));
+			}
+		});
+	});
+</script>

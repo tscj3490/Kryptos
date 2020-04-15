@@ -1,0 +1,69 @@
+<div id="logging">
+    <div class="login-widget">
+        <div class="logo">
+            <img src="/assets/images/kryptos.jpg">
+        </div>
+        <div class="infoText">
+            <h1>REJESTRACJA</h1>
+        </div>
+        <div class="section">
+            {if $message}
+            <div>
+                <span>{$message}</span>
+            </div>
+            {/if} {if $registered}
+            <div style="color:white">
+                <p>Konto zostało utworzone</p>
+                <p>Login: {$login} </p>
+                <p>Hasło: {$password} </p>
+                <p><b>Proszę zapisać powyższe dane zanim przejdziesz dalej</b></p>
+            </div>
+            <div class="submit">
+                <a href="/" class="btn btn-back">Anuluj</a>
+                <a href="/" class="btn btn-submit">ZALOGUJ</a>
+            </div>
+            {else}
+            <div class="loginBox">
+                <form method="post" action="/index/register" id="registrationForm">
+                    <p style="color:white">Nazwa organizacji:</p>
+                    <div class="form-group login">
+                        <i class="fa fa-user overlay"></i>
+                        <input type="text" name="organisation" value="{$organisation}">
+                    </div>
+                      <p style="color:white; padding-top:10px;">NIP:</p>
+                    <div class="form-group login">
+                        <i class="fa fa-user overlay"></i>
+                        <input type="text" name="nip" value="{$nip}">
+                    </div>
+                    <p style="color:white; padding-top:10px;">Imię:</p>
+                    <div class="form-group login">
+                        <i class="fa fa-user overlay"></i>
+                        <input type="text" name="firstname" value="{$firstname}">
+                    </div>
+
+                    <p style="color:white; padding-top:10px;">Nazwisko:</p>
+                    <div class="form-group login">
+                        <i class="fa fa-user overlay"></i>
+                        <input type="text" name="surname" value="{$surname}">
+                    </div>
+
+                    <div class="form-group submit">
+                        <a href="/" class="btn btn-back">Anuluj</a>
+                        <input type="submit" name="submit" class="btn btn-submit" value="Zarejestruj">
+                    </div>
+
+                    <input type="hidden" name="login" id="login" value="{$login}" />
+                </form>
+            </div>
+            <p style="color:white"><a href="/index/login">Jeżeli posiadasz konto przejdź do logowania</a></p>
+            <div class="errorMessage warning">
+                <p>Dane kontaktowe:</p>
+                <p> tel. 18 447 22 77</p>
+                <p>bok@kryptos.co</p>
+            </div>
+            {/if}
+        </div>
+    </div>
+</div>
+
+{include file="index/_login-script.html"}

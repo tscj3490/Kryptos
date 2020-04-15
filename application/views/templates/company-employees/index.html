@@ -1,0 +1,56 @@
+<div class="body-action">
+    {if $companyId && $auth->isGranted('node/company-employees/update')}
+    <a class="btn btn-info" href="{$baseUrl}/update">Dodaj pracownika</a>
+    {/if}
+</div>
+
+<div style="height:10px"></div>
+<hr class="nomargin"/>
+<div style="height:10px"></div>
+
+<form method="post" action="{$baseUrl}/delChecked/">
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead class="ui-widget-header">
+        <tr>
+            {if $auth->isGranted('node/company-employees/del')}
+            <th></th>
+            {/if}
+            <th>Nr</th>
+            <th>Imię</th>
+            <th>Nazwisko</th>
+            <th>Podmiot</th>
+            <th>Operacje</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content">
+        {foreach $paginator as $d}
+            <tr>
+                {if $auth->isGranted('node/company-employees/del')}
+                <td>
+                    <input type="checkbox" name="id[]" id="id{$d.id}" value="{$d.id}"/>
+                </td>
+                {/if}
+                <td>{$d@iteration}</td>
+                <td>{$d.first_name}</td>
+                <td>{$d.last_name}</td>
+                <td>{$d.company_name}</td>
+                <td>
+                    {if $auth->isGranted('node/company-employees/update', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-pencil" href="{$baseUrl}/update/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                    {/if}
+                    {if $auth->isGranted('node/company-employees/update', ['copy' => $d.id])}
+                    <a class="glyphicon glyphicon-star" href="{$baseUrl}/update/copy/{$d.id}" data-toggle="tooltip" title="Duplikuj"></a>
+                    {/if}
+                    {if $auth->isGranted('node/company-employees/del', ['id' => $d.id])}
+                        <a class="glyphicon glyphicon-trash modal-confirm" data-href="{$baseUrl}/del/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                    {/if}
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+
+    </table>
+    {if $auth->isGranted('node/company-employees/del')}
+        <input type="submit" value="Usuń zaznaczone" class="btn btn-default" onclick="return confirm('Usunąć?')"/>
+    {/if}
+</form>

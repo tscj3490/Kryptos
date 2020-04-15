@@ -1,0 +1,20 @@
+<div>
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead>
+        <tr>
+            <th data-filter-type="string">Dokument</th>
+            <th data-filter-type="string">Zgoda</th>
+            <th data-filter-type="date-range">Data</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $paginator as $d}
+            <tr>
+                <td>{$d.entities_named.document}</td>
+                <td>{$d.entities_named.consent.value}</td>
+                <td>{smart_date value=$d.created_at}</td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+</div>

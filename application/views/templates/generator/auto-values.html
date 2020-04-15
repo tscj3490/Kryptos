@@ -1,0 +1,35 @@
+{$message}
+<form name="f_data" id="f_data" method="POST" action="/generator/auto-values-save">
+    <fieldset>
+        {foreach from=$types key=typeId item=typeName}
+        <div class="page-header">
+            <h4>{$typeName}</h4>
+            {if isset($typesComments[$typeId])}
+                <p class="text-success">{$typesComments[$typeId]}</p>
+            {/if}
+        </div>
+            {foreach from=$generatorValues item=generatorValue}{if $generatorValue.type == $typeId}
+            <div class="form-group row">
+                <label for="value_{$typeId}_old_new_{$generatorValue.id}" class="col-sm-2">Wartość:</label>
+                <div class="col-sm-6"><textarea name="value[{$typeId}][{$generatorValue.id}][name]" id="value_{$typeId}_old_new_{$generatorValue.id}" class="form-control">{$generatorValue.value}</textarea></div>
+                <div class="col-sm-2"><input type="text" name="value[{$typeId}][{$generatorValue.id}][weight]" id="value_{$typeId}_old_weight_{$generatorValue.id}" class="form-control" placeholder="waga" value="{$generatorValue.weight}"></div>
+            </div>
+            {/if}{/foreach}
+            <div class="form-group row">
+                <label for="value_{$typeId}_new_name_1" class="col-sm-2">Nowa wartość:</label>
+                <div class="col-sm-6"><textarea name="new_value[{$typeId}][name][]" id="value_{$typeId}_new_name_1" class="form-control"></textarea></div>
+                <div class="col-sm-2"><input type="text" name="new_value[{$typeId}][weight][]" id="value_{$typeId}_new_weight_1" class="form-control" placeholder="waga"></div>
+                <div class="col-sm-2 bs-glyphicons"><a class="glyphicon glyphicon-plus-sign generateFormRow" data-index="1"></a></div>
+            </div>
+        {/foreach}
+        <div id="globalMessage"></div>
+        <div class="">
+            <a href="/generator/"><input type="button" value="Powrót" class="btn"></a>
+            <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+        </div>
+    </fieldset>
+    <div style="width:0px;height:0px;overflow:hidden;">
+        <input type="text" name="addAnother" id="addAnother" value="0"/>
+        <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+    </div>
+</form>

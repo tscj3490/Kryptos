@@ -1,0 +1,38 @@
+{include file='modals/modal.tpl' title='Kopie zapasowe - co to jest?' content='Prowadzenie rejestru Kopii zapasowych to obowiązek, który spędza sen z powiek większości Informatyków. Z naszego doświadczenia ów kopie są wykonywane, jednak nikt nie traci czasu na ich opisywanie oraz testowanie. Pamiętajmy jednak, że zgodnie z zawartymi procedurami w Instrukcji Zarządzania Systemem Informatycznym, ASI jest zobligowany do prowadzenia takiego rejestru, ze wskazaniem jakich zbiorów dotyczy poszczególna kopia. Jak widać na formularzu dodawania kopii, mamy możliwość wprowadzenia nazwy, daty, godziny, oznaczenia osoby odpowiedzialnej, zaznaczenie odpowiednich zbiorów oraz wskazanie lokalizacji, gdzie ta kopia będzie dostępna.'}
+<div class="table-operations-header">
+    {if $auth->isGranted('node/kopiezapasowe/update')}
+    <a class="btn btn-success" href="/kopiezapasowe/update" data-title="Dodaj kopie zapasową" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+    {/if}
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="string">nazwa</th>
+        <th data-filter-type="date-range">data wykonania</th>
+        <th data-filter-type="select">wykonawca</th>
+        <th data-filter-type="string">nr raportu</th>
+        <th data-filter-type="string">lokalizacja</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $kz as $d}
+    <tr>
+        <td>{$d.backup|ucfirst}</td>
+        <td>{$d.dwykonania|date_format:"%Y-%m-%d %H:%m"}</td>
+        <td>{$d.nazwisko} {$d.imie}</td>
+        <td>{$d.nr_raportu}</td>
+        <td>{$d.nazwa} {if $d.nr}({$d.nr}){/if}</td>
+        <td class="operations">
+            {if $auth->isGranted('node/kopiezapasowe/update', ['id' => $d.kz_id])}
+            <a class="glyphicon glyphicon-pencil" href="/kopiezapasowe/update/id/{$d.kz_id}"></a>
+            {/if}
+            {if $auth->isGranted('node/kopiezapasowe/remove', ['id' => $d.kz_id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="/kopiezapasowe/remove/id/{$d.kz_id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+            {/if}
+        </td>
+    </tr>
+    {/foreach}
+    </tbody>
+</table>

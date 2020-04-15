@@ -1,0 +1,42 @@
+<div class="row">
+    <div class="col-lg-6">
+        <form name="f_data" id="f_data" method="POST" action="{$baseUrl}/save-config-role" enctype="multipart/form-data">
+            <fieldset>
+                {if $data.id}
+                <input type="hidden" name="id" value="{$data.id}"/>
+                {/if}
+                <input type="hidden" name="type_id" value="{$data.type_id}"/>
+
+                <div class="form-group row">
+                    <label for="name" class="col-sm-4">Nazwa:</label>
+                    <div class="col-sm-8"><input type="text" name="name" id="name" class="form-control validate[required]" value="{$data.name}"></div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="name" class="col-sm-4">Uprawnienia:</label>
+                    <div class="col-sm-8">
+                        {foreach Application_Service_TicketsConst::ROLE_PERMISSIONS as $permission}
+                            <label class="col-sm-12" style="width: ">
+                                <input type="checkbox" {if in_array($permission.id, $data.permissionsIndex)}checked{/if}  name="permissions[]" value="{$permission.id}">
+                                {$permission.label}
+                            </label>
+                        {/foreach}
+                    </div>
+                </div>
+
+                <div>
+                    <a href="/tickets/config-roles/id/{$data.type_id}" class="btn btn-default">Powrót</a>
+                    <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+                </div>
+            </fieldset>
+
+            <div class="hiddenElement">
+                <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+</script>

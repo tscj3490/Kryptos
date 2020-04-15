@@ -1,0 +1,183 @@
+{include file='modals/modal.tpl' title='Zdarzenia - co to jest?' content='Zdarzenia to jeden z modułów na życzenie klienta. Moduł ten został w pełni zintegrowany z bramką wejściową w jednostce, zapewniająca kontrolę nad wejściami/wyjściami czy wjazdami/wyjazdami samochodów z i do jednostki. Zostały również przygotowane raporty z możliwością wybrania okresu oraz danych dla których raport ma być wygenerowany.'}
+<div class="body-action">
+    <a class="btn btn-info" href="/events/update">Dodaj wjazd</a>
+    <a class="btn btn-info" href="/events/update?type=3">Dodaj wejście</a>
+    <a class="btn btn-info" href="/events/report?{$l_list}">Pobierz raport</a>
+    <a class="btn btn-info" href="/events/reportview?{$l_list}">Wyświetl raport</a>
+    <a class="btn btn-info" href="/events/serwatka-summary?{$l_list}">Raport serwatki</a>
+    <a class="btn btn-info" href="/events/serwatka?{$l_list}">Raport osobowy serwatki</a>
+</div>
+<div style="height:10px"></div>
+<hr class="nomargin"/>
+<div style="height:10px"></div>
+<form method="get" action="/events">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-5">
+                    <strong>Typ:</strong><br/>
+
+                    <div style="height:5px;"></div>
+                    <select name="filters[type]" id="type" class="form-control">
+                        <option value="">wszystkie</option>
+                        <option value="c1" {if $get.filters.type=== 'c1'} selected{/if}>wjazd, wyjazd</option>
+                        <option value="c2" {if $get.filters.type=== 'c2'} selected{/if}>wejście, wyjście</option>
+                        <option value="x1" {if $get.filters.type=== 'x1'} selected{/if}>wjazdy bez wyjazdów</option>
+                        <option value="x2" {if $get.filters.type=== 'x2'} selected{/if}>wejścia bez wyjść</option>
+                        <option value="1" {if $get.filters.type=== '1'} selected{/if}>wjazd</option>
+                        <option value="2" {if $get.filters.type=== '2'} selected{/if}>wyjazd</option>
+                        <option value="3" {if $get.filters.type=== '3'} selected{/if}>wejście</option>
+                        <option value="4" {if $get.filters.type=== '4'} selected{/if}>wyjście</option>
+                    </select>
+                </div>
+                <div class="col-md-7">
+                    <strong>Firma:</strong><br/>
+
+                    <div style="height:5px;"></div>
+                    <select name="filters[eventscompany]" id="eventscompany" class="form-control">
+                        <option value="">wszystkie</option>
+                        {foreach $eventscompanies as $eventscompany}
+                        <option value="{$eventscompany->id}" {if $get.filters.eventscompany== $eventscompany->id}selected="selected"{/if}>{$eventscompany->name}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Rodzaj osoby:</strong><br/>
+
+                    <div style="height:5px;"></div>
+                    <select name="filters[eventspersonstype]" id="eventspersonstype" class="form-control">
+                        <option value="">wszystkie</option>
+                        {foreach $eventspersonstypes as $eventspersonstype}
+                        <option value="{$eventspersonstype->id}" {if $get.filters.eventspersonstype== $eventspersonstype->id}selected="selected"{/if}>{$eventspersonstype->name}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <strong>Osoba:</strong><br/>
+
+                    <div style="height:5px;"></div>
+                    <select name="filters[eventsperson]" id="eventsperson" class="form-control">
+                        <option value="">wszystkie</option>
+                        {foreach $eventspersons as $eventsperson}
+                        <option value="{$eventsperson->id}" {if $get.filters.eventsperson== $eventsperson->id}selected="selected"{/if}>{$eventsperson->name} {$eventsperson->lastname}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Rodzaj samochodu:</strong><br/>
+
+                    <div style="height:5px;"></div>
+                    <select name="filters[eventscarstype]" id="eventscarstype" class="form-control">
+                        <option value="">wszystkie</option>
+                        {foreach $eventscarstypes as $eventscarstype}
+                        <option value="{$eventscarstype->id}" {if $get.filters.eventscarstype== $eventscarstype->id}selected="selected"{/if}>{$eventscarstype->name}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <strong>Samochód:</strong><br/>
+
+                    <div style="height:5px;"></div>
+                    <select name="filters[eventscar]" id="eventscar" class="form-control">
+                        <option value="">wszystkie</option>
+                        {foreach $eventscars as $eventscar}
+                        <option value="{$eventscar->id}" {if $get.filters.eventscar== $eventscar->id}selected="selected"{/if}>{$eventscar->name}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <strong>Data od:</strong><br/>
+
+                    <div style="height:5px;"></div>
+                    <input type="text" name="filters[datefrom]" id="datefrom" class="form-control datepicker-input" value="{$get.filters.datefrom}">
+                </div>
+                <div class="col-md-4">
+                    <strong>Data do:</strong><br/>
+
+                    <div style="height:5px;"></div>
+                    <input type="text" name="filters[dateto]" id="dateto" class="form-control datepicker-input" value="{$get.filters.dateto}">
+                </div>
+                <div class="col-md-4">
+                    <br/>
+
+                    <div style="height:5px;"></div>
+                    <input type="submit" value="Szukaj" class="btn btn-success"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div style="height:10px"></div>
+<hr class="nomargin"/>
+<div style="height:10px"></div>
+<form method="post" action="/events/delchecked/">
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead class="ui-widget-header">
+        <tr>
+            <th></th>
+            <th>nr</th>
+            <th>typ</th>
+            <th>rodzaj osoby</th>
+            <th>firma</th>
+            <th>osoba</th>
+            <th>rodzaj samochodu</th>
+            <th>samochód</th>
+            <th>data</th>
+            <th>godzina</th>
+            <th>uwagi</th>
+            <th>cel</th>
+            <th>opcje</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content">
+        {foreach $paginator as $d}
+        <tr>
+            <td style="width:22px">
+                <input type="checkbox" name="id{$d.id}" id="id{$d.id}" value="1"/>
+            </td>
+            <td>{$d@iteration}</td>
+            <td>{if $d.enableOuter && $d.type == 1}<a href="/events/update/copy/{$d.id}/reverse/1/">{/if}<span class="btn btn-xs btn-{if $d.type == 1 || $d.type == 3}yellow-1{elseif $d.type == 2 || $d.type == 4}green-1{/if}">{if $d.type == 1}WJAZD{/if}{if $d.type == 2}WYJAZD{/if}{if $d.type == 3}WEJŚCIE{/if}{if $d.type == 4}WYJŚCIE{/if}</span>{if $d.enableOuter && $d.type == 1}</a>{/if}</td>
+            <td>{$d.eventspersonstype.name}</td>
+            <td>{$d.eventscompany.name}</td>
+            <td>{$d.eventsperson.name} {$d.eventsperson.lastname}</td>
+            <td>{$eventscarstypesArray[$d.eventscar.type]|upper}</td>
+            <td>{$d.eventscar.name}</td>
+            <td>{$d.date}</td>
+            <td>{$d.hour}</td>
+            <td>{$d.info}</td>
+            <td>{if $d.purpose_id}{$d.room_name}{if $d.room_no}, pok. {$d.room_no}{/if}, {$d.building_name}{/if}</td>
+            <td class="operations">
+                {if $auth->isGranted('node/events/update', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-pencil" href="/events/update/id/{$d.id}"></a>
+                {/if}
+                {if $auth->isGranted('node/events/update')}
+                <a class="glyphicon glyphicon-star" href="/events/update/copy/{$d.id}"></a>
+                {/if}
+                {if $auth->isGranted('node/events/del', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-trash" onclick="if(confirm('Usunąć?')) window.location.href='/events/del/id/{$d.id}'" href="javascript:;"></a>
+                {/if}
+                {if $auth->isGranted('node/events/update')}
+                {if ($d.type == 1 || $d.type == 3) && $d.enableOuter}<a href="/events/update/copy/{$d.id}/reverse/1/"><i class="fa fa-arrow-right"></i></a>{/if}
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+
+    </table>
+    {if $auth->isGranted('node/events/delchecked')}
+    <input type="submit" value="Usuń zaznaczone" class="btn btn-default"/>
+    {/if}
+</form>

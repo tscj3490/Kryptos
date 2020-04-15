@@ -1,0 +1,75 @@
+{$message}
+
+{if $showaddmessage == 1}
+    <div class="alert alert-info">Po dodaniu elementu zbioru wróć do zakładki przeglądarki, w której dodawałeś / edytowałeś element zbioru, a następnie ponownie kliknij przycisk WYBIERZ dla elementów. Nowo dodany element zbioru automatycznie pojawi się na liście.</div>
+{/if}
+
+{if $data.type == Application_Service_Zbiory::OBJECT_TYPE_LEGAL}
+    <div class="alert alert-danger">Edytujesz element ustawowy...</div>
+{elseif $data.type == Application_Service_Zbiory::OBJECT_TYPE_PATTERN}
+    <div class="alert alert-danger">Edytujesz element szablonowy...</div>
+{/if}
+
+
+<form name="f_data" id="f_data" method="POST" action="/fielditems/save">
+    <fieldset>
+        <div class="form-group row">
+            <label for="name" class="col-sm-2">Nazwa elementu:</label>
+            <div class="col-sm-10">
+                {if $data.type != Application_Service_Zbiory::OBJECT_TYPE_LEGAL || $utilities->getAppType() === 'hq_data'}
+                <input type="text" name="name" id="name" placeholder="Podaj nazwę elementu" class="form-control validate[required]" value="{$data.name}">
+                {else}
+                {$data.name}
+                {/if}
+            </div>
+        </div>
+        {if $utilities->getAppType() === 'hq_data'}
+        <div class="form-group row">
+            <label for="type" class="col-sm-2">Rodzaj elementu:</label>
+            <div class="col-sm-10">
+                <select name="type" id="type" class="form-control validate[required]">
+                    {foreach Application_Service_Zbiory::TYPES_DISPLAY as $type}
+                        <option value="{$type.id}" {if $type.id == $data.type}selected="selected"{/if}>{$type.label}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+        {/if}
+        <div class="form-group row">
+            <label for="fielditemscategory_id" class="col-sm-2">Kategoria:</label>
+            <div class="col-sm-10">
+                <select name="fielditemscategory_id" id="fielditemscategory_id" class="form-control validate[required]">
+                    <option value="0">brak</option>
+                    {foreach $t_fielditemscategories as $cat}
+                        <option value="{$cat->id}" {if $cat->id == $data.fielditemscategory_id}selected="selected"{/if}>{$cat->name}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+        <br/>
+        <div class="dpiTabs">
+            <div class="dpiTab" id="tabPersonal" rel="groupPersonal">Dane osobowe</div>
+            <div class="dpiTab" id="tabNotPersonal" rel="groupNotPersonal">Dane nieosobowe</div>
+        </div>
+
+        {if $data.is_locked && $utilities->getAppType() !== 'hq_data'}
+            {include file="fielditems/_element-update-locked.html"}
+        {else}
+            {include file="fielditems/_element-update-unlocked.html"}
+        {/if}
+
+        <br />
+        <div id="globalMessage"></div>
+        <div>
+            <a href="/fielditems" class="btn btn-default">Powrót</a>
+            <input type="button" value="Zapisz" class="btn btn-info" onclick="setView();return checkSubmit();">
+            <input type="button" value="Zapisz i dodaj następny" class="btn btn-info" onclick="setView(); $('#addAnother').val('1');return checkSubmit();">
+            <input type="hidden" name="id" id="id" value="{$data.id}">
+            <input type="hidden" name="options" id="options" value="{$data.options}">
+        </div>
+        <div class="hiddenElement">
+            <input type="hidden" name="addAnother" id="addAnother" value="0">
+            <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+        </div>
+    </fieldset>
+</form>

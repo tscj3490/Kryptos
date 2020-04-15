@@ -1,0 +1,70 @@
+<style>
+    input.form-control {
+        text-transform: none;
+    }
+</style>
+
+{if $message != null}
+<div class="alert alert-danger" role="alert">{$message}</div>
+{/if}
+<link rel="stylesheet" href="/assets/plugins/bootstrap-switch/css/bootstrap-switch.min.css">
+<div class="col-md-12">
+    <form class="form-horizontal" method="post" id="form">
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label>Aktywny:</label>
+                <input type="checkbox" name="active" value="{if $item.active != null}{$item.active}{else}1{/if}" {if $item.active == 1 || $item.active == null} checked {/if} data-size="small">
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="title">Tytuł:</label>
+                <input type="text" id="title" name="title" class="form-control  validate[required]" type="text" value="{$item.title}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="link">Link:</label>
+                <input type="text" id="link" name="link" class="form-control  validate[required]" type="text" value="{if $item.link!=null}{$item.link}{else}#{/if}" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label for="description">Opis:</label>
+                <br />
+                <textarea id="description" name="description"  cols="80" rows="5" class="form-control  validate[required]" type="text">{$item.description}</textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label for="content">Treść:</label>
+                <textarea id="content" name="content" cols="80" rows="5"  class="form-control" type="text">{$item.content}</textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div style="margin-bottom: 10px;">
+                <button class="btn btn-info" type="submit">Zapisz</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="/assets/plugins/ckeditor/ckeditor.js"></script>
+<script src="/assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("[name='active']").bootstrapSwitch();
+        $("[name='active']").on('switchChange.bootstrapSwitch', function(event, state) {
+            var result = state? 1 : 0;
+            $(this).val(result);
+        });
+        var roxyFileman = '/assets/plugins/roxyFileman/fileman/index.html';
+        CKEDITOR.replace('content', {
+            filebrowserBrowseUrl: roxyFileman,
+            fullPage: true,
+            entities_additional: '',
+            filebrowserImageBrowseUrl: roxyFileman + '?type=image',
+            removeDialogTabs: 'link:upload;image:upload'
+        });
+        backendUtilities.addVatidationEngine("form");
+    });
+</script>

@@ -1,0 +1,9 @@
+<div>
+    {assign var="index" value="1"}
+    {foreach $months as $m}
+    <h2>Miesiąc {$index++}</h2>
+        {foreach $m as $me}
+        <p>{$me}</p>
+        {/foreach}
+    {/foreach}
+</div>

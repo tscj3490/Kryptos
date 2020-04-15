@@ -1,0 +1,32 @@
+{include file='modals/modal.tpl' title='Grupy osób - co to jest?' content='Grupy osób pozwalają Ci przypisać daną osobę/użytkownika do grupy, np. Jana Kowalskiego do grupy Podatki. Osoba ta będzie otrzymywała notyfikacje jeśli np. jej grupa dostanie nowe zlecenie, zostanie poproszona o złożenie jakichś wyjaśnień lub po prostu dostanie wiadomość na grupowym czacie.'}
+<div class="table-operations-header">
+    {if $auth->isGranted('node/groups/update')}
+    <a class="btn btn-success" href="{$baseUrl}/update" data-title="Dodaj grupę" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+    {/if}
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="string">Nazwa</th>
+        <th>Grupa nadrzędna</th>
+        <th>Operacje</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $paginator as $d}
+        <tr>
+            <td>{$d.name}</td>
+            <td>{$d.group.name}</td>
+            <td class="operations">
+                {if $auth->isGranted('node/groups/update', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-pencil" href="/groups/update/id/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                {/if}
+                {if $auth->isGranted('node/groups/del', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-trash modal-confirm" data-href="/groups/del/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

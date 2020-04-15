@@ -1,0 +1,56 @@
+<div style="text-align: left">
+    {foreach $nonCompilances as $nonCompilance}
+        <table class="inspections-metadata" class="page-break-inside-avoid">
+            <tr>
+                <td colspan="8"><b>{$nonCompilance.title}</b></td>
+            </tr>
+            <tr>
+                <td colspan="4" style="width: 50%">Data zgłoszenia:</td>
+                <td colspan="4" style="width: 50%">{$nonCompilance.notification_date}</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="width: 50%">Data rejestracji:</td>
+                <td colspan="4" style="width: 50%">{$nonCompilance.registration_date}</td>
+            </tr>
+            <tr>
+                <td colspan="6" rowspan="2">Lokalizacja:<br>{if $nonCompilance.location_type = 1}{$nonCompilance.location.nazwa}{/if}</td>
+                <td colspan="2" style="width: 25%">Inne:</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="width: 25%">Nazwa lokalizacji: {if $nonCompilance.location_type = 2}{$nonCompilance.location_other}{/if}</td>
+            </tr>
+            <tr>
+                <td style="width: 12.5%">Rodzaj:<br></td>
+                <td colspan="7">{$nonCompilance.type}</td>
+            </tr>
+            <tr>
+                <td colspan="8">Opis:<br>{$nonCompilance.comment nofilter}</td>
+            </tr>
+            <tr>
+                <td colspan="8">Możliwe rozwiązanie:<br>{$nonCompilance.possible_solution nofilter}</td>
+            </tr>
+            <tr>
+                <td colspan="8">Zalecane działania:<br>{$nonCompilance.recommendation nofilter}</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="width: 25%">Osoba odpowiedzialna:</td>
+                <td colspan="6">{$nonCompilance.assigned_user_data.display_name}</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="width: 25%">Data realizacji:</td>
+                <td colspan="6">{$nonCompilance.realisation_date}</td>
+            </tr>
+            {if !empty($nonCompilance.files)}
+                <tr>
+                    <td colspan="8">Załączniki:<br></td>
+                </tr>
+                {foreach $nonCompilance.files as $file}
+                    <tr>
+                        <td colspan="8">{file id=$file.file.id print=true}</td>
+                    </tr>
+                {/foreach}
+            {/if}
+        </table>
+        <br>
+    {/foreach}
+</div>

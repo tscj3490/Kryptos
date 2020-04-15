@@ -1,0 +1,41 @@
+{$message}
+<form name="f_data" id="f_data" method="POST" action="/fielditemscategories/save" id="dataform-add">
+    <fieldset>
+        <div class="form-group row">
+            <label for="name" class="col-sm-2">Nazwa:</label>
+            <div class="col-sm-4"><input type="text" name="name" id="name" class="form-control validate[required]" value="{$data.name}"></div>
+        </div>
+        <div id="globalMessage"></div>
+        <div class="">
+            <a href="/fielditemscategories/"><input type="button" value="Powrót" class="btn"></a>
+            <input type="button" value="Zapisz" class="btn btn-info" onclick="return checkSubmit();">
+            <input type="button" value="Zapisz i dodaj następny" class="btn btn-info" onclick="$('#addAnother').val('1');return checkSubmit();">
+            <input type="hidden" name="id" id="id" value="{$data.id}"/>
+        </div>
+    </fieldset>
+    <div style="width:0px;height:0px;overflow:hidden;">
+        <input type="text" name="addAnother" id="addAnother" value="0"/>
+        <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+    </div>
+</form>
+<script type="text/javascript">
+    function checkSubmit() {
+        $.ajax({
+            dataType: 'html',
+            url: '/fielditemscategories/checkExist/',
+            data: 'name=' + $('#name').val() + '&id={$data.id}',
+            method: 'POST',
+            success: function (mess, textStatus, xhr) {
+                if (mess == 1) {
+                    $('#formSubmit').click();
+                } else {
+                    $('#globalMessage').html('<div class="alert alert-danger">Rekord z podaną nazwą już istnieje. Proszę zmienić nazwę.</div>');
+                    setTimeout('$(\'#globalMessage\').html(\'\')', 5000);
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+            }
+        });
+    }
+    backendUtilities.addVatidationEngine("f_data");
+</script>

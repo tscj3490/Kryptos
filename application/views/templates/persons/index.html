@@ -1,0 +1,61 @@
+{$message}
+{include file='modals/modal.tpl' title='Podmioty - co to jest?' content='Podmioty to zakładka w której możesz zarządzać zarówno podmiotami używanymi w elementach zbioru.'}
+
+<div class="body-action">
+    <a class="btn btn-default" href="/zbiory">Powrót</a>
+    <a class="btn btn-info" href="/persons/update">Dodaj nowy podmiot</a>
+</div>
+<form method="post" action="/persons/delChecked/">
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead class="ui-widget-header">
+        <tr>
+            <th class="min-width"></th>
+            <th data-filter-type="string" class="min-width">id</th>
+            <th data-filter-type="string">nazwa</th>
+            <th data-filter-type="date-range">data utworzenia</th>
+            <th data-filter-type="date-range">data edycji</th>
+            <th>opcje</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content js-checkbox-container">
+        {foreach $paginator as $d}
+            <tr{if $d@iteration > 10} style="display:none"{/if}>
+                <td>
+                    <div class="icheckbox_square-aero js-checkbox-from-container" data-target-id="id[{$d.id}]">
+                        <ins class="iCheck-helper"></ins>
+                        <span class="hidden text-indicator"></span>
+                    </div>
+                </td>
+                <td>{$d.id}</td>
+                <td><span class="{$d.icon}"></span> {$d.name|ucfirst}</td>
+                <td>{smart_date value=$d.created_at}</td>
+                <td>{smart_date value=$d.updated_at}</td>
+                <td class="operations nowrap">
+                    {if $auth->isGranted('node/persons/update', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-pencil" href="/persons/update/id/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                    {/if}
+                    {if $auth->isGranted('node/persons/unlock', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-lock" href="/persons/unlock/id/{$d.id}" data-toggle="tooltip" title="Odblokuj"></a>
+                    {/if}
+                    {if $auth->isGranted('node/persons/update')}
+                    <a class="glyphicon glyphicon-star" href="/persons/update/copy/{$d.id}" data-toggle="tooltip" data-title="Duplikuj"></a>
+                    {/if}
+                    {if $auth->isGranted('node/persons/del', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-trash modal-confirm" data-href="/persons/del/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                    {/if}
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    <input type="submit" value="Usuń zaznaczone" class="btn btn-default"/>
+</form>
+
+<div class="hiddenElement">
+    <div class="hiddenFormElements"></div>
+    <div id="klucze-form-data">
+        {foreach $paginator as $d}
+            <input type="hidden" name="id[{$d.id}]" class="js-checkbox-target">
+        {/foreach}
+    </div>
+</div>

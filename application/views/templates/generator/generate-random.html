@@ -1,0 +1,27 @@
+{$message}
+<form name="f_data" id="f_data" method="POST" action="/generator/generate-random-result">
+    <fieldset>
+        <div class="form-group row">
+            <label for="title" class="col-sm-2">Elementy, które nie mogą się powtarzać:</label>
+            <div class="col-sm-4"><textarea name="nondup" id="nondup" cols="100" rows="10"></textarea></div>
+        </div>
+        <div class="form-group row">
+            <label for="title" class="col-sm-2">Elementy, które mogą się powtarzać:</label>
+            <div class="col-sm-4"><textarea name="dup" id="dup" cols="100" rows="10"></textarea></div>
+        </div>
+         <div class="form-group row">
+            <label for="title" class="col-sm-2">Ilość niepowtarzających się na miesiąc:</label>
+            <div class="col-sm-4"><input name="amountnondup" value="12" type="text" /></div>
+        </div>
+          <div class="form-group row">
+            <label for="title" class="col-sm-2">Ilość powtarzających się na miesiąc:</label>
+            <div class="col-sm-4"><input name="amountdup" value="3" type="text" /></div>
+        </div>
+    </fieldset>     
+    <div >
+        <input type="submit" id="formSubmit" value="Generuj" class="btn btn-info">
+    </div>
+</form>
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+</script>

@@ -1,0 +1,57 @@
+<h1>{$dialogTitle}</h1>
+
+<div class="row">
+    <div class="col-sm-12">
+        <form name="f_profile" id="f_profile" action="/registry/ajax-save-document-template" class="ajax-form form-horizontal" role="form" data-process-fn="formProcessDialModal">
+            <input type="hidden" name="document_template[id]" value="{$data.id}"/>
+            <input type="hidden" name="document_template[registry_id]" value="{$data.registry_id}"/>
+
+            {element tag="bs.varchar" attributes=[
+                'name' => 'document_template[title]',
+                'label' => 'Tytuł'
+            ]}
+
+            {element tag="bs.typeahead" attributes=[
+                'model' => 'Osoby',
+                'name' => 'document_template[default_author_id]',
+                'label' => 'Osoba wystawiająca',
+                'simple' => true
+            ]}
+
+            {element tag="bs.select" attributes=[
+                'options' => 'typeahead',
+                'model' => 'RegistryTemplates',
+                'name' => 'document_template[template_id]',
+                'label' => 'Szablon',
+                'simple' => true
+            ]}
+
+{*
+            {include file="_reuse/form/varchar.element.html" name="title" label="Tytuł:"}
+            {include file="_reuse/form/users.typeahead.element.html" name="default_author_id" label="Osoba wystawiająca:" simple=true}
+            {include file="_reuse/form/registry.templates.typeahead.element.html" name="template_id" label="Szablon:" simple=true}
+            {include file="_reuse/form/varchar.element.html" name="numbering_scheme" label="Schemat numeracji:"}
+            {include file="_reuse/form/select.element.html" name="numbering_scheme_type_id" label="Rodzaj numeracji:" options=Application_Service_RegistryConst::NUMBERING_SCHEME_TYPES}
+            {include file="_reuse/form/users.typeahead.element.html" name="default_author_id" label="Osoba wystawiająca:" simple=true}
+*}
+
+
+            <div class="form-group row">
+                <label for="title" class="col-sm-4">Tytuł:</label>
+                <div class="col-sm-8"><input type="text" name="parameter[title]" id="title" class="form-control validate[required]" value="{$data.title}"></div>
+            </div>
+
+            {*<div class="form-group">
+                <label class="col-sm-4" for="is_multiple">Czy wiele wartości</label>
+                <div class="col-sm-8">
+                    <input type="hidden" name="parameter[is_multiple]" value="0">
+                    <input type="checkbox" name="parameter[is_multiple]" id="is_multiple" class="form-control" value="1"{if $data.is_multiple} checked{/if}/>
+                </div>
+            </div>*}
+        </form>
+    </div>
+</div>
+
+<div class="footer-actions">
+    <a class="btn btn-success pull-right dialog-form-submit">Zapisz</a>
+</div>

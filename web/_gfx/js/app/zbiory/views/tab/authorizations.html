@@ -1,0 +1,22 @@
+<div class="col-sm-12 portlets">
+    <div class="widget">
+        <div class="widget-header transparent">
+            <h2><strong>Authorizations</strong></h2>
+        </div>
+        <div class="widget-content padding">
+            <div class="form-group">
+                <div ng-repeat="item in dPerson">
+                    <label class="col-sm-4">&nbsp;
+                        <input type="checkbox" class="col-sm-2 checkbox" name="authorizations_check" 
+                               ng-model="form.authorizations_check[item.id]">
+                        <input type="text" class="col-sm-2" name="authorizations" 
+                               ng-model="form.authorizations[item.id]">
+                        <%item.imie%> <%item.nazwisko%>
+                    </label>
+                </div>
+            </div>
+            <p><b>Type of rule:</b> 1 = <i>read</i>, 2 = <i>create and read</i>, 3 = <i>update, create,read</i>, 4 = <i>delete,
+                read, create, update</i></p>
+        </div>
+    </div>
+</div>

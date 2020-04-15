@@ -1,0 +1,24 @@
+<div style="text-align:right">{smart_date value=$date}</div>
+<div style="text-align:left">{$name}</div>
+
+<h1 style="text-align:center;">{$title}</h1>
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead>
+        <tr>
+            <th style="background-color:#ADD8E6" data-filter-type="string">Lp.</th>
+            {foreach $registry.entities as $entity}
+                <th style="background-color:#ADD8E6" data-filter-type="string"{if $entity@iteration > 3} data-visible="false"{/if}>{$entity.title}</th>
+            {/foreach}
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $paginator as $d}
+            <tr>
+                <td>{$d@index+1}</td>
+                {foreach $registry.entities as $entity}
+                    <td>{$d->entityToString($entity.id)}</td>
+                {/foreach}
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>

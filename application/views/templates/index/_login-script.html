@@ -1,0 +1,54 @@
+{literal}
+<script>
+    $(document).ready(function () {
+        $('.login-widget .password:enabled:eq(0)').focus();
+
+        $(".login-widget input[type='password']").keydown(function (event) {
+            if ($.inArray(event.keyCode, [9,16,17,18,20,37,38,39,40]) !== -1) {
+                return false;
+            }
+            if ($.inArray(event.keyCode, [13]) !== -1) {
+                return true;
+            }
+
+            var current = $(this);
+            var position = current.attr('data-key');
+            position = parseInt(position);
+
+            if (event.keyCode == 8) {
+                if ($('.password[data-key="' + (position - 1) + '"]').length) {
+                    setTimeout(function() {
+                        $('.password[data-key="' + (position - 1) + '"]')
+                                .focus()
+                                .val('')
+                    }, 2)
+                }
+            } else {
+                var next = $('.password[data-key="' + (position + 1) + '"]');
+                if (next.length) {
+                    setTimeout(function() {
+                        if (current.val() !== '') {
+                            next.focus();
+                        }
+                    }, 2)
+                }
+            }
+        });
+
+        $('#loginForm').on('submit', function(e) {
+            var missing = false;
+
+            $('.password input').not('[disabled]').each(function() {
+                if (this.value === '') {
+                    missing = true;
+                }
+            });
+
+            if (missing) {
+                e.stopImmediatePropagation();
+                return false;
+            }
+        });
+    });
+</script>
+{/literal}

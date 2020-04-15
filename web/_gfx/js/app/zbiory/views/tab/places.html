@@ -1,0 +1,24 @@
+<div class="col-sm-12 portlets">
+    <div class="widget">
+        <div class="widget-header transparent">
+            <h2><strong>Authorizations</strong></h2>
+        </div>
+        <div class="widget-content padding">          
+            
+             <div class="form-group">
+                <div class="row">                    
+                    <div class="col-sm-12">                                            
+                       <div ng-repeat="item in dPlaces">
+                     <label class="col-sm-3">&nbsp;
+                        <input type="checkbox" class="col-sm-2 checkbox" id="inlineCheckbox1" ng-model="form.places" ng-true-value="<%item.id%>"> 
+                        <%item.nazwa%>
+                    </label>
+                </div>                    
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+{include file='modals/modal.tpl' title='Logi - co to jest?' content='W systemie dostępny jest dla osoby z odpowiednimi uprawnieniami rejestr logów systemów zarówno z operacji jak i z logowań, logi dostępne w systemie są w zakładce Aplikacja. Program zapisuje niemalże każdą operację jaka odbywa się w systemie.'}
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="date-range">data</th>
+        <th data-filter-type="string">login</th>
+        <th data-filter-type="string">moduł</th>
+        <th data-filter-type="string">funkcja</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $paginator as $d}
+        <tr{if $d@iteration > 10} style="display:none"{/if}>
+            <td>{$d.dodano}</td>
+            <td>{$d.login}</td>
+            <td>{$d.typ}</td>
+            <td>{$d.info}</td>
+            <td>
+                <a class="glyphicon glyphicon-eye-open" title="Szczegóły" data-toggle="tooltip" href="/config/log/id/{$d.id}"></a>
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

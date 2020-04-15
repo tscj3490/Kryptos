@@ -1,0 +1,90 @@
+<div class="row">
+    <div class="col-lg-6">
+        <form name="f_data" id="f_data" method="POST" action="{$baseUrl}/save-config-status" enctype="multipart/form-data">
+            <fieldset>
+                {if $data.id}
+                <input type="hidden" name="id" value="{$data.id}"/>
+                {/if}
+                <input type="hidden" name="type_id" value="{$data.type_id}"/>
+
+                <div class="form-group row">
+                    <label for="name" class="col-sm-4">Nazwa:</label>
+                    <div class="col-sm-8"><input type="text" name="name" id="name" class="form-control validate[required]" value="{$data.name}"></div>
+                </div>
+
+                {if !$data.state}
+                <div class="form-group row">
+                    <label for="state" class="col-sm-4">Stan:</label>
+                    <div class="col-sm-8">
+                        <select name="state" id="state" class="form-control">
+                            {foreach $states as $state}
+                            <option value="{$state.id}">{$state.label}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                {/if}
+
+                <div class="form-group row">
+                    <label for="color" class="col-sm-4">Kolor:</label>
+                    <div class="col-sm-8">
+                        <select name="color" id="color" class="selectpicker form-control" {if $data.state==1 OR $data.state==3 OR $data.state==4 OR $data.state==5}disabled{elseif $data.state==2}{elseif !$data.state}{/if}>
+                        <option value="label-default" data-content="<span class='label label-default'>Standardowy</span>" {if $data.color=='label-primary'}selected="true"{/if}}>standard</option>
+                        <option value="label-success" data-content="<span class='label label-success'>Zielony</span>" {if $data.color=='label-success'}selected="true"{/if}}>zielony</option>
+                        <option value="label-primary" data-content="<span class='label label-primary'>Niebieski</span>" {if $data.color=='label-primary'}selected="true"{/if}}>niebieski-1</option>
+                        <option value="label-info" data-content="<span class='label label-info'>Jasnoniebieski</span>" {if $data.color=='label-info'}selected="true"{/if}}>niebieski-2</option>
+                        <option value="label-warning" data-content="<span class='label label-warning'>Pomarańczowy</span>" {if $data.color=='label-warning'}selected="true"{/if}}>pomarancz</option>
+                        <option value="label-danger" data-content="<span class='label label-danger'>Czerwony</span>" {if $data.color=='label-danger'}selected="true"{/if}}>czerwony</option>
+                        </select>
+                </div>
+
+                <div>
+                    <a href="/tickets/config-statuses/id/{$data.type_id}" class="btn btn-default">Powrót</a>
+                    <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+                </div>
+            </fieldset>
+            <div class="hiddenElement">
+                <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+$('.selectpicker').selectpicker({
+      style: 'action'
+  });
+  });
+</script>
+<script type="text/javascript">
+
+    $('#state').on('change', function () {
+    if ($(this).val() == 2) {
+            $('#color').prop('disabled', false);
+            $('.selectpicker').selectpicker('refresh');
+    }
+    else
+    {
+            $('#color').prop('disabled', true);
+            $('.selectpicker').selectpicker('refresh');
+        }
+        });
+</script>
+<script type="text/javascript">
+
+    $('#state').on('load', function () {
+    if ($(this).val() == 2) {
+            $('#color').prop('disabled', false);
+            $('.selectpicker').selectpicker('refresh');
+    }
+    else
+    {
+            $('#color').prop('disabled', true);
+            $('.selectpicker').selectpicker('refresh');
+        }
+        });
+</script>

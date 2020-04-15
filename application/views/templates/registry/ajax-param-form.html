@@ -1,0 +1,139 @@
+<h1>{$dialogTitle}</h1>
+
+<div class="row dialog-form-param">
+    <div class="col-sm-12">
+        <form name="f_profile" id="f_profile" action="/registry/ajax-save-param" class="ajax-form form-horizontal" role="form" data-process-fn="formProcessDialModal">
+            <input type="hidden" name="parameter[id]" value="{$data.id}"/>
+            <input type="hidden" name="parameter[registry_id]" value="{$data.registry_id}"/>
+
+            {if !$data.id}
+            <div class="form-group">
+                <label class="col-sm-4" for="entity_id">Rodzaj:</label>
+                <div class="col-sm-8">
+                    <select name="parameter[entity_id]" id="entity_id" class="form-control toggle-relative">
+                        {foreach $entities as $entity}
+                            <option value="{$entity.id}">{$entity.title}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            {else}
+                <div class="form-group">
+                    <label class="col-sm-4" for="entity_id">Rodzaj:</label>
+                    <div class="col-sm-8">
+                        <div class="well">Jeśli chcesz zmienić rodzaj parametru, usuń aktualny i dodaj go ponownie.</div>
+                    </div>
+                </div>
+            {/if}
+
+            {element tag="bs.varchar" attributes=[
+                'name' => 'parameter[title]',
+                'label' => 'Nazwa:',
+                'required' => true,
+                'value' => $data.title
+            ]}
+
+                <div class="form-group">
+                    <label class="col-sm-4" for="is_multiple">Czy wiele wartości:</label>
+                    <div class="col-sm-8">
+                        <input type="hidden" name="parameter[is_multiple]" value="0">
+                        <input type="checkbox" name="parameter[is_multiple]" id="is_multiple" class="form-control" value="1"{if $data.is_multiple} checked{/if}/>
+                    </div>
+                </div>
+				
+				
+				
+				 <div class="form-group">
+                    <label class="col-sm-4" for="default_value">Domyślna wartość:</label>
+                    <div class="col-sm-8">
+                        <input type="hidden" name="parameter[default_value]"  value="$data.default_value">
+                        <input type="text" name="parameter[default_value]"
+                              id="default_value" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4" for="set_primary">Klucz podstawowy pole:</label>
+                    <div class="col-sm-8">
+                        <input type="hidden" name="parameter[set_primary]"  value="$data.set_primary">
+                        <input type="checkbox" name="parameter[set_primary]" id="set_primary" class="form-control" value="1" {$disabled}>
+                    </div>
+                </div>
+				
+            {if !$data.id || $data.entity.config_data->type === 'entry'}
+            <div data-relation-base="entity_id" data-relation-id="10" class="relative-element">
+                {if 1 || $data.entity.config_data->type === 'entry'}
+                    {element tag="bs.select" attributes=[
+                        'id' => 'entry_registry_id',
+                        'options' => 'typeahead',
+                        'model' => 'Registry',
+                        'name' => 'parameter[config][registry_id]',
+                        'label' => 'Rejestr',
+                        'simple' => true,
+                        'value' => $data.config_data->registry_id,
+                        'relative' => true
+                    ]}
+
+                    {if $data.config_data->original_registry_id}
+                        {element tag="input" attributes=[
+                            'type' => 'hidden',
+                            'name' => 'parameter[config][original_registry_id]',
+                            'value' => $data.config_data->original_registry_id
+                        ]}
+                    {/if}
+
+                    {element tag="bs.varchar" attributes=[
+                        'name' => 'parameter[config][label_schema]',
+                        'label' => 'Schemat etykiety',
+                        'required' => true,
+                        'value' => $data.config_data->label_schema
+                    ]}
+
+                    <div class="alert alert-info entities-listing">
+                        Możesz korzystać z następujących tagów specjalnych:<br>
+                        <div class="list"></div>
+                    </div>
+                {/if}
+            </div>
+            {/if}
+        </form>
+    </div>
+</div>
+
+<div class="footer-actions">
+    <a class="btn btn-success pull-right dialog-form-submit" onclick="show();">Zapisz</a>
+</div>
+
+<script>
+    $(function() {
+        $('.dialog-form-param').on('change', '#entry_registry_id', function() {
+            var entryRegistryIdElement = $('#entry_registry_id'),
+                labelSchema = $('input[name="parameter[config][label_schema]"]'),
+                labelSchemaWrapper = labelSchema.closest('.form-group');
+
+            $.get('/registry/ajax-get-registry-entities/id/' + entryRegistryIdElement.val(), function(data) {
+                var listWrapper = $('.entities-listing'),
+                    list = listWrapper.find('.list');
+
+                if (!data.length) {
+                    listWrapper.hide();
+                    labelSchemaWrapper.hide();
+                    return;
+                }
+
+                listWrapper.show();
+                list.html('');
+                labelSchemaWrapper.show();
+
+                $.each(data, function() {
+                    list.append('<div>{ldelim}'+this.system_name+'{rdelim} - '+this.title+'</div>');
+                });
+            });
+        });
+    });
+    function show()
+    {
+        var field = document.getElementsByName('parameter[title]')[0].value;
+        alert(field+" field added in registry!");
+        //window.location.reload();
+    }
+</script>

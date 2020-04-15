@@ -1,0 +1,96 @@
+{include file='modals/modal.tpl' title='Wszystkie dokumenty - co to jest?' content='Jeśli jakieś dokumenty tracą ważność, to mamy możliwość ich wycofania specjalnie do tego przeznaczonym formularzem, w tej zakładce. Również w tej zakładce mamy dostęp do wszystkich dokumentów jakie zostały wygenerowane w systemie.'}
+<form method="GET" action="/documents/all" class="hidden">
+    <div class="row">
+        <div class="col-sm-3">
+            <select name="active" class="form-control">
+                <option value="all">WSZYSTKIE DOKUMENTY</option>
+                <option value="0" {if $p_active === '0'}selected="selected"{/if}>ARCHIWUM</option>
+                <option value="1" {if $p_active === '1'}selected="selected"{/if}>AKTYWNE</option>
+                <option value="2" {if $p_active === '2'}selected="selected"{/if}>AKTYWNE - drobne zmiany</option>
+                <option value="3" {if $p_active === '3'}selected="selected"{/if}>NIE AKTYWNE</option>
+            </select>
+        </div>
+        <div class="col-sm-2">
+            <input type="submit" class="btn" value="Filtruj"/>
+        </div>
+    </div>
+</form>
+
+<form method="post" action="/documents/bulk-operations">
+    <input type="hidden" name="redirect" value="/documents"/>
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead>
+        <tr>
+            <th></th>
+            <th data-filter-type="string">nazwisko</th>
+            <th data-filter-type="string">imię</th>
+            <th data-filter-type="select">stanowisko</th>
+            <th data-filter-type="string">numer</th>
+            <th data-filter-type="select">typ</th>
+            <th data-filter-type="select-items">aktywne</th>
+            <th data-filter-type="date-range" class="text-center">utworzony</th>
+            <th>podgląd</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content js-checkbox-container">
+        {foreach $paginator as $d}
+            <tr{if $d@iteration > 10} style="display:none"{/if}>
+                <td>
+                    <div class="icheckbox_square-aero js-checkbox-from-container" data-target-id="id[{$d.id}]">
+                        <ins class="iCheck-helper"></ins>
+                        <span class="hidden text-indicator"></span>
+                    </div>
+                </td>
+                <td>{$d.osoba_nazwisko} <span class="hiddenElement">{$d.osoba_imie|ucfirst}</span></td>
+                <td>{$d.osoba_imie}</td>
+                <td>{$d.osoba_stanowisko}</td>
+                <td class="text-center">{$d.numbertxt}</td>
+                <td class="text-center">{if $d.template_type == 0}INNE{/if}{if $d.template_type == 1}OŚWIADCZENIE{/if}{if $d.template_type == 2}UPOWAŻNIENIE DO POMIESZCZEŃ{/if}{if $d.template_type == 3}UPOWAŻNIENIE DO ZBIORÓW{/if}</td>
+                <td class="text-center">
+                    {if $d.active == '0'}<i class="fa fa-circle" style="color:#c7bb00;" data-toggle="tooltip" title="ARCHIWUM"><span class="select-item hiddenElement">ARCHIWUM</span></i>
+                    {elseif $d.active == '1'}<i class="fa fa-circle" style="color:#00cc00;" data-toggle="tooltip" title="AKTUALNY"><span class="select-item hiddenElement">AKTUALNY</span></i>
+                    {elseif $d.active == '2'}<i class="fa fa-circle" style="color:#006d36;" data-toggle="tooltip" title="AKTUALNY - drobne zmiany"><span class="select-item hiddenElement">AKTUALNY - drobne zmiany</span></i>
+                    {elseif $d.active == '3'}<i class="fa fa-circle" style="color:#cc0000;" data-toggle="tooltip" title="NIEAKTUALNY"><span class="select-item hiddenElement">NIEAKTUALNY</span></i>
+                    {/if}
+                </td>
+                <td class="text-center">{$d.created_at}</td>
+                <td class="operations">
+                    {if $auth->isGranted('node/documents/getpdf', ['id' => $d.id])}
+                    <a href="#"
+                       class="choose-from-dial"
+                       data-dial-url="/documents/get-choice/id/{$d.id}"
+                       data-dial-class="modal-lg modal-max"
+                       data-toggle="tooltip"
+                       data-title="Podgląd dokumentu"
+                    ><i class="fa fa-eye"></i></a>
+                    {/if}
+                    {if $auth->isGranted('node/documents/recall-document', ['id' => $d.id])}
+                    <a href="#"
+                       class="choose-from-dial"
+                       data-dial-url="/documents/recall-document/id/{$d.id}"
+                       data-dial-class="modal-lg modal-max"
+                       data-toggle="tooltip"
+                       data-title="Wycofaj dokument"
+                       data-new-dialog="1"
+                    ><i class="fa fa-trash"></i></a>
+                    {/if}
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+
+    <div class="table-operations-footer">
+        <div class="btn-group">
+            <button type="submit" class="btn btn-default table-row-action" data-toggle="tooltip" data-title="Wydrukuj zaznaczone" name="rowsAction" value="print"><i class="fa fa-print"></i></button>
+            <button type="submit" class="btn btn-default table-row-action" data-toggle="tooltip" data-title="Pobierz zaznaczone" name="rowsAction" value="download"><i class="fa fa-download"></i></button>
+            <span class="btn btn-default dt-select-all-button" data-toggle="tooltip" data-title="Zaznacz / odznacz wszystkie"><i class="fa fa-check"></i></span>
+        </div>
+    </div>
+
+    <div class="hiddenElement">
+        {foreach $paginator as $d}
+            <input type="hidden" name="id[{$d.id}]" class="js-checkbox-target">
+        {/foreach}
+    </div>
+</form>

@@ -1,0 +1,149 @@
+{$message}
+<form id="f_profile" name="f_profile" action="{$baseUrl}/save" method="POST" class="form-horizontal" role="form">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#home" data-toggle="tab">Ogólnie informacja</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active form-horizontal" id="home" style="padding:15px 5px">
+            <div class="form-group row">
+                <label for="imie" class="col-sm-2">Imię:</label>
+                <div class="col-sm-4"><input type="text" placeholder="imię" name="imie" id="imie" class="form-control form-control-uppercase validate[required]" value="{$data['imie']}"></div>
+            </div>
+            <div class="form-group row">
+                <label for="nazwisko" class="col-sm-2">Nazwisko:</label>
+                <div class="col-sm-4"><input type="text" placeholder="nazwisko" name="nazwisko" id="nazwisko" class="form-control form-control-uppercase validate[required]" value="{$data['nazwisko']}" ></div>
+            </div>
+            <div class="form-group row">
+                <label for="stanowisko" class="col-sm-2">Stanowisko:</label>
+                <div class="col-sm-4"><input type="text" placeholder="stanowisko" name="stanowisko" id="stanowisko" class="form-control form-control-uppercase" value="{$data['stanowisko']}"></div>
+            </div>
+            {*<div class="form-group row">
+                <label for="umowa" class="col-sm-2">Rodzaj umowy:</label>
+                <div class="col-sm-4">
+                    <select id="umowa" name="umowa" class="form-control form-control-uppercase">
+                        <option value="" {if !$data.rodzajUmowy}selected{/if}>Wybierz</option>
+                        <option value="o-prace" {if $data.rodzajUmowy == 'u-o-prace'}selected{/if}>Umowa o pracę</option>
+                        <option value="cywilnoprawna" {if $data.rodzajUmowy == 'cywilnoprawna'}selected{/if}>Umowa cywilnoprawna</option>
+                        <option value="dzialalnosc-g" {if $data.rodzajUmowy == 'dzialalnosc-g'}selected{/if}>Działalność gospodarcza</option>
+                    </select>
+                </div>
+            </div>*}
+            <div class="form-group row">
+                <label for="dzial" class="col-sm-2">Dział:</label>
+                <div class="col-sm-4"><input type="text" placeholder="dział" name="dzial" id="dzial" class="form-control form-control-uppercase" value="{$data['dzial']}"></div>
+            </div>
+            <div class="form-group row">
+                <label for="email" class="col-sm-2">E-mail:</label>
+                <div class="col-sm-4"><input type="text" placeholder="e-mail" name="email" id="email" class="form-control form-control-uppercase" value="{$data.email}"></div>
+            </div>
+            <div class="form-group row">
+                <label for="telefon_stacjonarny" class="col-sm-2">Telefon stacjonarny:</label>
+                <div class="col-sm-4"><input type="text" placeholder="telefon stacjonarny" name="telefon_stacjonarny" id="telefon_stacjonarny" class="form-control form-control-uppercase" value="{$data.telefon_stacjonarny}"></div>
+            </div>
+            <div class="form-group row">
+                <label for="telefon_komorkowy" class="col-sm-2">Telefon komórkowy:</label>
+                <div class="col-sm-4"><input type="text" placeholder="telefon komórkowy" name="telefon_komorkowy" id="telefon_komorkowy" class="form-control form-control-uppercase" value="{$data.telefon_komorkowy}"></div>
+            </div>
+        </div>
+        <div class="hiddenElement">
+            <div class="hiddenFormElements"></div>
+        </div>
+        <div class="">
+            <input type="submit" value="Zapisz" class="btn btn-info">
+            <input type="hidden" name="id" id="id" value="{$data.id}"/>
+            <input type="hidden" name="login_do_systemu" id="login_do_systemy" value="{$data.login_do_systemu}"/>
+        </div>
+</form>
+
+<script type="text/javascript">
+    upowaznieniaPack = {$upowaznieniaPack nofilter};
+    var unpacked2 = unpacked = '';
+    $(upowaznieniaPack).each(function() {
+        unpacked += '<tr>' +
+                '<td>' + this[1] + '</td>' +
+                '<td><div class="icheckbox_square-aero js-checkbox-from-container" data-target-id="upowaznienia[' + this[0] + '][czytanie]"><ins class="iCheck-helper"></ins></div></td>' +
+                '<td><div class="icheckbox_square-aero js-checkbox-from-container" data-target-id="upowaznienia[' + this[0] + '][pozyskiwanie]"><ins class="iCheck-helper"></ins></div></td>' +
+                '<td><div class="icheckbox_square-aero js-checkbox-from-container" data-target-id="upowaznienia[' + this[0] + '][wprowadzanie]"><ins class="iCheck-helper"></ins></div></td>' +
+                '<td><div class="icheckbox_square-aero js-checkbox-from-container" data-target-id="upowaznienia[' + this[0] + '][modyfikacja]"><ins class="iCheck-helper"></ins></div></td>' +
+                '<td><div class="icheckbox_square-aero js-checkbox-from-container" data-target-id="upowaznienia[' + this[0] + '][usuwanie]"><ins class="iCheck-helper"></ins></div></td>' +
+                '<td><div class="icheckbox_square-aero action-select-all"><ins class="iCheck-helper"></ins></div></td>' +
+                '</tr>';
+
+        unpacked2 += '<input type="hidden" data-key="' + this[0] + '" value="' + this[2][0] + '" name="upowaznienia[' + this[0] + '][czytanie]" class="js-checkbox-target">' +
+                '<input type="hidden" data-key="' + this[0] + '" value="' + this[2][2] + '" name="upowaznienia[' + this[0] + '][pozyskiwanie]" class="js-checkbox-target">' +
+                '<input type="hidden" data-key="' + this[0] + '" value="' + this[2][3] + '" name="upowaznienia[' + this[0] + '][wprowadzanie]" class="js-checkbox-target">' +
+                '<input type="hidden" data-key="' + this[0] + '" value="' + this[2][4] + '" name="upowaznienia[' + this[0] + '][modyfikacja]" class="js-checkbox-target">' +
+                '<input type="hidden" data-key="' + this[0] + '" value="' + this[2][5] + '" name="upowaznienia[' + this[0] + '][usuwanie]" class="js-checkbox-target">'
+    });
+    $(unpacked).appendTo('.js-checkbox-container');
+    $(unpacked2).appendTo('.hiddenFormElements');
+
+    function czy_jest_znak(haslo, male_litery) {
+        var jest_mala_litera = false;
+        for (var i = 0; i < haslo.length; i++) {
+            //var litera_hasla=haslo.substring(i, 1);
+            litera_hasla = haslo.charAt(i);
+            if (male_litery.indexOf(litera_hasla) != -1) {
+                var jest_mala_litera = true;
+                break;
+            }
+        }
+        if (jest_mala_litera == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    $(document).ready(function () {
+
+
+        backendUtilities.addVatidationEngine("f_profile");
+
+        $('#f_profile').submit(function () {
+
+
+            if ($('#new_pass1').val() != '' || $('#new_pass2').val() != "") {
+
+                if ($('#new_pass1').val() != $('#new_pass2').val()) {
+                    alert('Wprowadzone nowe hasła różnią się.');
+                    return false;
+                }
+
+
+                var haslo = $('#new_pass1').val();
+                var male_litery = "qwertyuiopasdfghjklzxcvbnmęóąśłżźćń";
+
+                if (czy_jest_znak(haslo, male_litery)) {
+                } else {
+                    alert('Wymagana jest co najmniej jedna mała litera');
+                    return false;
+                }
+
+                var wielkie_litery = male_litery.toUpperCase()
+
+
+                if (czy_jest_znak(haslo, wielkie_litery)) {
+                } else {
+                    alert('Wymagana jest co najmniej jedna wielka litera');
+                    return false;
+                }
+
+
+                if (czy_jest_znak(haslo, '1234567890')) {
+                } else {
+                    alert('Wymagana jest co najmniej cyfra');
+                    return false;
+                }
+
+                if (czy_jest_znak(haslo, {literal}'`~!@#$%^&*()_+|[];\',./{}:">?_-=\\"'{/literal})) {
+
+                } else {
+                    alert('Wymagany jest co najmniej jeden znak specjalny');
+                    return false;
+                }
+            }
+        });
+    });
+</script>

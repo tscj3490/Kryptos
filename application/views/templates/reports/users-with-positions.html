@@ -1,0 +1,19 @@
+<h1>Użytkownicy wraz ze stanowiskami</h1>
+<table class="printable" cellspacing='1' cellpadding="5">
+    <thead>
+    <tr>
+        <th>L.p.</th>
+        <th>Nazwa użytkownika</th>
+        <th>Stanowisko</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $model as $d}
+        <tr>
+            <td>{$d@iteration}</td>
+            <td>{$d.osoba.imie} {$d.osoba.nazwisko} [{$d.login}]</td>
+            <td>{$d.osoba.stanowisko}</td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

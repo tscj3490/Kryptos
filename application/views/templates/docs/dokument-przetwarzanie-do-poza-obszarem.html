@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Dokument wykonania kopii zapasowych</title>
+
+    <link rel="stylesheet" href="/css/templates/reset.css">
+    <link rel="stylesheet" href="/css/templates/style.css">
+    <link rel="stylesheet" href="/css/docs.css">
+
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body style="margin: 0 5px; padding: 0">
+
+<div id="page-wrap" >
+    <div>
+        <div style="float:left">
+            {$data.nazwa_organizacji|strtoupper}<br />
+        </div>
+        <div style="float: right">
+            {$data.city}, {$data.data}
+        </div>
+    </div>
+    <div class="clear space"></div>
+
+    <h1 class="fn">
+        ZGODA NA PRZETWARZANIE DANYCH OSOBOWYCH<br />
+        POZA WYZNACZONYM OBSZAREM
+
+        <br />NR {$data.document_number}
+    </h1>
+    <div class="clear space"></div>
+    <p>
+        Na podstawie procedury 1 i) określonej w Polityce Bezpieczeństwa rozdział 8 - System zabezpieczeń danych osobowych
+    </p>
+    <div class="clear space"></div>
+    <p>
+        WYRAŻAM ZGODĘ BY<br />
+        PANI/PAN {$data.imie} {$data.nazwisko}<br />
+        PRZETWARZAŁ DANE OSOBOWE POZA WYZNACZONYM OBSZAREM
+
+    </p>
+    <span class="header">SZCZEGÓŁY:</span>
+    <table>
+        <tr>
+            <td width="25%">FORMA ZATRUDNIENIA/WSPÓŁPRACY</td>
+            <td width="25%">UMOWA  {if $rodzajUmowy == 'o-prace'}O PRACĘ{else if $rodzajUmowy=='cywilnoprawna'}CYWILNOPRAWNA{/if}
+            <td width="25%">STANOWISKO</td>
+            <td width="25%">{$stanowisko|strtoupper}</td>
+        </tr>
+        <tr>
+            <td >UPOWAŻNIENIE OD (DATA)</td>
+            <td>{$data.data}</td>
+            <td>UPOWAŻNIENIE DO (DATA)</td>
+            <td>BEZTERMINOWO</td>
+        </tr>
+        <tr>
+            <td colspan="2">IDENTYFIKATOR</td>
+            <td colspan="2">{$data.login_do_systemu}</td>
+        </tr>
+        <tr>
+            <td colspan="1">ZAKRES</td>
+            <td colspan="3">{$nazwy_zbiorow|substr:1}</td>
+        </tr>
+    </table>
+
+    <div class="clear space"></div>
+    <div class="clear space"></div>
+    <dl class="description right">
+
+        <dt>
+        <p style="text-transform: uppercase;font-size: 12px">Pełnomocnik Administratora Danych osobowy</p>
+        (data,podpis)
+        </dt>
+    </dl>
+</div>
+</body>
+
+</html>
+
+
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Upoważnienie</title>
+
+    <link rel="stylesheet" href="/css/templates/reset.css">
+    <link rel="stylesheet" href="/css/templates/style.css">
+    <link rel="stylesheet" href="/css/docs.css">
+
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body style="margin: 0 5px; padding: 0">
+
+<div id="page-wrap" >
+    <div>
+        <div style="float:left">
+            {$data.nazwa_organizacji|strtoupper}<br />
+        </div>
+        <div style="float: right">
+            {$data.city}, {$data.data}
+        </div>
+    </div>
+    <div class="clear space"></div>
+
+    <h1 class="fn">
+        RAPORT Z POWIERZENIA DANYCH OSOBOWYCH   <br />NR {$data.document_number} <br /> NA PODSTAWIE UMOWY {$data.umowa}
+    </h1>
+
+    <div class="clear space"></div>
+
+    <table>
+        <tr>
+            <td width="25%">DANE PODMIOTU, (któremu powierzono dane)</td>
+            <td>{$data.podmiot}</td>
+        </tr>
+        <tr>
+            <td>CEL:</td>
+            <td>{$data.cel}</td>
+        </tr>
+        <tr>
+            <td>ZAKRES:</td>
+            <td>{$data.zakres}</td>
+        </tr>
+        <tr>
+            <td>OKRES POWIERZENIA:</td>
+            <td>{$data.data_od} - {$data.data_do}</td>
+        </tr>
+        <tr>
+            <td>UWAGI:</td>
+            <td>{$data.uwagi}</td>
+        </tr>
+    </table>
+    <div class="clear space"></div>
+    <div class="clear space"></div>
+    <dl class="description right">
+
+        <dt>
+        <p style="text-transform: uppercase;font-size: 12px">Pełnomocnik Administratora Danych osobowy</p>
+        (data,podpis)
+        </dt>
+    </dl>
+</div>
+</body>
+
+</html>

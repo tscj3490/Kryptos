@@ -1,0 +1,153 @@
+{if $mode === 'table'}
+    <h3 class="text-center" style="margin-top:0px;margin-bottom:10px;">OPERACJE</h3>
+
+    <div>
+        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+            <thead>
+            <tr>
+                <th data-filter-type="string">id</th>
+                <th data-filter-type="string">imię</th>
+                <th data-filter-type="string">nazwisko</th>
+                <th data-filter-type="string">numer</th>
+                <th data-filter-type="string">typ</th>
+                <th data-filter-type="select" class="text-center">aktywne</th>
+                <th data-filter-type="date-range" class="text-center">utworzony</th>
+                <th>podgląd</th>
+            </tr>
+            </thead>
+            <tbody class="ui-widget-content">
+            {foreach $documents as $d}
+                <tr>
+                    <td>{$d@iteration}</td>
+                    <td>{$d.osoba_imie}</td>
+                    <td>{$d.osoba_nazwisko}</td>
+                    <td>{$d.numbertxt}</td>
+                    <td>{if $d.template_type == 0}INNE{/if}{if $d.template_type == 1}OŚWIADCZENIE{/if}{if $d.template_type == 2}UPOWAŻNIENIE DO POMIESZCZEŃ{/if}{if $d.template_type == 3}UPOWAŻNIENIE DO ZBIORÓW{/if}</td>
+                    <td class="text-center">
+                        {if $d.active == '0'}<i class="fa fa-circle" style="color:#c7bb00;" data-toggle="tooltip" title="ARCHIWUM"></i>
+                        {elseif $d.active == '1'}<i class="fa fa-circle" style="color:#00cc00;" data-toggle="tooltip" title="AKTUALNY"></i>
+                        {elseif $d.active == '2'}<i class="fa fa-circle" style="color:#006d36;" data-toggle="tooltip" title="AKTUALNY - drobne zmiany"></i>
+                        {elseif $d.active == '3'}<i class="fa fa-circle" style="color:#cc0000;" data-toggle="tooltip" title="NIEAKTUALNY"></i>
+                        {/if}
+                    </td>
+                    <td class="text-center">{$d.created_at}</td>
+                    <td class="operations"><a href="/documents/getpdf/id/{$d.id}"><i class="fa fa-eye"></i></a></td>
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    </div>
+{elseif $mode === 'document'}
+    <div class="document-preview">
+        {$documentContent nofilter}
+    </div>
+
+    {if $document.is_recalled}
+        <hr>
+        <div>
+            <h4>Dokument został wycofany</h4>
+            <table class="table table-striped table-bordered table-small">
+                <tr><td>Data wycofania</td><td>{smart_date value=$document.recall_date}</td></tr>
+                <tr><td>Osoba wycofująca</td><td>{$recallAuhtor.nazwisko} {$recallAuhtor.imie}</td></tr>
+                <tr><td>Powód wycofania</td><td>{$document.recall_reason}</td></tr>
+            </table>
+        </div>
+    {/if}
+
+    {if $document.signature}
+        <hr>
+        <div>
+            <h4>Dokument został podpisany elektronicznie</h4>
+            <table class="table table-striped table-bordered table-small">
+                <tr><td>Data otwarcia dokumentu: </td><td> {$document.signature.resource_view_date}</td></tr>
+                <tr><td>Data podpisu: </td><td> {$document.signature.sign_date}</td></tr>
+                <tr><td>Adres IP: </td><td> {$document.signature.ip}</td></tr>
+                <tr><td>Unikalny identyfikator podpisu: </td><td> {$document.signature.unique_id}</td></tr>
+            </table>
+        </div>
+    {/if}
+
+    {if $document.form}
+        <hr>
+        <div>
+            <h4>Pracownik wypełnił formularz</h4>
+            <table class="table table-striped table-bordered table-small">
+                {foreach $document.form.registry.entities as $entity}
+                    <tr>
+                        <td>{$entity.title}</td>
+                        <td>{if !empty($document.form.entities[$entity.id])}{$document.form.entities[$entity.id]}{else}nie{/if}</td>
+                    </tr>
+                {/foreach}
+            </table>
+        </div>
+    {/if}
+{/if}
+
+<hr>
+
+{if !empty($document.attachments)}
+    {include file="_reuse/_element-attachments-list-object.html" attachments=$document.attachments}
+{/if}
+
+<div class="row hidden" id="section-attachments-add">
+    <div class="col-sm-12">
+        <form action="/documents/attachments-upload/id/{$document.id}" class="form-horizontal ajax-form">
+            <input type="hidden" name="uploadedFiles" value="">
+            <div class="form-group row">
+                <label class="col-sm-2">Załączniki:</label>
+                <div class="col-sm-12 portlets ui-sortable">
+                    <!-- Your awesome content goes here -->
+                    <div class="widget messages-dropzone">
+                        <div id="msgDropzone" class="dropzone">
+                            <div class="dz-default dz-message"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-12">
+                    <button type="submit" class="btn btn-info">Wyślij</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="text-right">
+    <button type="button" class="btn btn-default pull-left show-section"
+            data-target="#section-attachments-add"
+            data-auto-hide="self"
+    >Dodaj załączniki</button>
+
+    <a href="{$baseUrl}/documents/print?ids={$ids}" target="_blank"><input type="button" value="Wydrukuj" class="btn btn-default"/></a>
+    &nbsp;
+    <a href="{$baseUrl}/documents/getpdf?ids={$ids}" target="_blank"><input type="button" value="Pobierz w PDF" class="btn btn-default"/></a>
+</div>
+
+<div style="clear:both;"></div>
+
+{literal}
+    <script>
+        documentDropzone = enableDropzoneWidget('#msgDropzone', {
+            url: '/upload.php',
+            params: {
+                dirname: 'documents'
+            }
+        });
+
+        var messageForm = $('#msgDropzone').closest('form');
+        messageForm.on('submit', function() {
+            var uploadedFiles = documentDropzone.getAcceptedFiles(),
+                    filesData = [];
+
+            $.each(uploadedFiles, function() {
+                filesData.push({
+                    name: this.name,
+                    uploadedUri: this.xhr.response
+                });
+            });
+
+            messageForm.find('input[name=uploadedFiles]').val(JSON.stringify(filesData));
+        });
+    </script>
+{/literal}

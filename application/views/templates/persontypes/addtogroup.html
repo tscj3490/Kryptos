@@ -1,0 +1,18 @@
+<h1>Wybór zestawu danych</h1>
+Kliknij na jeden z typów osób, by go wybrać.<br />
+<br />
+{foreach $t_data as $d}
+<div class="selopt2" id="id{$d.id}">{$d.name}</div>
+{/foreach}
+<div style="clear:both;"></div>
+<br />
+Możesz dodać nowy typ osoby za pomocą poniższego formularza:<br />
+<br />
+<input type="text" name="name" id="newname" value="" class="form-control" />
+<br />
+<div class="text-center">
+<input type="button" class="btn btn-default" value="Dodaj" onclick="showDial('/persontypes/savemini2/','modal-lg','name='+$('#newname').val());" />
+</div>
+<script type="text/javascript">
+runOptsSel();
+</script>

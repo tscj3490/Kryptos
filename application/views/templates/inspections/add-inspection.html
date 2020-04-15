@@ -1,0 +1,88 @@
+<div class="row">
+    <div class="col-lg-6">
+        <form name="f_data" id="f_data" method="POST" action="/inspections/save-inspection" enctype="multipart/form-data">
+            <fieldset>
+                {if $data.id}
+                <input type="hidden" name="inspection[id]" value="{$data.id}"/>
+                {/if}
+
+                <div class="form-group row">
+                    <label for="date" class="col-sm-4">Data inspekcji:</label>
+                    <div class="col-sm-8"><input type="text" name="inspection[date]" id="date" class="form-control datepicker-input" value="{$data.date}"></div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-4">Rodzaj inspekcji:</label>
+                    <div class="col-sm-8">
+                        <input type="hidden" id="inspection_type" name="inspection[type]" value="{$data.type}" class="toggle-relative clear-relative"/>
+                        <div class="form-inline">
+                            <div class="radio iradio">
+                                <label>
+                                    <input type="radio" data-value="1" name="radio_type" data-target="#inspection_type" class="transfer-value" {if $data.type != 2}checked{/if}>
+                                    Inne
+                                </label>
+                            </div>
+                            <div class="radio iradio">
+                                <label>
+                                    <input type="radio" data-value="2" name="radio_type" data-target="#inspection_type" class="transfer-value" {if $data.type == 2}checked{/if}>
+                                    Zbiór
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="author_id" class="col-sm-4">Inspektor:</label>
+                    <div class="col-sm-8">
+                        <input type="hidden" name="inspection[author_id]" id="author_id" value="{$data.author_id}"/>
+                        <div class="input-group">
+                            <input type="text" id="author_id_typeahead" class="form-control typeaheadElement validate[required]" data-source-variable="storageUsers" data-target-element="#author_id"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default choose-from-dial" data-target-element="#author_id" data-dial-url="/osoby/addmini/?useProcess=true" type="button">Wybierz</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row" data-relation-base="inspection_type" data-relation-id="2">
+                    <label for="object_id" class="col-sm-4">Zbiór:</label>
+                    <div class="col-sm-8">
+                        <input type="hidden" name="inspection[object_id]" id="object_id" value="{$data.object_id}" data-source-variable="storageZbiory"/>
+                        <div class="input-group">
+                            <input type="text" id="osoba_typeahead" class="form-control typeaheadElement widget-copy-value-as-text" data-source-variable="storageZbiory" data-target-element="#object_id" data-target="#inspection_title"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default choose-from-dial" data-dial-url="/zbiory/addmini/?useProcess=true" data-target-element="#object_id" type="button">Dodaj</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="inspection_title" class="col-sm-4">Tytuł:</label>
+                    <div class="col-sm-8"><input type="text" name="inspection[title]" id="inspection_title" class="form-control" value="{$data.title}"></div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="inspection_comment" class="col-sm-4">Komentarz:</label>
+                    <div class="col-sm-8"><textarea name="inspection[comment]" id="inspection_comment" class="form-control">{$data.comment}</textarea></div>
+                </div>
+
+                <div>
+                    <a href="{$baseUrl}"><input type="button" value="Powrót" class="btn"></a>
+                    <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+                </div>
+            </fieldset>
+            <div class="hiddenElement">
+                <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+
+    var storageZbiory = objectsStorage.init({$zbiory|json_encode nofilter}),
+        storageUsers = objectsStorage.init({$users|json_encode nofilter});
+</script>

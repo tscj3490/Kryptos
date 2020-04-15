@@ -1,0 +1,28 @@
+{$message}
+<div class="btn-group row">
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+            	<thead>
+                	<tr>
+                        <th>nazwa</th>  
+                        <th>numbering_rule</th>  
+                        <th>aktywny</th> 
+                        <!--th>ikona</th--> 
+                        <th width="75px"></th>
+                    </tr>
+                </thead>
+                <tbody >
+                	{foreach $paginator as $d}
+                	<tr>                        
+                        <td>{$d.nazwa}</td>
+                        <td>{$d.numbering_rule}</td>
+                        <td>{if $d.aktywny}Tak{/if}</td>
+                        <!--td>{if $d.icon}<img src="{$d.icon}"/>{/if}</td-->
+                        <td>							
+                            <a class="glyphicon glyphicon-pencil" title="edycja" href="/dokumenty/szablon/id/{$d.id}"></a>							
+                        </td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+</table>

@@ -1,0 +1,9 @@
+<script type="text/javascript">
+   var t_optsa = jQuery.parseJSON('{$jsonoptions nofilter}');
+   t_opts['t_items'].push('{$data.name}');
+   t_opts['t_itemsdata']['{$data.name}'] = clone(t_optsa);
+   t_opts['t_itemsdata']['{$data.name}']['id'] = 'id{$data.id}';
+   t_opts['t_itemsdata']['{$data.name}']['isGlobal'] = {if !is_null($data.unique_id)}true{else}false{/if};
+   activeitem = '{$data.name}';
+   setOptsView();
+</script>

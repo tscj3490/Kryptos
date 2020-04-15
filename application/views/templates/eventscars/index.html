@@ -1,0 +1,78 @@
+{$message}
+<div class="body-action">
+    <a class="btn btn-default" href="/events">Powrót</a>
+    <a class="btn btn-info" href="/eventscars/update">Dodaj nowy pojazd</a>
+    <a class="btn btn-info" href="/eventscars/report?{$l_list}">Pobierz raport</a>
+    <a class="btn btn-info" href="/eventscars/reportview?{$l_list}">Wyświetl raport</a>
+</div>
+<div style="height:10px"></div>
+<hr class="nomargin" />
+<div style="height:10px"></div>
+<form method="get" action="/eventscars">
+    <div class="row">
+        <div class="col-md-2">
+            <strong>Rodzaj pojazdu:</strong><br />
+            <div style="height:5px;"></div>
+            <select name="eventscarstype" id="eventscarstype" class="form-control">
+                <option value="">wszystkie</option>
+                {foreach $eventscarstypes as $eventscarstype}
+                    <option value="{$eventscarstype->id}" {if $get.eventscarstype == $eventscarstype->id}selected="selected"{/if}>{$eventscarstype->name}</option>
+                {/foreach}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <br />
+            <div style="height:5px;"></div>
+            <input type="submit" value="Szukaj" class="btn btn-success" />
+        </div>
+    </div>
+</form>
+<div style="height:10px"></div>
+<hr class="nomargin" />
+<div style="height:10px"></div>
+<form method="post" action="/eventscars/delChecked/">
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+            	<thead class="ui-widget-header">
+                	<tr>
+                    	<th></th>
+                    	<th>nr</th>
+                     <th>firma</th>
+                     <th>nr rejestracji</th>
+                     <th>rodzaj</th>
+                     <th>własność</th>
+                     <th>data utworzenia</th>
+                     <th>data edycji</th>
+                     <th>opcje</th>
+                  </tr>
+                </thead>
+                <tbody class="ui-widget-content">
+                	{foreach $paginator as $d}
+                	<tr>
+                     <td style="width:22px">
+                        <input type="checkbox" name="id{$d.id}" id="id{$d.id}" value="1" />
+                     </td>
+                    	<td>{$d@iteration}</td>
+                        <td>{if $d.eventscompany_id == 0}BRAK{else}{$d.eventscompany.name}{/if}</td> 
+                        <td>{$d.name}</td> 
+                        <td>{$carTypes[$d.type]|upper}</td>
+                        <td>{$carOwnerships[$d.ownership]}</td>
+                        <td>{$d.created_at}</td>
+                        <td>{if $d.updated_at}{$d.updated_at}{else}brak{/if}</td>
+                        <td class="operations">
+                            {if $auth->isGranted('node/eventscars/update', ['id' => $d.id])}
+                            <a class="glyphicon glyphicon-pencil"  href="/eventscars/update/id/{$d.id}"></a>
+                            {/if}
+                            {if $auth->isGranted('node/eventscars/update')}
+                            <a class="glyphicon glyphicon-star"  href="/eventscars/update/copy/{$d.id}"></a>
+                            {/if}
+                            {if $auth->isGranted('node/eventscars/del', ['id' => $d.id])}
+                            <a class="glyphicon glyphicon-trash" onclick="if(confirm('Usunąć?')) window.location.href='/eventscars/del/id/{$d.id}'" href="javascript:;"></a>
+                            {/if}
+                        </td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+
+</table>
+<input type="submit" value="Usuń zaznaczone" class="btn btn-default" />
+</form>

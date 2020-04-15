@@ -1,0 +1,33 @@
+{if $data.id}<input type="hidden" name="id" value="{$data.id}"/>{/if}
+
+<div class="form-group row">
+    <label for="title" class="col-sm-4">Nazwa:</label>
+    <div class="col-sm-8"><input type="text" name="title" id="title" class="form-control validate[required]" value="{$data.title}"></div>
+</div>
+
+<div class="form-group row">
+    <label for="authorize_user_id_typeahead" class="col-sm-4">Autor:</label>
+    <div class="col-sm-8">
+        <input type="hidden" name="author_id" id="author_id" value="{$data.author_id}"/>
+        <input type="text" id="authorize_user_id_typeahead" class="form-control typeaheadElement validate[required]" data-source-variable="storageUsers" data-target-element="#author_id"/>
+    </div>
+</div>
+
+{*{element tag="bs.varchar" attributes=[
+    'name' => 'label_schema',
+    'label' => 'Schemat etykiety',
+    'required' => true,
+    'value' => $data.label_schema
+]}
+
+<div class="alert alert-info">
+    Możesz korzystać z następujących tagów specjalnych:<br>
+    <br>
+    {foreach $data.entities as $entity}
+        {ldelim}{$entity.system_name}{rdelim} - {$entity.title}<br>
+    {/foreach}
+</div>*}
+
+<script type="text/javascript">
+    var storageUsers = objectsStorage.init({$users|json_encode nofilter});
+</script>

@@ -1,0 +1,90 @@
+<form method="post" action="/registry-entries/bulk-actions/registry_id/{$registry.id}">
+    <div class="table-operations-header">
+        {element tag='a' route='registry-entries/update' routeParams=['registry_id' => $registry.id] attributes=[
+        'class' => 'btn btn-success',
+        'icon' => 'plus',
+        'tooltip' => 'Dodaj wpis',
+        'innerHtml' => 'Dodaj'
+        ]}
+
+        <a class="btn btn-success dt-report" data-href="/registry-entries/report/registry_id/{$registry.id}" data-title="Raport PDF" data-toggle="tooltip"><i class="fa icon-print-2"></i> &nbsp;Raport</a>
+
+       
+
+    </div>
+
+    <table cellpadding="0" cellspacing="0" border="0" class="table test table-striped table-bordered example">
+        <thead>
+            <tr>
+                <th class="min-width"></th>
+                <th data-filter-type="string">Autor</th>
+                {foreach $registry.entities as $entity}
+                <th data-filter-type="string"{if $entity@iteration > 3} data-visible="false"{/if}>{$entity.title}</th>
+                {/foreach}
+                <th>Operacje</th>
+            </tr>
+        </thead>
+        <tbody class="ui-widget-content js-checkbox-container">
+            {foreach $paginator as $d}
+            <tr>
+                <td>
+                    <div class="icheckbox_square-aero js-checkbox-from-container" data-target-id="id[{$d.id}]">
+                        <ins class="iCheck-helper"></ins>
+                        <span class="hidden text-indicator"></span>
+                    </div>
+                </td>
+
+                <td>{$d.author.display_name}</td>
+                {foreach $registry.entities as $entity}
+                <td>{$d->entityToString($entity.id)}</td>
+                {/foreach}
+                <td class="operations">
+                <span class="glyphicon glyphicon-cd"></span>
+                	 {element tag='a' route='registry-entries/diagram' routeParams=['id' => $d.id, 'registry_id' => $d.registry_id] attributes=[
+                        'icon' => 'star',
+                        'tooltip' => 'Add Diagram'
+                    ]}
+                    {element tag='a' route='registry-entries/update' routeParams=['id' => $d.id, 'registry_id' => $d.registry_id] attributes=[
+                        'icon' => 'edit',
+                        'tooltip' => 'Edytuj'
+                    ]}
+                    {element tag='a' route='registry-entries/update' routeParams=['clone' => $d.id, 'registry_id' => $d.registry_id] attributes=[
+                        'icon' => 'star',
+                        'tooltip' => 'Duplikuj'
+                    ]}
+                    {element tag='a' route='registry-entries/ajax-create-document' routeParams=['id' => $d.id, 'registry_id' => $d.registry_id] attributes=[
+                        'dialog' => [
+                            'new-dialog' => true
+                        ],
+                        'icon' => 'add',
+                        'tooltip' => 'Utwórz dokument'
+                    ]}
+                    {element tag='a' route='registry-entries/documents' routeParams=['id' => $d.id, 'registry_id' => $d.registry_id] attributes=[
+                        'icon' => 'print',
+                        'tooltip' => 'Dokumenty'
+                    ]}
+                    {element tag='a' route='registry-entries/remove' routeParams=['id' => $d.id, 'registry_id' => $d.registry_id] attributes=[
+                        'icon' => 'delete',
+                        'delete' => 'singleDelete',
+                        'tooltip' => 'Usuń'
+                    ]}
+                </td>
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+
+    <div class="table-operations-footer">
+        <div class="btn-group">
+            <button type="submit" class="btn btn-danger modal-confirm-delete" data-toggle="tooltip" data-title="Usuń zaznaczone" data-modal-name="delete_selected" data-modal-class="delete-selected-confirmation"><i class="fa fa-remove"></i></button>
+            <span class="btn btn-default dt-select-all-button" data-toggle="tooltip" data-title="Zaznacz / odznacz wszystkie"><i class="fa fa-check"></i></span>
+        </div>
+    </div>
+
+    <div class="hiddenElement">
+        <input type="submit" class="modal-confirm-delete_selected-submit" name="rowsAction" value="delete"/>
+        {foreach $paginator as $d}
+            <input type="hidden" name="id[{$d.id}]" class="js-checkbox-target">
+        {/foreach}
+    </div>
+</form>

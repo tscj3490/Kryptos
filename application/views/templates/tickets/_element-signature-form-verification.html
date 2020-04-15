@@ -1,0 +1,138 @@
+
+<form name="f_accept" id="f_accept" class="form-horizontal" role="form">
+    <div>
+        <input type="submit" value="{'POTWIERDZAM I PODPISUJĘ'|translate}" class="btn btn-success"/>
+        <span class="md-trigger hidden trigger-confirmation" data-modal="confirmation-modal"></span>
+    </div>
+    <input type="hidden" name="id" id="id" value="{$storageTask.id}"/>
+</form>
+
+<div class="md-modal md-just-me modal-signature" id="confirmation-modal"{$singatureModalAttributesString}>
+    <div class="md-content">
+        <div>
+            <div>
+                <h2><strong>{'ELEKTRONICZNY PODPIS'|translate}</strong></h2>
+                <div>
+                    <p class="text-center">{'By podpisać weryfikacje przy pomocy podpisu elektronicznego KRYPTOS, zgodnie z Dyrektywą o Wspólnotowej Infrastrukturze Podpisów Elektronicznych (1999/93/EC), zaloguj się ponownie.'|translate}</p>
+
+                    <div class="alert alert-danger hidden">{'Nieprawidłowe hasło'|translate}</div>
+
+                    <div class="password-confirmation">
+                        <form>
+                            <input type="hidden" name="taskId" id="confirmationTaskId" value="{$storageTask.id}"/>
+                            {for $i = 0, $empty = 0; $i < $length; $i++}
+                                {$j = $i+1}
+                                <div class="password-char confirmationPassword">
+                                    <input type="password" class="password" maxlength="1" {if $gwiazdki[$i]} placeholder="*" disabled{else}data-key="{$empty++}" name="password[{$i}]"{/if} value>
+                                    <div>{$j}</div>
+                                </div>
+                            {/for}
+                        </form>
+                    </div>
+                    <div class="footer-buttons">
+                        <button class="btn btn-danger md-close">{'ANULUJ!'|translate}</button>
+                        <button class="btn btn-success pull-right">{'PODPISZ SIĘ'|translate}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#f_accept').validationEngine('attach', {
+            onValidationComplete: function (form, status) {
+                if (status) {
+                    $('.trigger-confirmation').click();
+                }
+                return false;
+            }
+        });
+
+        if (document.location.href.toString().match('complete=1')) {
+            $('.trigger-confirmation').click();
+        }
+    });
+
+    $(function () {
+        var modal = $('#confirmation-modal');
+
+        modal.insertBefore($('.md-overlay'));
+
+        modal.on('md-modal-show', function (e, params) {
+            var tg = $(this),
+                callerButton = $(params.callerButtonEvent.target);
+
+            tg.attr('data-confirmation-process', callerButton.attr('data-confirmation-process'));
+
+            setTimeout(function () {
+                tg.find('input[type=password]').not(':disabled').eq(0).focus();
+            }, 400);
+        });
+
+        modal.find("input[type='password']").keyup(function (event) {
+            if (event.keyCode == 18 || event.keyCode == 17 || event.keyCode == 16 || event.keyCode == 20) {
+                return;
+            }
+
+            var position = $(this).attr('data-key');
+            position = parseInt(position);
+
+            if (event.keyCode == 8) {
+                if (modal.find('.password[data-key="' + (position - 1) + '"]').length) {
+                    $('.password[data-key="' + (position - 1) + '"]').focus();
+                }
+            } else {
+                if (modal.find('.password[data-key="' + (position + 1) + '"]').length) {
+                    modal.find('.password[data-key="' + (position + 1) + '"]').focus();
+                }
+            }
+        });
+
+        modal.find('.footer-buttons .btn-success').on('click', function () {
+            var formData = modal.find('form').serializeObject(),
+                submitData = {
+                    password: { },
+                    taskId: confirmationTaskId.value,
+                    completeTask: modal.attr('data-dont-complete-task') ? 0 : 1
+                };
+
+
+            $.each($('.confirmationPassword').find('input'), function (index, input) {
+                if ($(input).val() !== '') {
+                    submitData.password[index] = $(input).val();
+                }
+            });
+
+            $.ajax({
+                method: "POST",
+                url: '/index/ajax-password-prompt',
+                data: submitData,
+                success: function (result) {
+                    if (result === '1') {
+                        $.ajax({
+                            method: "GET",
+                            url: '/verifications/approve/id/196',
+                            data: submitData,
+                            success: function (result) {
+                                if (result === '1') {
+                                    var passwordConfirmedProcessFn = modal.attr('data-confirmation-process');
+
+                                    if (passwordConfirmedProcessFn) {
+                                        window[passwordConfirmedProcessFn](modal, submitData);
+                                    } else {
+                                        document.location.href = '/tasks-my';
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        modal.find('.password-confirmation input[name*=password]').val('');
+                        modal.find('.alert-danger').removeClass('hidden');
+                    }
+                }
+            });
+        });
+    });
+</script>

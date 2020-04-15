@@ -1,0 +1,173 @@
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAA4IlFvh-G93qXQBi9VLdqdhTOdSBNH56RASGEBB885hKDanvWEhTbhdT6OlHEkEeL5ZsAq5RfidzvNQ" type="text/javascript"></script>
+<script type="text/javascript">
+	$().ready(function (){
+		$("#city").autocomplete( url + "autosuggest/suggestcities/", {
+			width: 260
+		});		
+	var editMode = false;
+		$(".tryb-edycji").click(function (){		
+			if(!editMode)
+			{
+				//włączony tryb edycji
+				$(this).html('wyłącz tryb edycji');
+			}
+			else
+			{
+				$(this).html('włącz tryb edycji');	
+			}		
+			editMode = editMode ^ 1;	
+			$("#view,#edit").toggle();
+			return false;
+		});
+		$("#birth_day, #birth_month, #birth_year").change(function (){
+			var date_n = $("#birth_year").val() + "-" + $("#birth_month").val() + "-" + $("#birth_day").val();
+			$("#birthday").val(date_n);	
+		});	
+		$("#birth_year option").each(function (i,el){
+			if($(el).val() == '{$user.birthday|date_format:"%Y"}') $(el).attr('selected','selected');
+		});
+		$("#birth_day option").each(function (i,el){
+			if($(el).val() == '{$user.birthday|date_format:"%d"|replace:"0":""}') $(el).attr('selected','selected');
+		});
+		$("#birth_month option").each(function (i,el){
+			if($(el).val() == '{$user.birthday|date_format:"%m"|replace:"0":""}') $(el).attr('selected','selected');
+		});
+		mapaStart();
+	});
+</script>
+<div class="middle-content profile">
+	<h3>Profil użytkownika {$user.login|strip_tags|ucfirst} {if $canEdit}<a href="#tryb_edycji" class="tryb-edycji">włącz tryb edycji</a>{/if}</h3>
+	<div class="profile-img">
+		<img src="{$thumb}{$url}{if $user.avatarUrl}{$user.avatarUrl}{else}pic/icons_gif/no_avatar.jpg{/if}&hp=100" alt="muzyka {$user.login}" title="muzyka {$user.login}" />
+	</div>
+	<div class="profile-info" id="view">
+		<div class="left">
+			<span class="field-left">punktów:</span><span class="field-right">{$user.points|strip_tags}</span>
+			<span class="field-left">miasto:</span><span class="field-right">{if $user.city}{$user.city|strip_tags}{else}brak{/if}</span>
+			<span class="field-left">płeć:</span><span class="field-right">{$tr->_($user.sex|strtolower)}</span>
+			<span class="field-left">e-mail:</span><span class="field-right">{$user.email|replace:"@":" [at] "}</span>
+		</div>
+		<div class="right">
+			<span class="field-left">data urodzenia:</span><span class="field-right">{$user.birthday|date_format:"%d.%m.%Y"}</span>
+			<span class="field-left">gg:</span><span class="field-right">{if $user.gg}{$user.gg|strip_tags}{else}brak{/if}</span>
+			<span class="field-left">skype:</span><span class="field-right">{if $user.skype}{$user.skype|strip_tags}{else}brak{/if}</span>
+			<span class="field-left">lubiane gatunki muzyki:</span><span class="field-right">{if $user.musicLiked}{$user.musicLiked|strip_tags}{else}brak{/if}</span>
+		</div>
+	</div>
+	{if $canEdit}
+	<div class="profile-info" id="edit" style="display:none">
+	<form method="post" action="{$url}user/edit">
+		<div class="left">
+			<span class="field-left">miasto:</span><span class="field-right"><input id="city" type="text" value="{$user.city}"  name="data[city]" /></span>
+			<span class="field-left">płeć:</span><span class="field-right"><select name="data[sex]"><option value="MAN" {if $user.sex=='MAN'}selected="selected"{/if}>mężczyzna</option><option value="WOMAN" {if $user.sex=='WOMAN'}selected="selected"{/if}>kobieta</option></select></span>
+			<span class="field-left">e-mail:</span><span class="field-right"><input type="text" value="{$user.email}"  name="data[email]" /></span>
+		</div>
+		<div class="right">
+			<span class="field-left">data urodzenia:</span>
+			<span class="field-right">
+				<input id="birthday" 	class="{if $errors.birthDay}input_error{/if}" type="hidden"	 value="{$user.birthday}" name="data[birthday]" /> 
+				<span style="margin-right:5px; margin-top:2px;width:52px;float:left;padding-top:2px;">dzień:</span>
+				<select id="birth_day" name="d" style="margin-top:3px;">
+					{section name=d start=1 loop=32 step=1}
+					<option	{if $data.workHoursSaturdayFrom==$smarty.section.d.index}selected="selected"{/if} value="{$smarty.section.d.index}">{$smarty.section.d.index}</option>
+					{/section}
+				</select><br />
+				<span style="margin-right:5px; margin-top:2px;margin-left:2px;width:50px;float:left;padding-top:2px;">miesiąc:</span>
+				<select id="birth_month" name="m" style="margin-top:3px;">
+					{section name=d start=1 loop=13 step=1}
+					<option	{if $data.workHoursSaturdayFrom==$smarty.section.d.index}selected="selected"{/if} value="{$smarty.section.d.index}">{$smarty.section.d.index}</option>
+					{/section}
+				</select>
+				<br />
+				<span style="margin-right:5px; margin-top:2px;margin-left:2px;width:50px;float:left;padding-top:2px;">rok:</span>
+				<select id="birth_year" name="y" style="margin-top:3px;">
+					{section name=y start=1900 loop=$smarty.now|date_format:"%Y" step=1}
+					<option	 value="{$smarty.section.y.index}">{$smarty.section.y.index}</option>
+					{/section}
+				</select>
+			</span>
+			<span class="field-left">gg:</span><span class="field-right"><input type="text" value="{$user.gg}"  name="data[gg]" /></span>
+			<span class="field-left">skype:</span><span class="field-right"><input type="text" value="{$user.skype}"  name="data[skype]" /></span>
+			<span class="field-left">lubiane gatunki muzyki:</span><span class="field-right"><input type="text" value="{$user.musicLiked}"  name="data[musicLiked]" /></span>
+			<div class="clear"><input type="submit" value="zapisz" /></div>
+		</div>
+	</form>	
+	</div>
+	{/if}
+	<div class="clear"></div>
+	<!--  mapa poczatek -->
+	<h4>{$tr->_('Lokalizacja na mapie')}</h4>
+                    
+                    <script type='text/javascript'>
+					{literal}
+					<!-- 
+						// zmienne globalne
+						var geo;
+						var mapa;
+							
+						function mapaStart()
+						{
+							if(GBrowserIsCompatible())  
+							{
+								mapa = new GMap2(document.getElementById("mapka"),{mapTypes: [G_NORMAL_MAP,G_SATELLITE_MAP,G_HYBRID_MAP]});
+								mapa.setCenter(new GLatLng(53.429805, 14.537883), 15);
+								
+								// kontrolki mapy
+								mapa.addControl(new GLargeMapControl());
+								var typyMapy = mapa.getMapTypes();    
+								typyMapy[0].getName= function() { return "Mapa";}
+								typyMapy[1].getName = function() { return "Satelita";}
+								typyMapy[2].getName = function() { return "Hybryda";}
+								mapa.addControl(new GMapTypeControl());
+								mapa.addControl(new GOverviewMapControl()); 
+								mapa.addControl(new GScaleControl());
+								
+								// nowy obiekt do geokodowania
+								geo = new GClientGeocoder();
+								var adres='{/literal}{if $user.city}{$user.city}{else}warszawa{/if}{literal}';
+								geo.getLatLng(adres,function(punkt)
+								{
+									if (!punkt)
+									{
+										$("#map-loc").hide();
+									}
+									else
+									{
+										// centrujemy na znalezionym punkcie
+										mapa.setCenter(punkt, 15);
+										
+										// dodajemy w tym miejscu marker
+										var ikona = new GIcon();
+										//ikona.image='http://maps.google.com/mapfiles/kml/pal3/icon52.png';
+										ikona.image= url + 'pic/here.png';
+										ikona.shadow='';
+										ikona.iconSize=new GSize(50,50);
+										ikona.iconAnchor=new GPoint(16,16);
+										ikona.infoWindowAnchor=new GPoint(16,16);
+										
+										var marker = new GMarker(punkt,{icon: ikona, title: adres});
+										mapa.addOverlay(marker);
+										
+										// i otwieramy dymek z adresem
+										marker.openInfoWindowHtml('<div style="color:#333;"><strong>{/literal}{$user.login|trim} jest tutaj{literal}</strong><br /></div>'+adres);
+									}
+								});
+							}
+						}
+					-->
+					{/literal}
+					</script>
+					<div id='mapka' style='width: 940px; height: 500px; border: 1px solid black; background: gray;float:left;clear:both;'></div>
+					<!-- tu będzie mapa -->
+				
+	<!--  mapa koniec -->
+	
+	<hr class="line" size="1" />
+	<div class="clear"></div>
+	{include file="box/addtobox.html"}
+	<div class="clear"><br /></div>
+	{assign var='comment_type' value='profile'}
+	{assign var='comment_affects' value=$user.idUsers}
+	{include file="comments/comments.html"}
+	
+</div>

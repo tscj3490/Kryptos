@@ -1,0 +1,53 @@
+{assign var="optionsData" value=Application_Service_Utilities::getModel($params.attributes.model)->getAllForTypeahead()}
+{Application_Service_Utilities::indexBy($optionsData, 'id')}
+
+{assign var="sectionId" value="ta"|set_id}
+{if empty($params.attributes.id)}
+    {assign var="id" value=$params.attributes.name|set_id}
+{else}
+    {assign var="id" value=$params.attributes.id}
+{/if}
+
+<div class="form-group row {$wrapper.class nofilter}" {$wrapper.attributes_string nofilter}>
+    <label for="{$id}" class="col-sm-4">{$params.attributes.label}:</label>
+    <div class="col-sm-8">
+        <div class="row">
+            <div class="col-sm-12">
+                <button class="btn btn-md btn-default choose-from-dial" type="button"
+                        data-dial-url="/home/universal-mini-choose/model/{$params.attributes.model}"
+                        data-dial-ready-fn="filter_{$sectionId}"
+                        data-dial-process-fn="add_{$sectionId}"
+                        data-target-element="#xSV_{$sectionId}">Wybierz</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12" id="xSV_{$sectionId}">
+                {foreach $params.attributes.value as $valueId => $value}
+                    <div class="seloptmin"><span>{$optionsData[$value].name}</span><i title="Usuń" class="glyphicon glyphicon-trash remove-element" data-closest-target=".seloptmin"></i><input type="hidden" name="{$params.attributes.name}[]" value="{$value}"></div>
+                {/foreach}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function filter_{$sectionId}() {
+        $('#xSV_{$sectionId}').find('input').each(function() {
+            $('#optsSearch').find('#id'+this.value).addClass('active');
+        });
+    }
+
+    function add_{$sectionId}(object, status) {
+        if (status) {
+            var newTag = $('<div class="seloptmin">');
+            newTag.append($('<span></span>').text(object.displayName));
+            newTag.append($('<i title="Usuń" class="glyphicon glyphicon-trash remove-element" data-closest-target=".seloptmin">'));
+            newTag.append($('<input type="hidden" name="{$params.attributes.name}[]" value="'+object.id+'">'));
+            $('#xSV_{$sectionId}').append(newTag);
+
+            systemAssignHandlers();
+        } else {
+            $('#xSV_{$sectionId}').find('input[value="'+object.id+'"]').closest('.seloptmin').remove();
+        }
+    }
+</script>

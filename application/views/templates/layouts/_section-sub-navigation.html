@@ -1,0 +1,20 @@
+{if $layout->subNavigation}
+    <ul class="sub-navigation nav-pills navbar-right">
+        {foreach $layout->subNavigation as $subNavigationItem}
+            {if empty($subNavigationItem.permissions) || $auth->isGranted($subNavigationItem.permissions)}
+                <li role="presentation" class="dropdown">
+                    <a class="dropdown-toggle btn btn-primary" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                        <i class="{$subNavigationItem.icon}"></i> &nbsp; {$subNavigationItem.label} &nbsp; <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        {foreach $subNavigationItem.children as $subNavigationItemChild}
+                            {if empty($subNavigationItemChild.permissions) || $auth->isGranted($subNavigationItemChild.permissions)}
+                                <li><a{if !$subNavigationItemChild.nohref} href="{$subNavigationItemChild.path}"{/if}{if !empty($subNavigationItemChild.onclick)} onclick="{$subNavigationItemChild.onclick}"{/if}>{$subNavigationItemChild.label}</a></li>
+                            {/if}
+                        {/foreach}
+                    </ul>
+                </li>
+            {/if}
+        {/foreach}
+    </ul>
+{/if}

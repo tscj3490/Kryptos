@@ -1,0 +1,41 @@
+<table cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered example inner-form">
+    <thead>
+    <tr>
+        <th data-disable-sort class="min-width"></th>
+        <th data-filter-type="string">nazwa</th>
+        <th data-filter-type="string">rodzaj</th>
+        <th data-filter-type="string">obiekt</th>
+        <th data-filter-type="string">login</th>
+        <th data-filter-type="string">hasło</th>
+        <th data-filter-type="string">komentarz</th>
+    </tr>
+    </thead>
+    <tbody class="js-checkbox-container">
+    {foreach $permissions as $p}
+        <tr>
+            <td>
+                <div class="icheckbox_square-aero js-checkbox" aria-checked="false" aria-disabled="false" data-target-id="permissions[{$p.id}][checked]">
+                    <ins class="iCheck-helper"></ins>
+                    <span class="hidden text-indicator"></span>
+                </div>
+            </td>
+            <td><span class="{$p.icon}"></span> {$p.name}</td>
+            <td>{smart_string_select value=$p.type_id config=Application_Model_Permissions::TYPES_DISPLAY}</td>
+            <td>{$p.object}</td>
+            <td><input type="text" name="permissions[{$p.id}][login]" class="form-control mirror-value" data-target="#user_permission_{$p.id}_login"/></td>
+            <td><input type="text" name="permissions[{$p.id}][password]" class="form-control mirror-value" data-target="#user_permission_{$p.id}_password"/></td>
+            <td><input type="text" name="permissions[{$p.id}][comment]" class="form-control mirror-value" data-target="#user_permission_{$p.id}_comment"/></td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>
+
+<div class="hiddenElement">
+    {foreach $permissions as $p}
+        {assign "userPermission" Application_Service_Utilities::arrayFindOne($data.permissions, 'permission_id', $p.id)}
+        <input value="{if $userPermission}1{else}0{/if}" type="hidden" data-id="permissions[{$p.id}][checked]" name="permissions[{$p.id}][checked]">
+        <input value="{$userPermission.login}" type="hidden" data-id="permissions[{$p.id}][login]" name="permissions[{$p.id}][login]" id="user_permission_{$p.id}_login">
+        <input value="{$userPermission.password}" type="hidden" data-id="permissions[{$p.id}][password]" name="permissions[{$p.id}][password]" id="user_permission_{$p.id}_password">
+        <input value="{$userPermission.comment}" type="hidden" data-id="permissions[{$p.id}][comment]" name="permissions[{$p.id}][comment]" id="user_permission_{$p.id}_comment">
+    {/foreach}
+</div>

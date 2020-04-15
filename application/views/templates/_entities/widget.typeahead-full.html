@@ -1,0 +1,28 @@
+<input type="hidden" name="{$element.name}" id="{$element.id}" value="{$data.value}"/>
+<div class="input-group">
+    <input type="text"
+           id="{$element.id}_typeahead"
+           class="form-control typeaheadElement {$element.class}"
+           data-source-function="{$element.sourceFn}"
+           data-target-element="#{$element.id}"
+           data-source-variable="storage_{$element.storage}"/>
+    {if $element.dialUrl}
+    <span class="input-group-btn">
+        <button type="button"
+                class="btn btn-default choose-from-dial"
+                data-target-element="#{$element.id}"
+                data-dial-process="{$element.process}"
+                data-dial-url="{$element.dialUrl}">Wybierz</button>
+    </span>
+    {/if}
+</div>
+
+{*
+
+<input type="hidden" name="arrival[source_user_id]" id="source_user_id" value="{$data.source_user_id}" data-source-variable="storageUsers"/>
+<div class="input-group">
+    <input type="text" id="source_employee_typeahead" class="form-control typeaheadElement" data-source-variable="storageUsers" data-target-element="#source_user_id"/>
+    <span class="input-group-btn">
+        <button class="btn btn-default choose-from-dial" data-dial-url="/osoby/mini-add-person/?useProcess=true" data-target-element="#source_user_id" type="button">Dodaj</button>
+    </span>
+</div>*}

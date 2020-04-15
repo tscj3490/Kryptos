@@ -1,0 +1,25 @@
+{include file='modals/modal.tpl' title='Ankiety - co to jest?' content='W tej zakładce będą dostępne ankiety dla użytkownika. O nowej ankiecie zostaniesz również poinformowany przez powiadomienie.'}
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+        <tr>
+            <th data-filter-type="string">Nazwa</th>
+            <th>Operacje</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach $paginator as $d}
+        <tr>
+            <td>{$d.name}</td>
+            <td class="operations">
+                {if $d.answers}
+                 <a class="glyphicon glyphicon-ok" href="/surveys/perform/id/{$d.id}" data-toggle="tooltip" title="Ankieta wypełniona"></a>
+
+                {else}
+                <a class="glyphicon glyphicon-eye-open" href="/surveys/perform/id/{$d.id}" data-toggle="tooltip" title="Szczegóły"></a>
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>
+

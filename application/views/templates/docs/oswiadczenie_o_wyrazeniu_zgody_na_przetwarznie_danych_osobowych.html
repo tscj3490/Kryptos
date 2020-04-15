@@ -1,0 +1,60 @@
+<p>
+<meta charset="UTF-8">
+<link href="http://abi1.kryptos24.pl/css/templates/reset.css" rel="stylesheet" />
+<link href="http://abi1.kryptos24.pl/css/templates/style.css" rel="stylesheet" />
+<link href="http://abi1.kryptos24.pl/css/docs.css" rel="stylesheet" />   </meta>
+</p>
+<div id="page-wrap">
+<div>
+<div style="float:left">{$data.nazwa_organizacji|strtoupper}</div>
+<div style="float: right">{$data.city}, {$data_z_ustawien|date_format:'%Y-%m-%d'}</div>
+</div>
+<div class="clear space">&nbsp;</div>
+<h1 class="fn">ZGODA NA PRZETWARZANIE DANYCH OSOBOWYCH<br />
+POZA WYZNACZONYM OBSZAREM         <br />
+NR {$data.number_dokument}</h1>
+<div class="clear space">&nbsp;</div>
+<p>Na podstawie procedury 1 i) określonej w Polityce Bezpieczeństwa rozdział 8 - System zabezpieczeń danych osobowych</p>
+<div class="clear space">&nbsp;</div>
+<h2 class="center">WYRAŻAM ZGODĘ BY<br />
+PANI/PAN {$data.imie} {$data.nazwisko}<br />
+PRZETWARZAŁ DANE OSOBOWE POZA WYZNACZONYM OBSZAREM</h2>
+<p>SZCZEG&Oacute;ŁY:</p>
+<table>
+    <tbody>
+        <tr>
+            <td width="25%">FORMA ZATRUDNIENIA/WSP&Oacute;ŁPRACY:</td>
+            <td width="25%">{if $data.rodzajUmowy == 'o-prace'}O PRACĘ{else if $data.rodzajUmowy=='cywilnoprawna'}CYWILNOPRAWNA{else}DZIAŁALNOŚĆ GOSPODARCZA{/if}</td>
+            <td width="25%">STANOWISKO:</td>
+            <td width="25%">{$data.stanowisko}</td>
+        </tr>
+        <tr>
+            <td>UPOWAŻNIENIE OD (DATA):</td>
+            <td>{$data.data|date_format:'%Y-%m-%d'}</td>
+            <td>UPOWAŻNIENIE DO (DATA):</td>
+            <td>{$data.data_do}</td>
+        </tr>
+        <tr>
+            <td>IDENTYFIKATOR:</td>
+            <td colspan="3">{$data.login_do_systemu}</td>
+        </tr>
+        <tr>
+            <td>ZAKRES (ZBI&Oacute;R/DOKUMENT):</td>
+            <td colspan="3">{$data.zbiory}</td>
+        </tr>
+    </tbody>
+</table>
+<div class="clear space">&nbsp;</div>
+<div class="clear space">&nbsp;</div>
+<dl class="description right">
+    <dt>
+    <p style="text-transform: uppercase;font-size: 12px">Pełnomocnik Administratora Danych osobowy</p>
+    (data,podpis)         </dt>
+</dl>
+<div class="clear space">&nbsp;</div>
+<div class="clear space">&nbsp;</div>
+<div class="clear space">&nbsp;</div>
+<p>Otrzymałem instruktaż odnośnie zachowania bezpieczeństwa informacji oraz jestem świadomy odpowiedzialności, jaka na mnie ciąży.</p>
+<p class="center">(Data, podpis osoby otrzymującej zgodę)</p>
+</div>
+<p>&nbsp;</p>

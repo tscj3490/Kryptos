@@ -1,0 +1,31 @@
+{$message}
+<div style="height:10px"></div>
+<hr class="nomargin"/>
+<div style="height:10px"></div>
+<form method="post" action="/audits/zbiory-save/auditId/{$auditId}">
+    {foreach $paginator as $d}
+        <input value="{if $d.is_selected}1{else}0{/if}" type="hidden" data-id="{$d.id}" name="zbiory[{$d.id}]">
+    {/foreach}
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead class="ui-widget-header">
+        <tr>
+            <th></th>
+            <th>Nazwa</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content">
+        {foreach $paginator as $d}
+        <tr>
+            <td style="width:22px">
+                <div class="icheckbox_square-aero js-checkbox" aria-checked="false" aria-disabled="false" data-target-id="zbiory[{$d.id}]">
+                    <ins class="iCheck-helper"></ins>
+                    <span class="hidden text-indicator"></span>
+                </div>
+            </td>
+            <td>{$d.nazwa}</td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    <input type="submit" value="Wybierz zbiory" class="btn btn-default"/>
+</form>

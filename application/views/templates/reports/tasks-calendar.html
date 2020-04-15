@@ -1,0 +1,21 @@
+<h1>Raport z kalendarza</h1>
+<table class="printable" cellspacing='1' cellpadding="5">
+    <thead>
+    <tr>
+        <th>L.p.</th>
+        <th>Nazwa użytkownika</th>
+        <th>Data</th>
+        <th>Zadanie</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $model as $d}
+        <tr>
+            <td>{$d@iteration}</td>
+            <td>{$d.user.nazwisko} {$d.user.imie}</td>
+            <td>{$d.deadline_date}</td>
+            <td>{$d.title}</td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

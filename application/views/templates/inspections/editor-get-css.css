@@ -1,0 +1,8 @@
+.inspections-metadata {
+    border:1px solid black;
+    border-collapse:collapse;
+    width:100%;
+}
+.inspections-metadata td {
+    border:1px solid black;
+}

@@ -1,0 +1,193 @@
+<div class="row page-medium">
+    <div class="col-sm-12">
+        <form name="f_profile" id="f_profile" action="/courses/save" method="post" class="form-horizontal" role="form">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#home" data-toggle="tab">{'Ogólnie informacja'|translate}</a></li>
+                <li class=""><a href="#coursePages" data-toggle="tab">{'Podstrony'|translate}</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="home" class="tab-pane active">
+                    <fieldset>
+                        {if $utilities->getAppType() === 'hq_data'}
+                            <div class="form-group row">
+                                <label for="type" class="col-sm-4">{'Rodzaj szkolenia'|translate}:</label>
+                                <div class="col-sm-8">
+                                    <select name="type" id="type" class="form-control validate[required]">
+                                        {foreach Application_Service_Courses::TYPES_DISPLAY as $type}
+                                            <option value="{$type.id}" {if $type.id == $data.type}selected="selected"{/if}>{$type.label}</option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                            </div>
+                        {else}
+                            <input type="hidden" name="type" value="2">
+                        {/if}
+                        <div class="form-group row">
+                            <label for="status" class="col-sm-4">Status:</label>
+                            <div class="col-sm-8">
+                                <select name="status" id="status" class="form-control validate[required]">
+                                    {foreach Application_Service_Utilities::STATUS_DISPLAY_DUAL as $type}
+                                        <option value="{$type.id}" {if $type.id == $data.status}selected="selected"{/if}>{$type.label}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="topic" class="col-sm-4">{'Temat'|translate}:</label>
+
+                            <div class="col-sm-8"><input type="text" id="topic" name="topic" value="{$data.topic}" class="form-control validate[required]"/></div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="category_id" class="col-sm-4">{'Kategoria'|translate}:</label>
+                            <div class="col-sm-8">
+                                <select name="category_id" id="category_id" class="form-control">
+                                    {foreach $categories as $category}
+                                        <option value="{$category.id}" {if $data.category_id == $category.id}selected{/if}>{$category.name}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="exam_id" class="col-sm-4">{'Egzamin'|translate}:</label>
+                            <div class="col-sm-8">
+                                <select name="exam_id" id="exam_id" class="form-control">
+                                    <option value="">brak</option>
+                                    {foreach $exams as $exam}
+                                        <option value="{$exam.id}" {if $data.exam_id == $exam.id}selected{/if}>{$exam.name}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="author_id" class="col-sm-4">{'Autor'|translate}:</label>
+                            <div class="col-sm-8">
+                                <input type="hidden" name="author_id" id="author_id" value="{$data.author_id}"/>
+                                <div class="input-group">
+                                    <input type="text" id="authorize_user_id_typeahead" class="form-control typeaheadElement validate[required]" data-source-variable="storageUsers" data-target-element="#author_id"/>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default choose-from-dial" data-target-element="#author_id" data-dial-url="/osoby/addmini/?useProcess=true" type="button">{'Wybierz'|translate}</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="description" class="col-sm-4">{'Opis'|translate}:</label>
+                            <div class="col-sm-8">
+                                <textarea name="description" id="description" class="form-control">{$data.description}</textarea>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div id="coursePages" class="tab-pane">
+                    <a class="upload btn btn-success" onclick="otworzUpload()">{'Prześlij pliki'|translate}</a>
+                    <a class="btn btn-success choose-from-dial" data-dial-url="/courses/mini-add-youtube/" data-new-dialog="1">{'Dodaj film youtube'|translate}</a>
+                    <button type="button" class="btn btn-primary remove-all-files">{'Usuń wszystkie'|translate}</button>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="courses-slide-list">
+                                {foreach from=$pages item=page}
+                                    {if $page.type == 1}
+                                        <div class="slide image">
+                                            <img src="/files/thumbnail/t/{$page.file_token}">
+                                            <span class="info">{$page.file_name}</span>
+                                            <input type="hidden" name="files[]" value="{$page.id}">
+                                        </div>
+                                    {elseif $page.type == 2}
+                                        <div class="slide image-placeholder youtube">
+                                            <div class="placeholder"><span>Youtube</span></div>
+                                            <span class="info">{$page.file_external_uri}</span>
+                                            <input type="hidden" name="files[]" value="{$page.id}">
+                                        </div>
+                                    {/if}
+                                {/foreach}
+                            </div>
+                        </div>
+                    </div>
+                    <hr/>
+                </div>
+            </div>
+
+
+            <div>
+                <input type="submit" value="{'Zapisz'|translate}" class="btn btn-info"/>
+            </div>
+            <input type="hidden" name="id" id="id" value="{$data.id}"/>
+        </form>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_profile");
+
+    var storageUsers = objectsStorage.init({$users|json_encode nofilter}),
+        slideList = $('#coursePages .courses-slide-list');
+
+    function errorImagePreview(e)
+    {
+        var tg = $(this),
+            placeholder = $('<div class="placeholder"><span>'+tg.attr('title')+'</span></div>');
+
+        tg.after(placeholder);
+        tg.closest('.image').addClass('image-placeholder');
+        tg.remove();
+
+    }
+
+    function otworzUpload() {
+        var url = '/courses/upload';
+        showDial(url, '', '');
+        $('#ajaxDial').on('hide.bs.modal', function () {
+            var files = coursesDropzone.getAcceptedFiles();
+
+            $.each(files, function() {
+                var slideData = {
+                    type: 1,
+                    name: this.name,
+                    uploadedUri: this.xhr.response
+                };
+
+                var slide = $(sprintf('<div class="slide image"><img src="/uploads/courses/%s"><span class="info">%s</span><input type="hidden" name="files[]"></div>', this.xhr.response, this.name));
+
+                slideList.append(slide);
+                slide.find('img').on('error', errorImagePreview);
+                slide.find('input').val(JSON.stringify(slideData));
+                enableUploadList();
+            });
+
+            coursesDropzone.removeAllFiles(true);
+        });
+    }
+
+    function processAddYoutube(e)
+    {
+        e.preventDefault();
+
+        var tg = $(this),
+            data = tg.serializeObject(),
+            linkMatch = data.youtube_link.match(/v=([^&]+)/i);
+
+        if (!linkMatch) {
+            return;
+        }
+
+        var slideData = {
+                type: 2,
+                uri: linkMatch[1]
+            };
+        console.log(slideData);
+
+        var slide = $(sprintf('<div class="slide youtube image-placeholder"><div class="placeholder"><span>Youtube</span></div><span class="info">%s</span><input type="hidden" name="files[]"></div>', slideData.uri));
+
+        slideList.append(slide);
+        slide.find('input').val(JSON.stringify(slideData));
+        enableUploadList();
+
+        tg.closest('.modal').find('button[data-dismiss=modal]').click();
+    }
+
+    $('.remove-all-files').on('click', function() {
+        $('.image-delete-button').click();
+    });
+</script>

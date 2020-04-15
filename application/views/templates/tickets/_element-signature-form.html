@@ -1,0 +1,127 @@
+<form name="f_accept" id="f_accept" class="form-horizontal" role="form">
+    <div>
+        <input type="submit" value="POTWIERDZAM I PODPISUJĘ" class="btn btn-success"/>
+        <span class="md-trigger hidden trigger-confirmation" data-modal="confirmation-modal"></span>
+    </div>
+    <input type="hidden" name="id" id="id" value="{$file.id}"/>
+</form>
+
+<div class="md-modal md-just-me modal-signature" id="confirmation-modal">
+    <div class="md-content">
+        <div>
+            <div>
+                <h2><strong>ELEKTRONICZNY PODPIS</strong></h2>
+                <div>
+                    <p class="text-center">By podpisać zadanie przy pomocy podpisu elektronicznego KRYPTOS, zgodnie z Dyrektywą o Wspólnotowej Infrastrukturze Podpisów Elektronicznych (1999/93/EC), zaloguj się ponownie.</p>
+
+                    <div class="alert alert-danger hidden">Nieprawidłowe hasło</div>
+
+                    <div class="password-confirmation">
+                        <form>
+                            <input type="hidden" name="fileId" value="{$file.id}"/>
+                            {for $i = 0, $empty = 0; $i < $length; $i++}
+                                {$j = $i+1}
+                                <div class="password-char">
+                                    <input type="password" class="password" maxlength="1" {if $gwiazdki[$i]} placeholder="*" disabled{else}data-key="{$empty++}" name="password[{$i}]"{/if} value>
+                                    <div>{$j}</div>
+                                </div>
+                            {/for}
+                        </form>
+                    </div>
+                    <div class="footer-buttons">
+                        <button class="btn btn-danger dialog-close">ANULUJ!</button>
+                        <button class="btn btn-success pull-right">PODPISZ SIĘ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var signatureModal = $('#confirmation-modal');
+
+        signatureModal.insertBefore($('.md-overlay'));
+
+        signatureModal.on('md-modal-show', function () {
+            var tg = $(this);
+            setTimeout(function () {
+                tg.find('input[type=password]').not(':disabled').eq(0).focus();
+            }, 400);
+        });
+
+        signatureModal.find("input[type='password']").keyup(function (event) {
+            if (event.keyCode == 18 || event.keyCode == 17 || event.keyCode == 16 || event.keyCode == 20) {
+                return;
+            }
+
+            var position = $(this).attr('data-key');
+            position = parseInt(position);
+
+            if (event.keyCode == 8) {
+                if (signatureModal.find('.password[data-key="' + (position - 1) + '"]').length) {
+                    $('.password[data-key="' + (position - 1) + '"]').focus();
+                }
+            } else {
+                if (signatureModal.find('.password[data-key="' + (position + 1) + '"]').length) {
+                    signatureModal.find('.password[data-key="' + (position + 1) + '"]').focus();
+                }
+            }
+        });
+
+        signatureModal.find('.footer-buttons .btn-success').on('click', function () {
+            var formData = signatureModal.find('form').serializeObject(),
+                    submitData = {
+                        password: { },
+                        fileId: formData.fileId
+                    };
+
+            $.each(formData.password, function (index, value) {
+                if (value !== '') {
+                    submitData.password[index] = value;
+                }
+            });
+
+            $.ajax({
+                method: "POST",
+                url: '/index/ajax-password-prompt',
+                data: submitData,
+                success: function (result) {
+                    if (result === '1') {
+                        $.ajax({
+                            method: "POST",
+                            url: '/tickets/confirm-file-save',
+                            data: submitData,
+                            success: function (result) {
+                                document.location.reload();
+                            }
+                        });
+                    } else {
+                        signatureModal.find('.password-confirmation input[name*=password]').val('');
+                        signatureModal.find('.alert-danger').removeClass('hidden');
+                    }
+                }
+            });
+        });
+
+        $('#f_accept').validationEngine('attach', {
+            onValidationComplete: function (form, status) {
+                if (status) {
+                    uiActiveDialog.modal('hide');
+                    $('#confirmation-modal').addClass('md-show').trigger('md-modal-show');
+                }
+                return false;
+            }
+        });
+
+        $('.dialog-close').on('click', function() {
+            signatureModal.removeClass('md-show').trigger('md-modal-show');
+            signatureModal.remove();
+        });
+
+        if (document.location.href.toString().match('complete=1')) {
+            $('.trigger-confirmation').click();
+        }
+    });
+</script>

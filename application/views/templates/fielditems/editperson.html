@@ -1,0 +1,10 @@
+<h1>Edycja podmiotu</h1>
+<br />
+<input type="text" name="personName" id="personName" class="form-control" placeholder="Podaj nazwę podmiotu np. WYKONAWCA" value="{$p_name}" />
+<br />
+<div class="text-right">
+   <button class="btn btn-default" id="addItem" type="button" onclick="editPerson('{$p_name}');">Zapisz &nbsp;<i class="fa fa-plus"></i></button>
+</div>
+<script type="text/javascript">
+$('#personName').keypress(function(e) { if(e.which == 13) { editPerson('{$p_name}'); return false; }});
+</script>

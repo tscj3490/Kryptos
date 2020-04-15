@@ -1,0 +1,29 @@
+<div style="padding-bottom: 5px;" class="row-fluid">
+    <div class="span12">
+        <h3 class="page-title">
+            <i class="{if $layout->sectionIcon}{$layout->sectionIcon}{else}icon-data-science-inv{/if}"></i>
+            &nbsp;
+            {if $layout->sectionDetailed}
+                <a class="home_href" href="{if $baseUrl}{$baseUrl}{else}/home{/if}">Home</a> -> {$layout->sectionDetailed|translate}
+            {else}
+                <a class="home_href" href="{if $baseUrl}{$baseUrl}{else}/home{/if}">Home</a> -> {$layout->section|translate}
+            {/if}
+            &nbsp;
+            <a class="btn btn-top btn-warning" id="top-block-btn-back">
+                <i class="icon-back"></i>
+                {'Powrót'|translate}
+            </a>
+        </h3>
+    </div>
+</div>
+
+<script type="text/javascript">
+   
+    var elem = $('a.active'); 
+      //for (var i = 0; i < elem.length; i++) { 
+         var classes = elem[0].text; 
+         $('a.home_href').text(classes);
+         //alert(classes);
+         //console.log( classes );
+      //} 
+</script>

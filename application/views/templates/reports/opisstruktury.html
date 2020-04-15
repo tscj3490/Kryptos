@@ -1,0 +1,24 @@
+<h1>Opis struktury zbiorów danych wskazujących zawartość poszczególnych pól informacyjnych</h1>
+<p>
+    <small>Komentarz: W przypadku gdy dla zbioru dostępna jest dokumentacja techniczna używanego systemu, może zostać załączona w formie papierowej lub elektronicznej	</small>
+</p>
+<table>
+	<thread>
+    	<th>lp</th>
+        <th width="15%">Zbiór danych</th>
+        <th width="30%">Opis struktury zbiorów</th>
+        <th>
+        	Zawartość pól informacyjnych
+        </th>
+    <thread>
+    {foreach $zbiory as $z}
+     <tr>
+     	<td>{$z@iteration}</td>
+        <td>{$z.nazwa}</td>
+        <td>{$z.opis_zbioru}</td>
+        <td>{$z.pola nofilter}
+        </td>
+     </tr>
+    {/foreach}
+   
+</table>

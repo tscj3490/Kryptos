@@ -1,0 +1,32 @@
+<table class="table">
+    <tbody>
+    <tr>
+        <th>Data:</th>
+        <td>{$arrival.date}</td>
+    </tr>
+    <tr>
+        <th>Rodzaj połączenia:</th>
+        <td>{$destination_display[$arrival.direction].label}</td>
+    </tr>
+    <tr>
+        <th>Odbierający:</th>
+        <td>{$arrival.receive_user_name|upper}</td>
+    </tr>
+    <tr>
+        <th>Dzwoniący:</th>
+        <td>{$arrival.source_user_name|upper}</td>
+    </tr>
+    <tr>
+        <th>Wywoływany:</th>
+        <td>{$arrival.destination_name|upper}</td>
+    </tr>
+    <tr>
+        <th>Temat:</th>
+        <td>{$arrival.topic|upper}</td>
+    </tr>
+    <tr>
+        <th>Komentarz:</th>
+        <td>{$arrival.comment|upper}</td>
+    </tr>
+    </tbody>
+</table>

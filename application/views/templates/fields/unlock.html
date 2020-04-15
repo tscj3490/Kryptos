@@ -1,0 +1,19 @@
+<div class="row page-small">
+    <div class="col-sm-12">
+        <div class="alert alert-danger">Uwaga! Odblokowane obiekty nie będą aktualizowane w ramach centralnej aktualizacji obiektów Platformy Kryptos dokonywanej przez Dostawcę.</div>
+        <div class="well">
+            Czy na pewno chcesz odblokować pole o nazwie: <b>{$field.name}</b>
+        </div>
+        <form action="/fields/unlock-save">
+            <input type="hidden" name="id" value="{$field.id}"/>
+            <fieldset>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <a href="/fields/" class="btn btn-default">Powrót</a>
+                        <button type="submit" class="btn btn-info">Odblokuj</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

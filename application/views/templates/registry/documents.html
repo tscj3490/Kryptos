@@ -1,0 +1,37 @@
+<div>
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead>
+            <tr>
+                <th data-filter-type="string">Autor</th>
+                <th data-filter-type="string">Numer</th>
+                <th data-filter-type="string">Nazwa</th>
+                <th data-filter-type="string">Data</th>
+                <th>Operacje</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach $paginator as $d}
+            <tr>
+                <td>{$d.author.display_name}</td>
+                <td>{$d.number}</td>
+                <td>{$d.document_template.title}</td>
+                <td>{smart_date value=$d.created_at}</td>
+                <td class="operations">
+                    {element tag='a' route='registry-entries/preview-document' routeParams=['id' => $d.id, 'entry_id' => $d.entry_id, 'registry_id' => $d.entry.registry_id] attributes=[
+                        'icon' => 'view',
+                        'tooltip' => 'Podgląd'
+                    ]}
+                    {element tag='a' route='registry-entries/download-document' routeParams=['id' => $d.id, 'entry_id' => $d.entry_id, 'registry_id' => $d.entry.registry_id] attributes=[
+                        'icon' => 'download',
+                        'tooltip' => 'Pobierz'
+                    ]}
+                    {element tag='a' route='registry-entries/update' routeParams=['id' => $d.id, 'registry_id' => $d.registry_id] attributes=[
+                        'icon' => 'edit',
+                        'tooltip' => 'Edycja wpisu w rejestrze'
+                    ]}
+                </td>
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+</div>

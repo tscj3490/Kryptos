@@ -1,0 +1,18 @@
+<h1>{$dialogTitle}</h1>
+
+<div class="row">
+    <div class="col-sm-12">
+        <form name="f_profile" id="f_profile" action="/registry-entries/save" class="ajax-form form-horizontal" role="form" data-process-fn="formProcessDialModal">
+            {if $data.id}<input type="hidden" name="id" value="{$data.id}"/>{/if}
+            <input type="hidden" name="registry_id" value="{$data.registry.id}"/>
+
+            {foreach $data.registry.entities as $registryEntity}
+                {Application_Service_Entities::render($registryEntity, $data) nofilter}
+            {/foreach}
+        </form>
+    </div>
+</div>
+
+<div class="footer-actions">
+    <a class="btn btn-success pull-right dialog-form-submit">Zapisz</a>
+</div>

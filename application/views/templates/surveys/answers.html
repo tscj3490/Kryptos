@@ -1,0 +1,25 @@
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+        <tr>
+            <th data-filter-type="string">Ankieta</th>
+            <th data-filter-type="string">Zbiór</th>
+            <th data-filter-type="string">Imię i nazwisko</th>
+            <th data-filter-type="string">Data udzielenia odpowiedzi</th>
+            <th>Zobacz odpowiedzi</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach $paginator as $d}
+        <tr>
+            <td>{$d.ankieta.name}</td>
+            <td>{if $d.set_id == 0}NIE DOTYCZY{else}{$d.zbior.id}{/if}</td>
+            <td>{$d.osoba.nazwisko} {$d.osoba.imie}</td>
+            <td>{$d.date_created}</td>
+            <td class="operations">
+                <a class="glyphicon glyphicon-eye-open" href="/surveys/answers-browse/id/{$d.id}" data-toggle="tooltip" title="Szczegóły"></a>
+            </td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>

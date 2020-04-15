@@ -1,0 +1,116 @@
+<h3 class="text-center" style="margin-top:0px;margin-bottom:10px;">Wybór dostępnych osób</h3>
+<div class="modtop">
+    <div class="form-group row">
+        <div class="col-sm-12">
+            <input type="text" name="searcher" id="searcher" class="form-control" placeholder="Wpisz szukaną frazę" onkeyup="runOptsSearch();"/>
+        </div>
+    </div>
+    {if $chooseMode === 'multi'}
+    <div class="form-group row" style="margin-bottom:0px;">
+        <div class="col-sm-1">
+            <div class="checknew">
+                <input type="hidden" name="showchecked" value="0"/>
+                <input type="checkbox" name="showchecked" id="showchecked" value="1" class="" onclick="runOptsSearch();">
+                <label for="showchecked"></label>
+            </div>
+        </div>
+        <label for="categories" class="col-sm-11">Pokaż na liście tylko zaznaczone pozycje</label>
+    </div>
+    {/if}
+</div>
+{if $chooseMode === 'multi'}
+<div class="text-right">
+    <input type="button" class="btn btn-default btn-xs js-dial-action" id="checkall" value="Zaznacz wszystkie" data-action="checkall"/>
+    <input type="button" class="btn btn-default btn-xs js-dial-action" id="uncheckall" value="Odznacz wszystkie" data-action="uncheckall"/>
+</div>
+{/if}
+<div style="height:20px"></div>
+<div id="optsSearch">
+    <div class="alert alert-danger optsnodata"><i class="fa fa-4x fa-exclamation-triangle"></i>
+        <div class="floathead">
+            <div class="ins">Zmień kryteria wyszukiwania lub skorzystaj z formularza dodawania nowych rekordów znajdującego się poniżej.</div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    {foreach $t_data as $d}
+        <div class="selopt2bl" id="id{$d.id}" data-id="{$d.id}">{if $d.icon}<span class="{$d.icon}"></span>{/if}{$d.name}</div>
+    {/foreach}
+</div>
+<div style="clear:both;"></div>
+
+<div class="modbottom" id="section-add-person">
+    <h3 style="margin-top:0px;">Dodawanie nowej osoby</h3>
+    <form name="f_data_mini" id="f_data_mini" onsubmit="return checkSubmit()">
+        <fieldset>
+            <div class="form-group row">
+                <div class="col-sm-5">
+                    <div class="row">
+                        <label for="imie" class="col-sm-4">Imię:</label>
+                        <div class="col-sm-8"><input type="text" name="create[imie]" id="imie" class="form-control validate[required]" value="{$data.imie}"></div>
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <button type="button" class="switch-values btn btn-default"><span class="glyphicon glyphicon-transfer"></span></button>
+                </div>
+                <div class="col-sm-6">
+                    <div class="row">
+                        <label for="nazwisko" class="col-sm-4">Nazwisko:</label>
+                        <div class="col-sm-8"><input type="text" name="create[nazwisko]" id="nazwisko" class="form-control validate[required]" value="{$data.nazwisko}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-10">
+                    <div class="row">
+                        <input type="hidden" name="company_id" id="create[company_id]" value="{$data.company_id}" data-source-variable="storageCompaniesMini"/>
+                        <label for="company" class="col-sm-2">Firma:</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="create[company]" id="company" class="form-control typeaheadElement" data-target-element="#company_id" data-source-variable="storageCompaniesMini" data-allow-new="true"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="globalMessage_mini"></div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <input type="button" value="Zapisz" class="btn btn-info pull-right" onclick="return checkSubmit();">
+                </div>
+            </div>
+        </fieldset>
+        <div class="hiddenElement">
+            <input type="hidden" name="create[type]" id="type" value="{$data.type}"/>
+            <input type="hidden" name="addAnother" id="addAnother" value="0"/>
+            <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    setTimeout('$(\'#searcher\').focus()', 500);
+
+    var storageCompaniesMini = objectsStorage.init({$employees|json_encode nofilter});
+
+    $('#optsSearch .selopt2bl').on('click', function (e) {
+        var result = dial.lastDialProcessFn(this.id.replace('id', ''));
+        if (result === false) {
+            e.stopPropagation();
+        }
+    });
+
+    function checkSubmit() {
+        var data = $('#f_data_mini').serializeObject();
+
+        $.ajax({
+            url : '/osoby/mini-save/',
+            data : data,
+            method : 'POST',
+            dataType: 'json',
+            success: function(result) {
+                dial.lastDialProcessFn(result.object);
+            }
+        });
+
+        return false;
+    }
+    backendUtilities.addVatidationEngine("f_data_mini");
+</script>

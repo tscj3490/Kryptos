@@ -1,0 +1,40 @@
+
+<h1 class="float: right;">Wykaz wszystkich zbiorów danych osobowych wraz ze wskazaniem programów zastosowanych do przetwarzania tych danych</h1>
+
+<table >
+    <thread >
+        <th width="10%">lp</th>
+        <th width="15%">Nazwa zbioru danych osobowych</th>
+        <th width="15%">Forma przetwarzania zbioru danych osobowych<sup>1</sup></th>
+        <th width="15%">Nazwa systemu informatycznego</th>
+        <th width="15%">Czy podlega rejestracji w GIODO</th>
+        <th width="15%">Czy podlega wpisaniu do Jawnego Rejestru</th>
+        <thread>
+            {foreach $zbiory as $z}
+            <tr>
+                <td>{$z@iteration}</td>
+                <td>{$z.nazwa}</td>
+                <td>{$z.formaGromadzeniaDanych}</td>
+                <td>
+                {foreach $z.programy as $p}
+                {$p.producent} {$p.nazwa} {$p.wersja}{if !$p@last}, {/if}
+                {foreachelse}
+                brak 
+                {/foreach}
+                </td>
+                <td>{foreach $z.podlega_rejestracji as $d}
+                {if $d == 1} Tak {else} Nie{/if}
+                {/foreach}
+                </td>
+                <td>{foreach $z.show_in_public_registry as $e}
+                {if $e == 1} Tak {else} Nie{/if}
+                {/foreach}</td>
+            </tr>
+            {/foreach}
+
+</table>
+<h4>
+Legenda:<br>
+
+    (<sup>1</sup>) tradycyjna (papierowa), informatyczna (nazwa systemu informatycznego)
+</h4>

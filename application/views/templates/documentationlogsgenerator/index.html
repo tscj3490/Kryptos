@@ -1,0 +1,183 @@
+{$message}
+<div class="body-action">
+    <a class="btn btn-info" href="/documentationlogsgenerator/events_types">Typy operacji</a>
+    <a class="btn btn-info" href="/eventspersonstypes">Rodzaje osób</a>
+    <a class="btn btn-info" href="/eventspersons">Osoby</a>
+    <a class="btn btn-info" href="/eventscars">Pojazdy</a>
+    &nbsp;&nbsp;&nbsp;
+    <a class="btn btn-info" href="/events/update">Dodaj nowe zdarzenie</a>
+    <a class="btn btn-info" href="/events/report?{$l_list}">Pobierz raport</a>
+    <a class="btn btn-info" href="/events/reportview?{$l_list}">Wyświetl raport</a>
+</div>
+<div style="height:10px"></div>
+<hr class="nomargin"/>
+<div style="height:10px"></div>
+<form method="get" action="/events">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-5">
+                    <strong>Typ:</strong><br/>
+
+                    <div style="height:5px;"></div>
+                    <select name="type" id="type" class="form-control">
+                        <option value="">wszystkie</option>
+                        <option value="c1" {if $get.type===
+                        'c1'} selected{/if}>wjazd, wyjazd</option>
+                        <option value="c2" {if $get.type===
+                        'c2'} selected{/if}>wejście, wyjście</option>
+                        <option value="1" {if $get.type===
+                        '1'} selected{/if}>wjazd</option>
+                        <option value="2" {if $get.type===
+                        '2'} selected{/if}>wyjazd</option>
+                        <option value="3" {if $get.type===
+                        '3'} selected{/if}>wejście</option>
+                        <option value="4" {if $get.type===
+                        '4'} selected{/if}>wyjście</option>
+                    </select>
+                </div>
+                <div class="col-md-7">
+                    <strong>Firma:</strong><br/>
+
+                    <div style="height:5px;"></div>
+                    <select name="eventscompany" id="eventscompany" class="form-control">
+                        <option value="">Wszystkie</option>
+                        {foreach $eventscompanies as $eventscompany}
+                        <option value="{$eventscompany->id}" {if $get.eventscompany== $eventscompany->id}selected="selected"{/if}>{$eventscompany->name}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Rodzaj osoby:</strong><br/>
+
+                    <div style="height:5px;"></div>
+                    <select name="eventspersonstype" id="eventspersonstype" class="form-control">
+                        <option value="">wszystkie</option>
+                        {foreach $eventspersonstypes as $eventspersonstype}
+                        <option value="{$eventspersonstype->id}" {if $get.eventspersonstype== $eventspersonstype->id}selected="selected"{/if}>{$eventspersonstype->name}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <strong>Osoba:</strong><br/>
+
+                    <div style="height:5px;"></div>
+                    <select name="eventsperson" id="eventsperson" class="form-control">
+                        <option value="">wszystkie</option>
+                        {foreach $eventspersons as $eventsperson}
+                        <option value="{$eventsperson->id}" {if $get.eventsperson== $eventsperson->id}selected="selected"{/if}>{$eventsperson->name} {$eventsperson->lastname}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Rodzaj samochodu:</strong><br/>
+
+                    <div style="height:5px;"></div>
+                    <select name="eventscarstype" id="eventscarstype" class="form-control">
+                        <option value="">wszystkie</option>
+                        {foreach $eventscarstypes as $eventscarstype}
+                        <option value="{$eventscarstype->id}" {if $get.eventscarstype== $eventscarstype->id}selected="selected"{/if}>{$eventscarstype->name}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <strong>Samochód:</strong><br/>
+
+                    <div style="height:5px;"></div>
+                    <select name="eventscar" id="eventscar" class="form-control">
+                        <option value="">wszystkie</option>
+                        {foreach $eventscars as $eventscar}
+                        <option value="{$eventscar->id}" {if $get.eventscar== $eventscar->id}selected="selected"{/if}>{$eventscar->name}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <strong>Data od:</strong><br/>
+
+                    <div style="height:5px;"></div>
+                    <input type="text" name="datefrom" id="datefrom" class="form-control datepicker-input" value="{$get.datefrom}">
+                </div>
+                <div class="col-md-4">
+                    <strong>Data do:</strong><br/>
+
+                    <div style="height:5px;"></div>
+                    <input type="text" name="dateto" id="dateto" class="form-control datepicker-input" value="{$get.dateto}">
+                </div>
+                <div class="col-md-4">
+                    <br/>
+
+                    <div style="height:5px;"></div>
+                    <input type="submit" value="Szukaj" class="btn btn-success"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div style="height:10px"></div>
+<hr class="nomargin"/>
+<div style="height:10px"></div>
+<form method="post" action="/events/delChecked/">
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead class="ui-widget-header">
+        <tr>
+            <th></th>
+            <th>nr</th>
+            <th>typ</th>
+            <th>rodzaj osoby</th>
+            <th>firma</th>
+            <th>osoba</th>
+            <th>rodzaj samochodu</th>
+            <th>samochód</th>
+            <th>data</th>
+            <th>godzina</th>
+            <th>uwagi</th>
+            <th>cel</th>
+            <th>opcje</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content">
+        {foreach $paginator as $d}
+        <tr>
+            <td style="width:22px">
+                <input type="checkbox" name="id{$d.id}" id="id{$d.id}" value="1"/>
+            </td>
+            <td>{$d@iteration}</td>
+            <td><span class="btn btn-xs btn-{if $d.type == 1 || $d.type == 3}yellow-1{elseif $d.type == 2 || $d.type == 4}green-1{/if}">{if $d.type == 1}WJAZD{/if}{if $d.type == 2}WYJAZD{/if}{if $d.type == 3}WEJŚCIE{/if}{if $d.type == 4}WYJŚCIE{/if}</span></td>
+            <td>{$d.eventspersonstype.name}</td>
+            <td>{$d.eventscompany.name}</td>
+            <td>{$d.eventsperson.name} {$d.eventsperson.lastname}</td>
+            <td>{$eventscarstypesArray[$d.eventscar.type]|upper}</td>
+            <td>{$d.eventscar.name}</td>
+            <td>{smart_date value=$d.date}</td>
+            <td>{$d.hour}</td>
+            <td>{$d.info}</td>
+            <td>{if $d.purpose_id}{$d.room_name}{if $d.room_no}, pok. {$d.room_no}{/if}, {$d.building_name}{/if}</td>
+            <td>
+                {if $userIsKodoOrAbi}
+                <a class="glyphicon glyphicon-pencil" href="/events/update/id/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                <a class="glyphicon glyphicon-star" href="/events/update/copy/{$d.id}" data-toggle="tooltip" title="Duplikuj"></a>
+                <a class="glyphicon glyphicon-trash" onclick="if(confirm('Usunąć?')) window.location.href='/events/del/id/{$d.id}'" href="javascript:;" data-toggle="tooltip" title="Usuń"></a>
+                {/if}
+                {if ($d.type == 1 || $d.type == 3) && $d.enableOuter}<a href="/events/update/copy/{$d.id}/reverse/1/"><i class="fa fa-arrow-right"></i></a>{/if}
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+
+    </table>
+    {if $userIsKodoOrAbi}
+    <input type="submit" value="Usuń zaznaczone" class="btn btn-default"/>
+    {/if}
+</form>

@@ -1,0 +1,39 @@
+{$message}
+<form name="f_data" id="f_data" method="POST" action="/documentation-logs/save">
+    <fieldset>
+        <div class="form-group row">
+            <label for="title" class="col-sm-2">Tytuł:</label>
+            <div class="col-sm-4"><input type="text" name="title" id="title" class="form-control validate[required]" value="{$data.title}"></div>
+        </div>
+        <div class="form-group row">
+            <label for="date_start" class="col-sm-2">Data od:</label>
+            <div class="col-sm-4"><input type="text" name="date_start" id="date_start" class="form-control validate[required] datepicker-input" value="{$data.date_start}"></div>
+        </div>
+        <div class="form-group row">
+            <label for="date_end" class="col-sm-2">Data do:</label>
+            <div class="col-sm-4"><input type="text" name="date_end" id="date_end" class="form-control validate[required] datepicker-input" value="{$data.date_end}"></div>
+        </div>
+        <div class="form-group row">
+            <label for="date" class="col-sm-2">Identyfikator:</label>
+            <div class="col-sm-4"><input type="text" name="log_unique_id" id="log_unique_id" class="form-control validate[required]" value="{$data.log_unique_id}"></div>
+        </div>
+        <div class="form-group row">
+            <label for="auditor" class="col-sm-2">Audytor:</label>
+            <div class="col-sm-4"><input type="text" name="auditor" id="auditor" class="form-control validate[required]" value="{$data.auditor}"></div>
+        </div>
+        <div id="globalMessage"></div>
+        <div class="">
+            <a href="/documentation-logs"><input type="button" value="Powrót" class="btn"></a>
+            <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+            <input type="button" value="Zapisz i dodaj następny" class="btn btn-info" onclick="$('#addAnother').val('1');$('#formSubmit').click();">
+            <input type="hidden" name="id" id="id" value="{$data.id}"/>
+        </div>
+    </fieldset>
+    <div style="width:0px;height:0px;overflow:hidden;">
+        <input type="text" name="addAnother" id="addAnother" value="0"/>
+        <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+    </div>
+</form>
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+</script>

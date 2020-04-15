@@ -1,0 +1,51 @@
+{$message}
+<form name="f_data" id="f_data" method="POST" action="/contacts/save" id="dataform-add">
+   <fieldset>
+      <div class="form-group row">
+         <label for="name" class="col-sm-1">Nazwa:</label>
+         <div class="col-sm-8"><input type="text" name="name" id="name"  class="form-control validate[required]" value="{$data['name']}"></div>
+      </div>
+      <div class="form-group row">
+         <label for="street" class="col-sm-1">Ulica:</label>
+         <div class="col-sm-4"><input type="text" name="street" id="street"  class="form-control validate[required]" value="{$data['street']}"></div>
+         <label for="house" class="col-sm-1">Nr domu:</label>
+         <div class="col-sm-1"><input type="text" name="house" id="house"  class="form-control validate[required]" value="{$data['house']}"></div>
+         <label for="locale" class="col-sm-1">Nr lokalu:</label>
+         <div class="col-sm-1"><input type="text" name="locale" id="locale"  class="form-control" value="{$data['locale']}"></div>
+      </div>
+      <div class="form-group row">
+         <label for="postal_code" class="col-sm-1">Kod pocztowy:</label>
+         <div class="col-sm-1"><input type="text" name="postal_code" id="postal_code"  class="form-control validate[required]" value="{$data['postal_code']}"></div>
+         <label for="city" class="col-sm-1">Miejscowość:</label>
+         <div class="col-sm-6"><input type="text" name="city" id="city"  class="form-control validate[required]" value="{$data['city']}"></div>
+      </div>
+      <div class="form-group row">
+         <label for="country" class="col-sm-1">Kraj:</label>
+         <div class="col-sm-8"><input type="text" name="country" id="country"  class="form-control validate[required]" value="{$data['country']}"></div>
+      </div>
+      <div id="globalMessage"></div>
+      <div class="">
+         <a href="/contacts/"><input type="button" value="Powrót"  class="btn"  ></a>
+         <input type="button" value="Zapisz"  class="btn btn-info" onclick="return checkSubmit();" >
+         <input type="button" value="Zapisz i dodaj następny"  class="btn btn-info" onclick="$('#addAnother').val('1');return checkSubmit();"  >
+         <input type="hidden" name="id" id="id" value="{$data.id}" />
+      </div>
+   </fieldset>
+   <div style="width:0px;height:0px;overflow:hidden;">
+      <input type="text" name="addAnother" id="addAnother" value="0" />
+      <input type="submit" id="formSubmit" value="Zapisz"  class="btn btn-info"  >
+   </div>
+</form>
+<script type="text/javascript">
+   function checkSubmit () {
+      $.ajax({
+         dataType : 'html',
+         url : '/contacts/checkExist/',
+         data : 'name='+$('#name').val()+'&id={$data.id}',
+         method : 'POST',
+         success : function(mess,textStatus,xhr) { if ( mess == 1 ) { $('#formSubmit').click(); } else { $('#globalMessage').html('<div class="alert alert-danger">Rekord z podaną nazwą już istnieje. Proszę zmienić nazwę.</div>'); setTimeout('$(\'#globalMessage\').html(\'\')',5000); } },
+         error : function(xhr,textStatus,errorThrown) { }
+      });
+   }
+	backendUtilities.addVatidationEngine("f_data");
+</script>

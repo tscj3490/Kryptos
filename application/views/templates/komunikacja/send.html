@@ -1,0 +1,82 @@
+<div class="widget transparent box-messages">
+    {include file='komunikacja/_top.html'}
+    <div class="row">
+        <div class="col-md-3">
+            {include file='komunikacja/_menu.html'}
+        </div>
+
+        <div class="col-md-9">
+            <div class="widget">
+                <div class="widget-content padding">
+                    <form action="/komunikacja/save" method="post" class="form-horizontal" id="newMessageForm">
+                        <input type="hidden" name="uploadedFiles" value="">
+                        <div class="form-group">
+                            <label class="col-sm-2 ">Osoba:</label>
+                            <div class="col-sm-4">
+                                <select id="odbiorca_id" name="odbiorca_id" class="form-control validate[required]">
+                                    {foreach $users as $user}
+                                        <option value="{$user['id']}" {if $user['id'] == $data['odbiorca_id']}selected{/if}>{$user['name']}</option>
+                                    {/foreach}
+                                </select></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 ">Temat:</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="temat" name="temat" placeholder="Temat wiadomości" value="{$data.temat}" class="form-control validate[required]" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 ">Treść:</label>
+                            <div class="col-sm-12">
+                                <textarea id="tresc" name="tresc" class="summernote-small form-control" placeholder="Treść wiadomości" cols="70" rows="5" >{$data.tresc}</textarea>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label class="col-sm-2">Załączniki:</label>
+                            <div class="col-sm-12 portlets ui-sortable">
+                                <!-- Your awesome content goes here -->
+                                <div class="widget messages-dropzone">
+                                    <div id="msgDropzone" class="dropzone">
+                                        <div class="dz-default dz-message"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        <div>
+                            <input type="submit" value="Wyślij" class="btn btn-info" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div><!-- End div .col-md-10 -->
+    </div><!-- End div .row -->
+</div><!-- End div .box-info -->
+
+
+<link href="/assets/libs/summernote/summernote.css" rel="stylesheet" type="text/css" />
+<script src="/assets/libs/summernote/summernote.js"></script>
+<script src="/_gfx/js/pages/new-message.js"></script>
+
+{literal}
+<script>
+    documentDropzone = enableDropzoneWidget('#msgDropzone', {
+        url: '/upload.php',
+        params: {dirname: 'messages'}
+    });
+
+    var messageForm = $('#newMessageForm');
+    messageForm.on('submit', function() {
+        var uploadedFiles = documentDropzone.getAcceptedFiles(),
+            filesData = [];
+
+        $.each(uploadedFiles, function() {
+            filesData.push({
+                name: this.name,
+                uploadedUri: this.xhr.response
+            });
+        });
+
+        messageForm.find('input[name=uploadedFiles]').val(JSON.stringify(filesData));
+    });
+</script>
+{/literal}

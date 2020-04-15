@@ -1,0 +1,135 @@
+<div class="row">
+    <div class="col-sm-12">
+        <form name="form_mini-add-non-compilance" id="form_mini-add-non-compilance" action="/inspections/mini-add-non-compilance-ajax-save" method="post" class="form-horizontal ajax-form" role="form" data-process-fn="formProcessDialModal">
+            {if $data.id}
+            <input type="hidden" name="non_compilance[id]" value="{$data.id}">
+            {/if}
+            <input type="hidden" name="non_compilance[activity_id]" value="{$data.activity_id}">
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <label for="non_compilance_notification_date" class="col-sm-4">Data zgłoszenia:</label>
+                    <div class="col-sm-8"><input type="text" name="non_compilance[notification_date]" id="non_compilance_notification_date" class="form-control datetimepicker-input" value="{$data.notification_date}"></div>
+                </div>
+                <div class="col-sm-6">
+                    <label for="non_compilance_registration_date" class="col-sm-4">Data rejestracji:</label>
+                    <div class="col-sm-8"><input type="text" name="non_compilance[registration_date]" id="non_compilance_registration_date" class="form-control datetimepicker-input" value="{$data.registration_date}"></div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-4">Lokalizacja rodzaj:</label>
+                <div class="col-sm-8">
+                    <input type="hidden" id="location_type" name="non_compilance[location_type]" value="{$data.location_type}" class="toggle-relative clear-relative"/>
+                    <div class="form-inline">
+                        <div class="radio iradio">
+                            <label>
+                                <input type="radio" data-value="1" name="radio_location_type" data-target="#location_type" class="transfer-value">
+                                Pomieszczenie
+                            </label>
+                        </div>
+
+                        <div class="radio iradio">
+                            <label>
+                                <input type="radio" data-value="2" name="radio_location_type" data-target="#location_type" class="transfer-value">
+                                Inne
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="apartment" class="col-sm-4">Lokalizacja:</label>
+                <div class="col-sm-2">
+                    <select name="non_compilance[apartment]" id="apartment" class="form-control">
+                        <option value="apartment">Apartment</option>
+                        {foreach $apartment as $apart}
+                            <option value="{$apart.id}">{$apart.text}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <select name="non_compilance[settlement]" id="settlement" class="form-control">
+                        <option value="settlement">Settlement</option>
+                        {foreach $settlement as $settle}
+                            <option value="{$settle.id}">{$settle.text}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <select name="non_compilance[block]" id="block" class="form-control">
+                        <option value="block">Block</option>
+                        {foreach $block as $bloc}
+                            <option value="{$bloc.id}">{$bloc.text}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+         
+            <div class="form-group row" data-relation-base="location_type" data-relation-id="1">
+                <label for="non_compilance_location_pomieszczenie_typeahead" class="col-sm-4">Pomieszczenie:</label>
+                <div class="col-sm-8">
+                    <input type="hidden" name="non_compilance[location_pomieszczenie]" id="non_compilance_location_pomieszczenie" value="{$data.location_pomieszczenie}" data-source-variable="storagePomieszczenia"/>
+                    <input type="text" id="non_compilance_location_pomieszczenie_typeahead" class="form-control typeaheadElement" data-source-variable="storagePomieszczeniaMini" data-target-element="#non_compilance_location_pomieszczenie"/>
+                </div>
+            </div>
+            <div class="form-group row" data-relation-base="location_type" data-relation-id="2">
+                <label for="non_compilance_location_other" class="col-sm-4">Nazwa lokalizacji:</label>
+                <div class="col-sm-8"><input type="text" name="non_compilance[location_other]" id="non_compilance_location_other" class="form-control" value="{$data.location_other}"></div>
+            </div>
+
+            <div class="form-group row">
+                <label for="non_compilance_title" class="col-sm-4">Nazwa problemu:</label>
+                <div class="col-sm-8"><input type="text" name="non_compilance[title]" id="non_compilance_title" class="form-control" value="{$data.title}"></div>
+            </div>
+            <div class="form-group row">
+                <label for="non_compilance_type" class="col-sm-4">Rodzaj:</label>
+                <div class="col-sm-8">
+                    <select name="non_compilance[type]" id="non_compilance_type" class="form-control">
+                        {foreach $nonCompilanceTypes as $nonCompilanceType}
+                            <option value="{$nonCompilanceType.name}"{if $data.type == $nonCompilanceType.id} selected{/if}>{$nonCompilanceType.name}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="non_compilance_comment" class="col-sm-4">Opis:</label>
+                <div class="col-sm-8"><textarea name="non_compilance[comment]" id="non_compilance_comment" class="form-control ckeditor-default">{$data.comment}</textarea></div>
+            </div>
+            <div class="form-group row">
+                <label for="non_compilance_possible_solution" class="col-sm-4">Możliwe rozwiązanie:</label>
+                <div class="col-sm-8">
+                    <textarea name="non_compilance[possible_solution]" id="non_compilance_possible_solution" class="form-control ckeditor-default">{$data.possible_solution}</textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="non_compilance_recommendation" class="col-sm-4">Zalecane działania:</label>
+                <div class="col-sm-8">
+                    <textarea name="non_compilance[recommendation]" id="non_compilance_recommendation" class="form-control ckeditor-default">{$data.recommendation}</textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <input type="hidden" name="non_compilance[assigned_user]" id="non_compilance_assigned_user_id" value="{$data.assigned_user}" data-source-variable="storageCompaniesMini"/>
+                    <label for=non_compilance_assigned_user class="col-sm-4">Osoba odpowiedzialna:</label>
+                    <div class="col-sm-8">
+                        <input type="text" id="non_compilance_assigned_user" class="form-control typeaheadElement" data-target-element="#non_compilance_assigned_user_id" data-source-variable="storageUsersMini"/>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label for="non_compilance_realisation_date" class="col-sm-4">Data realizacji:</label>
+                    <div class="col-sm-8"><input type="text" name="non_compilance[realisation_date]" id="non_compilance_realisation_date" class="form-control datepicker-input" value="{$data.realisation_date}"></div>
+                </div>
+            </div>
+            <hr>
+            {include file="_reuse/_element-attachments-list.html" attachments=$data.files}
+            {include file="_reuse/_element-attachments.html"}
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("form_mini-add-non-compilance");
+
+    var storageUsersMini = objectsStorage.init({$employees|json_encode nofilter});
+    var storagePomieszczeniaMini = objectsStorage.init({$pomieszczenia|json_encode nofilter});
+</script>

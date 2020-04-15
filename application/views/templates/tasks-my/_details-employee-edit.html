@@ -1,0 +1,17 @@
+<a href="/osoby/update/id/{$storageTask.object_id}?task={$storageTask.id}" class="btn btn-info">Przejdź do edycji pracownika</a>
+
+<hr>
+{if $storageTask.signature_required}
+    {include file="tasks-my/_element-signature-form.html"}
+{else}
+    <form name="f_accept" id="f_accept" action="{$baseUrl}/confirm" method="post" class="form-horizontal" role="form">
+        <div>
+            <input type="submit" value="{'AKCEPTUJ'|translate}" class="btn btn-success"/>
+        </div>
+        <input type="hidden" name="id" id="id" value="{$storageTask.id}"/>
+    </form>
+
+    <script>
+        backendUtilities.addVatidationEngine("f_accept");
+    </script>
+{/if}

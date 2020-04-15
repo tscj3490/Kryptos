@@ -1,0 +1,72 @@
+{$message}
+<form name="f_profile" id="f_profile" method="POST" action="/zastepstwa/save" id="dataform-add">
+    <fieldset>
+        <div class="form-group row">
+            <label for="osoba_zastepowana" class="col-sm-2">Osoba zastępowana:</label>
+
+            <select name="osoba_zastepowana" id="osoba_zastepowana">
+                {foreach $osoby as $o}
+                <option value="{$o.id}" {if $o.id==$data.osoba_zastepowana}selected{/if}>{$o.imie} {$o.nazwisko}
+                </option>
+                {/foreach}
+            </select>
+        </div>
+        <div class="form-group row">
+            <label for="osoba_zastepujaca" class="col-sm-2">Osoba zastępująca:</label>
+
+            <select name="osoba_zastepujaca" id="osoba_zastepujaca">
+                {foreach $osoby as $o}
+                <option value="{$o.id}" {if $o.id==$data.osoba_zastepujaca}selected{/if}>{$o.imie} {$o.nazwisko}
+                </option>
+                {/foreach}
+            </select>
+        </div>
+
+        <div class="form-group row">
+            <label for="od" class="col-sm-2">Od:</label>
+            <input type="date" name="od" id="od"/>
+        </div>
+
+        <div class="form-group row">
+            <label for="do" class="col-sm-2">Do:</label>
+            <input type="date" name="do" id="do"/>
+            (jeśli zastępstwo jest bezterminowe zostaw pole puste)
+        </div>
+
+        <div class="form-group row">
+            <label>
+                <div class="col-sm-12">
+                    <input type="checkbox" name="przetwarzanie" id="przetwarzanie" value="1"/>
+                    Przenieś upoważnienia do zbiorów
+                </div>
+            </label>
+        </div>
+
+        <div class="form-group row">
+            <label>
+                <div class="col-sm-12">
+                    <input type="checkbox" name="klucze" id="klucze" value="1"/>
+                    Przenieś upoważnienia do pomieszczeń
+                </div>
+            </label>
+        </div>
+
+        <div class="form-group row">
+            <label>
+                <div class="col-sm-12">
+                    <input type="checkbox" name="przetwarzanie_poza" id="przetwarzanie_poza" value="1"/>
+                    Przenieś upoważnienia do przetważania danych poza firmą
+                </div>
+            </label>
+        </div>
+
+        <div class="">
+            <input type="submit" value="Zapisz" class="btn btn-info">
+            <input type="hidden" name="id" id="id" value="{$data.id}"/>
+        </div>
+    </fieldset>
+</form>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_profile");
+</script>

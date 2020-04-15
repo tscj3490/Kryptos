@@ -1,0 +1,84 @@
+{include file='modals/modal.tpl' title='Importexport- co to jest?' content='Moduł ten umożliwia szybki dostęp o wybranych raportów dostępnych w systemie domyślnie lub wykonanych specjalnie dla danego Klienta, m. in.: Opis struktury zbiorów; Ewidencja zmiany haseł; Wykaz budynków, pomieszczeń i obszarów przetwarzania; Wykaz kluczy, Wykaz osób zapoznanych z polityką bezpieczeństwa; Rozbudowany raport o zbiorach wraz z podstawami prawnymi; Zbiory wraz z pomieszczeniami; Zbiory niemodyfikowane przez ostatnie 30 dni; Rejestr osób upoważnionych do przetwarzania danych; Rejestr udostępnień/powierzeń danych osobowych; Ewidencja nośników służących przetwarzaniu danych osobowych; Stosowane zabezpieczenia; Ilość wysłanych wiadomości; Użytkownicy, którzy nie logowali się w ogóle lub ponad 30 dni; Rejestr incydentów; Zadania z kalendarza lub raport o osobach, które nie zrealizowały testów.'}
+<div>
+    <fieldset>
+        <form role="form" enctype="multipart/form-data" action="importexport/process" class="form-horizontal" method="post" id="fileinfo" name="fileinfo" onsubmit="return submitForm();">
+            <div class="form-group row">
+                <div class="col-sm-12">
+				<div id="status"></div>
+                    <label for="fields">Import Registory:</label>
+                    <input required type="file" name="fields" id="fields" class="" />
+                </div>
+            </div>
+        </form>
+	
+		<form method="post" id="fileimport" role="form" enctype="multipart/form-data" action="importexport/export" class="form-horizontal">
+            
+                <input type="submit" value="Export" class="btn btn-info" />
+           
+        </form>
+    </fieldset>
+	<div id="alldata">
+	<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example" >
+            	<thead>
+                	<tr>
+                    	<th>Name</th>
+                    	<th>Street</th>
+                    	<th>Number</th>
+                    	<th>Address</th>
+                    	 <th>Country</th>
+						 <th>Computer</th>
+                    </tr>
+                </thead>
+                <tbody class="ui-widget-content">
+                	{foreach $data as $d}
+                	<tr>
+                        <td>{$d|ucfirst}</td>
+                        
+                    </tr>
+                    {/foreach}
+                </tbody>
+
+</table>
+	<div>
+	
+</div>
+ <script type="text/javascript">
+        $('#fields').change(function() {
+            var bar = $('.bar');
+            var percent = $('.percent');
+            var status = $('#status');
+            console.log("submit event");
+            var fd = new FormData(document.getElementById("fileinfo"));
+            fd.append("label", "WEBUPLOAD");
+            $.ajax({
+              url: "importexport/process",
+              type: "POST",
+              data: fd,
+              processData: false,  // tell jQuery not to process the data
+              contentType: false,   // tell jQuery not to set contentType
+              dataType : 'json',
+            }).done(function( data ) { 
+              if($.trim(data.status)=='1'){
+                 $('#status').attr('style','color:green');
+                 $('#status').html(data.message);
+                 $('#fields').val('');
+                 getallData();
+              }else{
+                 $('#status').attr('style','color:red');
+                 $('#status').html(data.message);
+              }
+              
+            });
+            return false;
+   });
+   
+ function getallData(){
+     $.ajax({
+              url: "importexport/alldata",
+              type: "POST",
+            }).done(function( data ) { //alert(data);
+               $('#alldata').html(data);
+            });
+ 
+ }  
+    </script>

@@ -1,0 +1,443 @@
+<div class="row page-small">
+    <div class="col-sm-12">
+        <h3>{'Zadanie'|translate}:</h3>
+        <table class="table table-small">
+            <tbody>
+            <tr>
+                <td class="min-width">{'Autor'|translate}:</td>
+                <td>{$task.author_name}</td>
+            </tr>
+            <tr>
+                <td>{'Tytuł'|translate}:</td>
+                <td>{if $storageTask.title}{$storageTask.title}{else}{$task.title}{/if}</td>
+            </tr>
+            <tr>
+                <td>{'Termin'|translate}:</td>
+                <td>{$storageTask.deadline_date|substr:0:10}</td>
+            </tr>
+            <tr>
+                <td>{'Status'|translate}:</td>
+                <td>{if $storageTask.status}<span class="btn btn-xs btn-success">{'ZREALIZOWANE'|translate}</span>{else}<span class="btn btn-xs btn-danger">{'DO REALIZACJI'|translate}</span>{/if}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<hr/>
+
+{if $detailedTemplate}
+    {include file=$detailedTemplate}
+{elseif $storageTaskType == Application_Service_Tasks::TYPE_GENERAL}
+    <div class="row">
+        <div class="col-sm-12"><h3>{'Potwierdź poniższą operację'|translate}:</h3></div>
+    </div>
+    <div class="row form-group">
+        <div class="col-sm-12">{$storageTask.description nofilter}</div>
+    </div>
+    {if $storageTask.status === '0'}
+        {if $storageTask.signature_required}
+            {include file="tasks-my/_element-signature-form.html"}
+        {else}
+            <form name="f_accept" id="f_accept" action="{$baseUrl}/confirm" method="post" class="form-horizontal" role="form">
+                <div>
+                    <input type="submit" value="{'AKCEPTUJ'|translate}" class="btn btn-success trigger-confirmation"/>
+                </div>
+                <input type="hidden" name="id" id="id" value="{$storageTask.id}"/>
+            </form>
+
+            <script>
+                backendUtilities.addVatidationEngine("f_accept");
+
+                $(function() {
+                    if (document.location.href.toString().match('complete=1')) {
+                        $('.trigger-confirmation').click();
+                    }
+
+                });
+
+            </script>
+        {/if}
+    {/if}
+{/if}
+
+{if $storageTaskType == Application_Service_Tasks::TYPE_DOCUMENT}
+    {if $storageTask.status === '0'}
+        <div class="row">
+            <div class="col-sm-12"><h3>{'Zapoznaj się z poniższym dokumentem'|translate}:</h3></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 document-preview-box">
+                <div>
+                    {$documentHtml nofilter}
+                </div>
+            </div>
+        </div>
+        <form name="f_accept" id="f_accept" class="form-horizontal" role="form">
+            <fieldset>
+                {if $registry}
+                    {foreach $registry.entities as $entity}
+                        {if $entity.system_name != 'employee' && $entity.system_name != 'document'}
+                            {Application_Service_Entities::render($entity, $data) nofilter}
+                        {/if}
+                    {/foreach}
+                {/if}
+                <div class="form-group row">
+                    <label class="col-sm-12">
+                        <input type="checkbox" value="1" name="confirmed" class="validate[required]">
+                        {'Oświadczam, że zapoznałem się z powyższym dokumentem'|translate}
+                    </label>
+                </div>
+            </fieldset>
+            <div>
+                <input type="submit" value="AKCEPTUJĘ I PODPISUJĘ" class="btn btn-success"/>
+                <span class="md-trigger hidden trigger-confirmation" data-modal="confirmation-modal"></span>
+            </div>
+            <input type="hidden" name="id" id="id" value="{$storageTask.id}"/>
+        </form>
+
+        <div class="md-modal md-just-me modal-signature" id="confirmation-modal">
+            <div class="md-content"><div><div>
+                <h2><strong>{'ELEKTRONICZNY PODPIS'|translate}</strong></h2>
+                <div>
+                    <p class="text-center">{'By podpisać dokument przy pomocy podpisu elektronicznego KRYPTOS, zgodnie z Dyrektywą o Wspólnotowej Infrastrukturze Podpisów Elektronicznych (1999/93/EC), zaloguj się ponownie.'|translate}</p>
+
+                    <div class="alert alert-danger hidden">{'Nieprawidłowe hasło'|translate}</div>
+
+                    <div class="password-confirmation">
+                        <form>
+                            <input type="hidden" name="taskId" value="{$storageTask.id}"/>
+                            <input type="hidden" name="formDataJson" class="formDataJson"/>
+                        {for $i = 0, $empty = 0; $i < $length; $i++}
+                            {$j = $i+1}
+                            <div class="password-char">
+                                <input type="password" class="password" maxlength="1" {if $gwiazdki[$i]} placeholder="*" disabled{else}data-key="{$empty++}" name="password[{$i}]"{/if} value>
+                                <div>{$j}</div>
+                            </div>
+                        {/for}
+                        </form>
+                    </div>
+                    <div class="footer-buttons">
+                        <button class="btn btn-danger md-close">{'ANULUJ!'|translate}</button>
+                        <button class="btn btn-success pull-right">{'PODPISZ SIĘ'|translate}</button>
+                    </div>
+                </div>
+            </div></div></div>
+        </div>
+
+        <script>
+            $(function() {
+                $('#f_accept').validationEngine('attach', {
+                    onValidationComplete: function(form, status) {
+                        if (status) {
+                            $('.trigger-confirmation').click();
+                            $('#confirmation-modal .formDataJson').val(JSON.stringify($('#f_accept').serializeObject()));
+                        }
+                        return false;
+                    }
+                });
+            });
+
+            $(function() {
+                var modal = $('#confirmation-modal');
+
+                modal.insertBefore($('.md-overlay'));
+
+                modal.on('md-modal-show', function() {
+                    var tg = $(this);
+                    setTimeout(function() {
+                        tg.find('input[type=password]').not(':disabled').eq(0).focus();
+                    }, 400);
+                });
+
+                modal.find("input[type='password']").keyup(function(event) {
+                    if(event.keyCode == 18 || event.keyCode == 17 || event.keyCode == 16 || event.keyCode == 20) {
+                        return;
+                    }
+
+                    var position = $(this).attr('data-key');
+                    position = parseInt(position);
+
+                    if(event.keyCode == 8) {
+                        if(modal.find('.password[data-key="' + (position - 1) + '"]').length) {
+                            $('.password[data-key="' + (position - 1) + '"]').focus();
+                        }
+                    } else {
+                        if(modal.find('.password[data-key="' + (position + 1) + '"]').length) {
+                            modal.find('.password[data-key="' + (position + 1) + '"]').focus();
+                        }
+                    }
+                });
+
+                modal.find('.footer-buttons .btn-success').on('click', function() {
+                    var formData = modal.find('form').serializeObject(),
+                        submitData = {
+                            password: { },
+                            taskId: formData.taskId,
+                            formDataJson: formData.formDataJson
+                        };
+
+                    $.each(formData.password, function(index, value) {
+                        if (value !== '') {
+                            submitData.password[index] = value;
+                        }
+                    });
+
+                    $.ajax({
+                        method: "POST",
+                        url: '/index/ajax-password-prompt',
+                        data: submitData,
+                        success: function(result) {
+                            if (result === '1') {
+                                $.ajax({
+                                    method: "POST",
+                                    url: '/tasks-my/ajax-password-confirm',
+                                    data: submitData,
+                                    success: function(result) {
+                                        if (result === '1') {
+                                            document.location.href = '/tasks-my';
+                                        }
+                                    }
+                                });
+                            } else {
+                                modal.find('.password-confirmation input[name*=password]').val('');
+                                modal.find('.alert-danger').removeClass('hidden');
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
+    {/if}
+{/if}
+
+{if $storageTaskType == Application_Service_Tasks::TYPE_COURSE}
+    <div class="row page-small">
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="col-sm-12"><h3>{'Musisz odbyć szkolenie'|translate}:</h3></div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-12">
+                    <table class="table table-small">
+                        <tbody>
+                        <tr>
+                            <td class="min-width nowrap">{'Nazwa szkolenia'|translate}:</td>
+                            <td>{$courseSession.course.topic}</td>
+                        </tr>
+                        <tr>
+                            <td>{'Kategoria'|translate}:</td>
+                            <td>{$courseSession.course.category_name}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-12">
+                    <a href="/courses/course-session/id/{$courseSession.id}" class="btn btn-success">{'Przejdź do szkolenia'|translate}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
+
+{if $storageTaskType == Application_Service_Tasks::TYPE_SURVEY}
+    <div class="row page-small">
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="col-sm-12"><h3>{'Musisz wypełnić ankietę'|translate}:</h3></div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-12">
+                    <table class="table table-small">
+                        <tbody>
+                        <tr>
+                            <td class="min-width nowrap">{'Nazwa ankiety'|translate}:</td>
+                            <td>{$survey.name}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-12">
+                    <a href="/surveys/perform/id/{$survey.id}" class="btn btn-success">{'Przejdź do ankiety'|translate}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
+
+{if $storageTaskType == Application_Service_Tasks::TYPE_SURVEY_VERIFICATION}
+    <div class="row page-small">
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="col-sm-12"><h3>{'Musisz wypełnić ankietę weryfikacyjną dla zbioru'|translate}: {$set.nazwa}</h3></div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-12">
+                    <table class="table table-small">
+                        <tbody>
+                        <tr>
+                            <td class="min-width nowrap">{'Nazwa ankiety'|translate}:</td>
+                            <td>{$survey.name}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-12">
+                    <a href="/surveys/perform/id/{$survey.id}/setid/{$setId}" class="btn btn-success">{'Przejdź do ankiety'|translate}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
+
+{if $storageTaskType == Application_Service_Tasks::TYPE_DOCUMENT_VERSIONED}
+    {if $storageTask.status === '0'}
+        <div class="row">
+            <div class="col-sm-12"><h3>{'Zapoznaj się z poniższym dokumentem'|translate}:</h3></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 document-preview-box">
+                <div>
+                    <embed src="/files/view/t/{$documentVersion.document_token}" width="100%" height="800" type="application/pdf">
+                </div>
+            </div>
+        </div>
+        <form name="f_accept" id="f_accept" class="form-horizontal" role="form">
+            <fieldset>
+                <div class="form-group row">
+                    <label class="col-sm-12">
+                        <input type="checkbox" value="1" name="confirmed" class="validate[required]">
+                        {'Oświadczam, że zapoznałem się z powyższym dokumentem'|translate}
+                    </label>
+                </div>
+            </fieldset>
+            <div>
+                <input type="submit" value="AKCEPTUJĘ I PODPISUJĘ" class="btn btn-success"/>
+                <span class="md-trigger hidden trigger-confirmation" data-modal="confirmation-modal"></span>
+            </div>
+            <input type="hidden" name="id" id="id" value="{$storageTask.id}"/>
+        </form>
+
+        <div class="md-modal md-just-me modal-signature" id="confirmation-modal">
+            <div class="md-content"><div><div>
+                        <h2><strong>{'ELEKTRONICZNY PODPIS'|translate}</strong></h2>
+                        <div>
+                            <p class="text-center">{'By podpisać dokument przy pomocy podpisu elektronicznego KRYPTOS, zgodnie z Dyrektywą o Wspólnotowej Infrastrukturze Podpisów Elektronicznych (1999/93/EC), zaloguj się ponownie.'|translate}</p>
+
+                            <div class="alert alert-danger hidden">{'Nieprawidłowe hasło'|translate}</div>
+
+                            <div class="password-confirmation">
+                                <form>
+                                    <input type="hidden" name="taskId" value="{$storageTask.id}"/>
+                                    {for $i = 0, $empty = 0; $i < $length; $i++}
+                                        {$j = $i+1}
+                                        <div class="password-char">
+                                            <input type="password" class="password" maxlength="1" {if $gwiazdki[$i]} placeholder="*" disabled{else}data-key="{$empty++}" name="password[{$i}]"{/if} value>
+                                            <div>{$j}</div>
+                                        </div>
+                                    {/for}
+                                </form>
+                            </div>
+                            <div class="footer-buttons">
+                                <button class="btn btn-danger md-close">{'ANULUJ!'|translate}</button>
+                                <button class="btn btn-success pull-right">{'PODPISZ SIĘ'|translate}</button>
+                            </div>
+                        </div>
+                    </div></div></div>
+        </div>
+
+        <script>
+            $(function() {
+                $('#f_accept').validationEngine('attach', {
+                    onValidationComplete: function(form, status) {
+                        if (status) {
+                            $('.trigger-confirmation').click();
+                        }
+                        return false;
+                    }
+                });
+            });
+
+            $(function() {
+                var modal = $('#confirmation-modal');
+
+                modal
+                    .insertBefore($('.md-overlay'));
+
+                modal.on('md-modal-show', function() {
+                    $(this).find('input[type=password]').not(':disabled').eq(0).focus();
+                });
+
+                modal.find("input[type='password']").keyup(function(event) {
+                    if(event.keyCode == 18 || event.keyCode == 17 || event.keyCode == 16 || event.keyCode == 20) {
+                        return;
+                    }
+
+                    var position = $(this).attr('data-key');
+                    position = parseInt(position);
+
+                    if(event.keyCode == 8) {
+                        if(modal.find('.password[data-key="' + (position - 1) + '"]').length) {
+                            $('.password[data-key="' + (position - 1) + '"]').focus();
+                        }
+                    } else {
+                        if(modal.find('.password[data-key="' + (position + 1) + '"]').length) {
+                            modal.find('.password[data-key="' + (position + 1) + '"]').focus();
+                        }
+                    }
+                });
+
+                modal.find('.footer-buttons .btn-success').on('click', function() {
+                    var formData = modal.find('form').serializeObject(),
+                            submitData = {
+                                password: { },
+                                taskId: formData.taskId
+                            };
+
+                    $.each(formData.password, function(index, value) {
+                        if (value !== '') {
+                            submitData.password[index] = value;
+                        }
+                    });
+
+                    $.ajax({
+                        method: "POST",
+                        url: '/index/ajax-password-prompt',
+                        data: submitData,
+                        success: function(result) {
+                            if (result === '1') {
+                                $.ajax({
+                                    method: "POST",
+                                    url: '/tasks-my/ajax-password-confirm',
+                                    data: submitData,
+                                    success: function(result) {
+                                        if (result === '1') {
+                                            document.location.href = '/tasks-my';
+                                        }
+                                    }
+                                });
+                            } else {
+                                modal.find('.password-confirmation input[name*=password]').val('');
+                                modal.find('.alert-danger').removeClass('hidden');
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
+    {/if}
+{/if}
+
+<hr/>
+
+<div class="row">
+    <div class="col-sm-12">
+        <a href="{$baseUrl}" class="btn btn-default btn-icon"><i class="fa fa-chevron-left"></i> {'Powrót'|translate}</a>
+    </div>
+</div>

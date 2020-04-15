@@ -1,0 +1,42 @@
+<h2>Szczegóły</h2>
+<p><b>Nazwa sprawdzenia: </b>{$data.name}</p>
+<p><b>Opis sprawdzenia: </b>{$data.description}</p>
+<p><b>Termin od: </b>{smart_date value=$data.date_start}</p>
+<p><b>Termin do: </b>{smart_date value=$data.date_due}</p>
+<h2>Zbiory biorące udział w sprawdzeniu</h2>
+<table  class="table table-striped">        
+    <thead>
+        <tr>
+            <th>Id zbioru</th>
+            <th>Nazwa zbioru</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach $sets as $s}
+        <tr>
+            <td><a href="/zbiory/update/id/{$s.set_id}">{$s.set_id}</a></td><td><a href="/zbiory/update/id/{$s.set_id}">{$s.set.nazwa}</a></td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>
+<h2>Przypisane zadania do sprawdzenia z podziałem na osoby</h2>
+<table  class="table table-striped">      
+    <thead>
+        <tr>
+            <th>Id zadania</th>
+            <th>Nazwa zadania</th>
+        </tr>
+    </thead>
+    <tbody>
+        {assign var="ticketId" value=""}
+        {foreach $tickets as $t}
+        {if $ticketId!=$t.ticket_id}
+        <tr>
+            <td>{$t.ticket_id}</td>
+            <td><a href="/tickets/view/id/{$t.ticket_id}">{$t.ticket.topic}</a></td>
+        </tr>
+        {/if}
+        {assign var="ticketId" value=$t.ticket_id}
+        {/foreach}
+    </tbody>
+</table>

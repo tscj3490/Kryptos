@@ -1,0 +1,7 @@
+.operations {
+    white-space: nowrap;
+}
+.operations a {
+    font-size: 150%;
+    margin: 5px;
+}

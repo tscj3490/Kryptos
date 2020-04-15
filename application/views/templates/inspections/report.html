@@ -1,0 +1,43 @@
+<form name="f_data" id="f_data" method="POST" action="/inspections/report-save">
+    <div class="well">
+        <input type="hidden" id="inspection-id" name="id" value="{$inspection.id}">
+        Tytuł: {$inspection.title|upper}<br>
+        {if $zbior}
+            Zbiór:
+            {if $auth->isGranted('node/zbiory/update', ['id' => $inspection.object_id])}
+                <a href="/zbiory/update/id/{$inspection.object_id}" target="_blank">{$zbior.nazwa}</a>
+            {else}
+                {$zbior.nazwa}
+            {/if}
+            <br/>
+        {/if}
+        Data: {$inspection.date}
+    </div>
+    <fieldset>
+        <h2>Treść sprawozdania</h2>
+        <hr>
+        <div id="inspection-activities">
+            <div class="form-group row">
+                <div class="col-sm-12">
+                    <textarea name="report_content" id="report_content" class="form-control ckeditor-inspections">
+                        {if !$inspection.report_content}
+                            {include file="inspections/_default-report.html"}
+                        {else}
+                        {$inspection.report_content}
+                        {/if}
+                    </textarea>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <hr>
+    <div class="row">
+        <div class="col-sm-12">
+            <a href="/inspections" class="btn btn-default">Powrót</a>
+            <input type="submit" class="btn btn-info" value="Zapisz"/>
+            <a href="/inspections/report-download/id/{$inspection.id}" class="btn btn-info">Pobierz</a>
+        </div>
+    </div>
+</form>
+
+<script src="/_gfx/js/pages/inspections.js"></script>

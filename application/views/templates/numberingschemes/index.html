@@ -1,0 +1,90 @@
+{include file='modals/modal.tpl' title='Schematy numeracji - co to jest?' content='Schematy numeracji to numery, które będą nadawane dokumentom(o ile będą w nich używane).Przykładem może być schemat [nr].[dd].[mm].[yyyy].OS czyli dla oświadczenia z tą numeracją dnia 04.04.2017 zostanie nadany dla pierwszego dokumentu numer 1.4.4.2017.OS, dla następnego 2.4.4.2017.OS itd.'}
+<form method="post" action="/numberingschemes/delChecked/">
+    <div class="table-operations-header">
+        <a class="btn btn-success" href="/numberingschemes/update" data-title="Dodaj nowy schemat numeracji" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+    </div>
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead>
+        <tr>
+            <th></th>
+            <th data-filter-type="string">nr</th>
+            <th data-filter-type="string">nazwa</th>
+            <th data-filter-type="string">schemat</th>
+            <th data-filter-type="select" class="text-center">rodzaj numeracji</th>
+            <th data-filter-type="select-items" class="text-center">używany w szablonach</th>
+            <th data-filter-type="select-items" class="text-center">aktywne dokumenty</th>
+            <th data-filter-type="date-range" class="text-center">data utworzenia</th>
+            <th data-filter-type="date-range" class="text-center">data edycji</th>
+            <th>opcje</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content">
+        {foreach $paginator as $d}
+            <tr>
+                <td>
+                    <input type="checkbox" name="id{$d.id}" id="id{$d.id}" value="1" class="checkGlobal" rel="{$d.i_docs}"/>
+                </td>
+                <td class="text-right">{$d@iteration}</td>
+                <td>{$d.name}</td>
+                <td class="text-center">{$d.scheme}</td>
+                <td class="text-center">{if $d.type == '1'}dzienna{/if}{if $d.type == '2'}miesięczna{/if}{if $d.type == '3'}kwartalna{/if}{if $d.type == '4'}roczna{/if}</td>
+                <td class="text-center">{if $d.used == '0'}<i class="fa fa-circle" style="color:#cc0000;" title="nie"><span class="select-item hiddenElement">NIE</span></i>{/if}{if $d.used == '1'}<i class="fa fa-circle" style="color:#00cc00;" title="{$d.usednames}"><span class="select-item hiddenElement">TAK</span></i>{/if}</td>
+                <td class="text-center">{if $d.i_docs == '0'}<i class="fa fa-circle" style="color:#cc0000;" title="nie"><span class="select-item hiddenElement">NIE</span></i>{/if}{if $d.i_docs > 0}<i class="fa fa-circle" style="color:#00cc00;" title="{$d.usednames}"><span class="select-item hiddenElement">TAK</span></i>{/if}</td>
+                <td class="text-center">{smart_date value=$d.created_at}</td>
+                <td class="text-center">{smart_date value=$d.updated_at}</td>
+                <td class="operations">
+                    {if $auth->isGranted('node/numberingschemes/update', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-pencil" href="/numberingschemes/update/id/{$d.id}" data-toggle="tooltip" title="Edytuj"></a>
+                    {/if}
+                    {if $auth->isGranted('node/numberingschemes/update/copy')}
+                    <a class="glyphicon glyphicon-star" href="/numberingschemes/update/copy/{$d.id}" data-toggle="tooltip" title="Duplikuj"></a>
+                    {/if}
+                    {if $auth->isGranted('node/numberingschemes/del', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-trash" href="" onclick="{if $d.i_docs > 0}bootbox.confirm('<h3>Ważna informacja</h3>W systemie istnieje co najmniej jeden dokument korzystający z wybranego do usunięcia schematu numeracji. Usunięcie schematu numeracji spowoduje przeniesienie powiązanych z nim dokumentów do archiwum.<br /><br />Czy na pewno chcesz wykonać operację?',function(result){ if ( result == true ) { window.location.href='/numberingschemes/del/id/{$d.id}'; } });{else}bootbox.confirm('<h3>Ważna informacja</h3>Czy na pewno chcesz usunąć wybrany schemat numeracji?',function(result){ if ( result == true ) { window.location.href='/numberingschemes/del/id/{$d.id}'; } });{/if} return false;" data-toggle="tooltip" title="Usuń"></a>
+                    {/if}
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+
+    </table>
+
+    <div class="table-operations-footer">
+        <div class="btn-group">
+            <button type="button" class="btn btn-danger table-row-action" data-toggle="tooltip" data-title="Usuń zaznaczone" name="rowsAction" onclick="checkGlobal();"><i class="fa fa-remove"></i></button>
+        </div>
+    </div>
+
+    <div class="hiddenElement">
+        <input type="submit" id="formsubbmit" value="Usuń zaznaczone" class="btn btn-default"/>
+    </div>
+</form>
+
+<br/>
+
+<div class="alert alert-info"><i class="fa fa-info"></i> &nbsp;Usunięcie schematu numeracji, z którego korzystają szablony dokumentów spowoduje, że szablony te będą generowane bez numeracji. Prosimy o zachowanie szczególnej ostrożności.</div>
+
+<script type="text/javascript">
+    function checkGlobal() {
+        var globalCounter = 0;
+        $('.checkGlobal').each(function () {
+            if ($(this).is(':checked') && $(this).attr('rel') * 1 > 0) {
+                globalCounter++;
+            }
+        });
+        if (globalCounter > 0) {
+            bootbox.confirm('<h3>Ważna informacja</h3>W systemie istnieje co najmniej jeden dokument korzystający z jednego z wybranych do usunięcia schematów numeracji. Usunięcie schematu numeracji spowoduje przeniesienie powiązanych z nim dokumentów do archiwum.<br /><br />Czy na pewno chcesz wykonać operację?', function (result) {
+                if (result == true) {
+                    $('#formsubbmit').click();
+                }
+            });
+        }
+        else {
+            bootbox.confirm('<h3>Ważna informacja</h3>Czy na pewno chcesz usunąć wybrane schematy numeracji?', function (result) {
+                if (result == true) {
+                    $('#formsubbmit').click();
+                }
+            });
+        }
+    }
+</script>

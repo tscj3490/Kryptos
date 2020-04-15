@@ -1,0 +1,87 @@
+<h1>Statystyki wiadomości wysłanych</h1>
+<table class="printable" cellspacing='1' cellpadding="5">
+    <thead>
+    <tr>
+        <th rowspan="2">L.p.</th>
+        <th rowspan="2">Nazwa użytkownika</th>
+        <th rowspan="2">Ilość razem</th>
+        <th>Styczeń</th>
+        <th>Luty</th>
+        <th>Marzec</th>
+        <th>Kwiecień</th>
+        <th>Maj</th>
+        <th>Czerwiec</th>
+        <th>Lipiec</th>
+        <th>Sierpień</th>
+        <th>Wrzesień</th>
+        <th>Październik</th>
+        <th>Listopad</th>
+        <th>Grudzień</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $modelSent as $d}
+        <tr>
+            <td>{$d@iteration}</td>
+            <td>{$d.Imie} {$d.Nazwisko}</td>
+            <td>{$d.Total}</td>
+            <td>{$d.Jan}</td>
+            <td>{$d.Feb}</td>
+            <td>{$d.Mar}</td>
+            <td>{$d.Apr}</td>
+            <td>{$d.May}</td>
+            <td>{$d.Jun}</td>
+            <td>{$d.Jul}</td>
+            <td>{$d.Aug}</td>
+            <td>{$d.Sep}</td>
+            <td>{$d.Oct}</td>
+            <td>{$d.Nov}</td>
+            <td>{$d.Dec}</td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>
+
+<h1>Statystyki wiadomości otrzymanych</h1>
+<table class="printable" cellspacing='1' cellpadding="5">
+    <thead>
+    <tr>
+        <th rowspan="2">L.p.</th>
+        <th rowspan="2">Nazwa użytkownika</th>
+        <th rowspan="2">Ilość razem</th>
+        <th>Styczeń</th>
+        <th>Luty</th>
+        <th>Marzec</th>
+        <th>Kwiecień</th>
+        <th>Maj</th>
+        <th>Czerwiec</th>
+        <th>Lipiec</th>
+        <th>Sierpień</th>
+        <th>Wrzesień</th>
+        <th>Październik</th>
+        <th>Listopad</th>
+        <th>Grudzień</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $modelReceived as $d}
+        <tr>
+            <td>{$d@iteration}</td>
+            <td>{$d.Imie} {$d.Nazwisko}</td>
+            <td>{$d.Total}</td>
+            <td>{$d.Jan}</td>
+            <td>{$d.Feb}</td>
+            <td>{$d.Mar}</td>
+            <td>{$d.Apr}</td>
+            <td>{$d.May}</td>
+            <td>{$d.Jun}</td>
+            <td>{$d.Jul}</td>
+            <td>{$d.Aug}</td>
+            <td>{$d.Sep}</td>
+            <td>{$d.Oct}</td>
+            <td>{$d.Nov}</td>
+            <td>{$d.Dec}</td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

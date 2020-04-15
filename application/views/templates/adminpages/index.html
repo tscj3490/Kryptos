@@ -1,0 +1,20 @@
+<table class="data">
+	<thead>
+		<tr>
+			<th>lp</th>
+			<th>nazwa strony</th>
+			<th>edytuj</th>
+			<th>przywróć domyślną</th>
+		</tr>
+	</thead>
+	<tbody>
+	{foreach item=data from=$pages name=d}
+		<tr>
+			<td>{$smarty.foreach.d.iteration}</td>
+			<td>{$data.name}</td>
+			<td><a title="Idź do edycji strony" class="edit" href="{$url}adminpages/edit/id/{$data.id}"><img src="/img/edit.png" alt="edit"></a></td>
+			<td><a title="Przywróć domyślą wersję strony" class="remove" href="{$url}adminpages/default/id/{$data.id}"><img src="/img/remove.png" alt="edit"></a></td>
+		</tr>
+	{/foreach}	
+	</tbody>
+</table>

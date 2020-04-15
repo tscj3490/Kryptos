@@ -1,0 +1,38 @@
+{include file='modals/modal.tpl' title='Inne osoby - co to jest?' content='Osoby inne to część moduły odpowiedzialna za prowadzenie ewidencji innych osób w jednostce niż pracownicy, stażyści czy praktykanci, np. osoby zatrudnione na umowę o zlecenie. Dzięki tej zakładce będzie możliwe wygenerowanie upoważnień oraz oświadczeń dla takich osób, którzy nie będą posiadać konta Kryptos24.'}
+<div class="table-operations-header">
+    {if $auth->isGranted('node/osoby-inne/update')}
+    <a class="btn btn-success" href="{$baseUrl}/update" data-title="Dodaj nową osobę" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+    {/if}
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="string">imię</th>
+        <th data-filter-type="string">nazwisko</th>
+        <th data-filter-type="select">dział</th>
+        <th data-filter-type="select">stanowisko</th>
+        <th data-filter-type="string">login</th>
+        <th class="min-width text-center">operacje</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $paginator as $d}
+        <tr>
+            <td>{$d.imie|ucfirst}</td>
+            <td>{$d.nazwisko|ucfirst}</td>
+            <td>{$d.dzial|ucfirst}</td>
+            <td>{$d.stanowisko|ucfirst}</td>
+            <td>{$d.login_do_systemu}</td>
+            <td class="operations nowrap">
+                {if $auth->isGranted('node/osoby-inne/update', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-pencil" href="{$baseUrl}/update/id/{$d.id}" data-toggle="tooltip" title="EDYTUJ"></a>
+                {/if}
+                {if $auth->isGranted('node/osoby-inne/remove', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="{$baseUrl}/remove/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

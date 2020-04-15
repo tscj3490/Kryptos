@@ -1,0 +1,26 @@
+<?php
+
+class ImportexportController extends Muzyka_Admin
+{
+     // protected $Importexport;
+    
+    public function init() {
+        parent::init();
+     //   $this->Importexport = Application_Service_Utilities::getModel('Importexport');
+        $this->_helper->layout->setLayout('importexport');
+        $this->view->section = 'Importexport';
+        Zend_Layout::getMvcInstance()->assign('section', 'Importexport');
+    }
+
+  
+
+
+    public function indexAction() {   
+      //  $paginator = $this->Importexport->getLocalization();
+  // echo '<pre>';     print_r( $paginator);echo '<pre>';die('here'); 
+        $this->view->data  =  array('2'=>'test');
+
+//    $this->view->data  =  $paginator;
+        $this->_helper->layout->setLayout('admin');
+    }
+}

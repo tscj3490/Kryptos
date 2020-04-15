@@ -1,0 +1,48 @@
+<h3 class="text-center" style="margin-top:0px;margin-bottom:10px;">Usuwanie pola z przesunięciem danych</h3>
+<div class="modtop">
+    <div class="row">
+        <div class="col-sm-12"><strong>Pole do usunięcia:</strong> &nbsp;{$t_field->name}</div>
+    </div>
+    <br/>
+    <div class="form-group row">
+        <label for="fields" class="col-sm-12">Wybierz pole, do którego mają zostać przepięte dane:</label>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-12">
+            <input type="text" name="searcher" id="searcher" class="form-control" placeholder="Wpisz szukaną frazę" onkeyup="runOptsSearch();" />
+        </div>
+    </div>
+</div>
+<div id="optsSearch">
+    <div class="alert alert-danger optsnodata"><i class="fa fa-4x fa-exclamation-triangle"></i>
+        <div class="floathead">
+            <div class="ins">Zmień kryteria wyszukiwania</div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    {foreach $t_fields as $field}
+        <div class="selopt2bl" data-id="{$field->id}">{$field->name}</div>
+    {/foreach}
+</div>
+<div class="modbottom">
+    <div class="form-group row">
+        <div class="col-sm-12 text-right">
+            <input type="button" class="btn btn-default" id="field-choose" value="Usuń i przenieś dane do wybranego pola"/>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('.selopt2bl').on('click', function() {
+        $('.selopt2bl.active').removeClass('active');
+        $(this).addClass('active');
+    });
+
+    $('#field-choose').on('click', function() {
+        if ($('.selopt2bl.active').size()) {
+            var choosedId = $('.selopt2bl.active').attr('data-id');
+
+            window.location.href = '/fields/delWithMove/id/{$id}/moveto/'+ choosedId +'/';
+        }
+    });
+</script>

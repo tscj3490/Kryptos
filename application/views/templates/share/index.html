@@ -1,0 +1,41 @@
+{$message}
+<div class="body-action">
+    <a class="btn btn-info" href="/share/update">Dodaj upoważnienie</a>
+</div>
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example" >
+    <thead>
+    <tr>
+        <td style="width: 250px;">Nazwa podmiotu</td>
+        <td>Data od</td>
+        <td>Data do</td>
+        <td width="300px; ">Zbiory</td>
+        <td>Umowa</td>
+        <td>Osoba</td>
+        <td width="105px;"></td>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $shares as $share}
+    <tr>
+        <td>{$share.podmiot}</td>
+        <td>{strtotime($share.data_od)|date_format:"%Y-%m-%d"}</td>
+        <td>{strtotime($share.data_do)|date_format:"%Y-%m-%d"}</td>
+        <td>
+            {if $share.zbiory}
+            <ul>
+                {foreach $share.zbiory as $zbior}
+                    <li style="text-align:left">{$zbior.nazwa}</li>
+                {/foreach}
+            </ul>
+            {/if}
+        </td>
+        <td>{$share.umowa}</td>
+        <td>{$share.nazwisko} {$share.imie}</td>
+        <td>
+            <a class="glyphicon glyphicon-pencil" href="/share/update/id/{$share.share_id}"></a>
+            <a class="glyphicon glyphicon-trash" onclick="if(confirm('Usunąć?')) window.location.href='/share/del/id/{$share.share_id}'" href="javascript:;"></a>
+        </td>
+    </tr>
+    {/foreach}
+    </tbody>
+</table>

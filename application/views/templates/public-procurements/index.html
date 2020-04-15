@@ -1,0 +1,45 @@
+{include file='modals/modal.tpl' title='Zamówienia publiczne - co to jest?' content='Zamówienia publiczne to jeden z przykładowych modułów na życzenie klienta. Dzięki niemu można wprowadzić dane odnośnie zamówień publicznych w danej jednostce a później takie dane umieścić np. na swojej stronie www aby ułatwić zleceniobiorcom dotarcie do takich informacji. W Zamówieniach Publicznych możliwe jest również załączanie załączników do danego zamówienia, oraz przypisywanie takich informacji jak status danego zamówienia, godziny otwarcia czy zamknięcia itp.'}
+<div class="table-operations-header">
+    {element tag='a' route='public-procurements/update' routeParams=[] attributes=[
+        'class' => 'btn btn-success',
+        'icon' => 'plus',
+        'tooltip' => 'Dodaj zamówienie publiczne',
+        'innerHtml' => 'Dodaj'
+    ]}
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="string">Numer przetargu</th>
+        <th data-filter-type="string">Tytuł</th>
+        <th data-filter-type="date-range">Data otwarcia</th>
+        <th data-filter-type="date-range">Data zamknięcia</th>
+        <th>Status</th>
+        <th class="text-center">Operacje</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $paginator as $d}
+        <tr>
+            <td>{$d.procurement_number}</td>
+            <td>{$d.title}</td>
+            <td>{smart_date value=$d.date_opened}</td>
+            <td>{smart_date value=$d.date_closed}</td>
+            <td>{$d.status}</td>
+            <td class="operations">
+                {element tag='a' route='public-procurements/update' routeParams=['id' => $d.id] attributes=[
+                    'icon' => 'edit',
+                    'tooltip' => 'Edytuj'
+                ]}
+
+                {element tag='a' route='public-procurements/remove' routeParams=['id' => $d.id] attributes=[
+                    'icon' => 'delete',
+                    'delete' => 'singleDelete',
+                    'tooltip' => 'Usuń'
+                ]}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

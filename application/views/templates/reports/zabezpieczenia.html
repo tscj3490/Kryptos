@@ -1,0 +1,21 @@
+<h1>Opis stosowanych zabezpieczeń</h1>
+<p>
+    <small></small>
+</p>
+<table>
+	<thread>
+    	<th>lp</th>
+        <th width="80%">nazwa</th>
+        <th width="20%">typ</th>
+    <thread>
+    {foreach $paginator as $z}
+		{if $z.status}
+		 <tr>
+			<td>{$z@iteration}</td>
+			<td>{$z.nazwa}</td>
+			<td>{$model->getTypeName($z.typ)}</td>
+		 </tr>
+		{/if}
+    {/foreach}
+   
+</table>

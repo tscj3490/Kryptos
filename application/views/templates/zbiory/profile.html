@@ -1,0 +1,181 @@
+<div style="min-height: 500px;" class="widget">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#items" data-toggle="tab">Elementy zbioru</a></li>
+        <li><a href="#transfers" data-toggle="tab">Transfery</a></li>
+        <li><a href="#upowaznienia" data-toggle="tab">Rejestr upoważnień</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="items">
+            <div class="nestable dd">
+                <ol class="dd-list">
+                    <li class="dd-item">
+                        <div class="dd-handle dd-nodrag">ELEMENTY ZBIORU</div>
+                        <ol class="dd-list">
+                            {foreach $t_options->t_itemsdata as $k => $v}
+                                <li class="dd-item">
+                                    <div class="dd-handle dd-nodrag">{$k}</div>
+                                    <ol class="dd-list">
+                                        <li class="dd-item">
+                                            <div class="dd-handle dd-nodrag">PODMIOTY</div>
+                                            <ol class="dd-list">
+                                                {foreach $v->t_personsdata as $k2 => $v2}
+                                                    <li class="dd-item">
+                                                        <div class="dd-handle dd-nodrag">{$k2}</div>
+                                                        <ol class="dd-list">
+                                                            {if count(get_object_vars($v2->t_persontypes))}
+                                                                <li class="dd-item">
+                                                                    <div class="dd-handle dd-nodrag">OSOBY</div>
+                                                                    <ol class="dd-list">
+                                                                        {foreach $v2->t_persontypes as $k3 => $v3}
+                                                                            <li class="dd-item">
+                                                                                <div class="dd-handle dd-nodrag">{$k3}</div>
+                                                                            </li>
+                                                                        {/foreach}
+                                                                    </ol>
+                                                                </li>
+                                                            {/if}
+                                                            {if count(get_object_vars($v2->t_fields1checked))}
+                                                                <li class="dd-item">
+                                                                    <div class="dd-handle dd-nodrag">DANE DODATKOWE</div>
+                                                                    <ol class="dd-list">
+                                                                        {foreach $v2->t_fields1checked as $k3 => $v3}
+                                                                            <li class="dd-item">
+                                                                                <div class="dd-handle dd-nodrag">{$k3}</div>
+                                                                            </li>
+                                                                        {/foreach}
+                                                                    </ol>
+                                                                </li>
+                                                            {/if}
+                                                            {if count(get_object_vars($v2->t_fields2checked))}
+                                                                <li class="dd-item">
+                                                                    <div class="dd-handle dd-nodrag">DANE PODSTAWOWE</div>
+                                                                    <ol class="dd-list">
+                                                                        {foreach $v2->t_fields2checked as $k3 => $v3}
+                                                                            <li class="dd-item">
+                                                                                <div class="dd-handle dd-nodrag">{$k3}</div>
+                                                                            </li>
+                                                                        {/foreach}
+                                                                    </ol>
+                                                                </li>
+                                                            {/if}
+                                                            {if count(get_object_vars($v2->t_fields3checked))}
+                                                                <li class="dd-item">
+                                                                    <div class="dd-handle dd-nodrag">DANE WRAŻLIWE {count($v2->t_fields3checked)}</div>
+                                                                    <ol class="dd-list">
+                                                                        {foreach $v2->t_fields3checked as $k3 => $v3}
+                                                                            <li class="dd-item">
+                                                                                <div class="dd-handle dd-nodrag">{$k3}</div>
+                                                                            </li>
+                                                                        {/foreach}
+                                                                    </ol>
+                                                                </li>
+                                                            {/if}
+                                                            {if count(get_object_vars($v2->t_fields4checked))}
+                                                                <li class="dd-item">
+                                                                    <div class="dd-handle dd-nodrag">DANE INNE</div>
+                                                                    <ol class="dd-list">
+                                                                        {foreach $v2->t_fields4checked as $k3 => $v3}
+                                                                            <li class="dd-item">
+                                                                                <div class="dd-handle dd-nodrag">{$k3}</div>
+                                                                            </li>
+                                                                        {/foreach}
+                                                                    </ol>
+                                                                </li>
+                                                            {/if}
+                                                            {if count(get_object_vars($v2->t_fields0checked))}
+                                                                <li class="dd-item">
+                                                                    <div class="dd-handle dd-nodrag">DANE NIEOSOBOWE</div>
+                                                                    <ol class="dd-list">
+                                                                        {foreach $v2->t_fields0checked as $k3 => $v3}
+                                                                            <li class="dd-item">
+                                                                                <div class="dd-handle dd-nodrag">{$k3}</div>
+                                                                            </li>
+                                                                        {/foreach}
+                                                                    </ol>
+                                                                </li>
+                                                            {/if}
+                                                        </ol>
+                                                    </li>
+                                                {/foreach}
+                                            </ol>
+                                        </li>
+                                    </ol>
+                                </li>
+                            {/foreach}
+                        </ol>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <div class="tab-pane" id="transfers">
+            <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+                <thead class="ui-widget-header">
+                <tr>
+                    <th>Nr</th>
+                    <th>Rodzaj</th>
+                    <th>Data transferu</th>
+                    <th>Osoba odpowiedzialna</th>
+                    <th>Podmiot</th>
+                    <th>Pracownik podmiotu</th>
+                    <th>Operacje</th>
+                </tr>
+                </thead>
+                <tbody class="ui-widget-content">
+                {foreach $transfers as $d}
+                    <tr>
+                        <td>{$d.id}</td>
+                        <td>{$transferTypes[$d.type].name}</td>
+                        <td>{smart_date value=$d.transfer_date}</td>
+                        <td>{$d.osoba_name}</td>
+                        <td>{$d.source_company_name}</td>
+                        <td>{$d.source_employee_name}</td>
+                        <td>
+                            {if $auth->isGranted('node/data-transfers/mini-preview', ['id' => $d.id])}
+                            <a class="btn btn-default choose-from-dial" title="szczegóły" data-dial-url="/data-transfers/mini-preview/id/{$d.id}" data-toggle="tooltip" title="Szczegóły">Szczegóły</a>
+                            {/if}
+                        </td>
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane" id="upowaznienia">
+            <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+                <thead class="ui-widget-header">
+                <tr>
+                    <th>LP</th>
+                    <th data-filter-type="string">Nazwisko i imię</th>
+                    <th data-filter-type="string">Stanowisko</th>
+                    <th data-filter-type="string">Nr upoważnienia</th>
+                    <th>Szczegóły</th>
+                    <th data-filter-type="date-range">Data nadania</th>
+                </tr>
+                </thead>
+                <tbody class="ui-widget-content">
+                {foreach $historiaUpowaznien as $d}
+                    <tr>
+                        <td>{$d@iteration}</td>
+                        <td>{$d.osoba.nazwisko} {$d.osoba.imie}</td>
+                        <td>{$d.osoba.stanowisko}</td>
+                        <td>{if $d.dokument}{$d.dokument.numbertxt}{/if}</td>
+                        <td>
+                            {if $d.czytanie}C{/if}
+                            {if $d.pozyskiwanie}P{/if}
+                            {if $d.wprowadzanie}W{/if}
+                            {if $d.modyfikacja}M{/if}
+                            {if $d.usuwanie}U{/if}
+                            {if $d.czytanie + $d.pozyskiwanie + $d.wprowadzanie + $d.modyfikacja + $d.usuwanie == 0}WYCOFANIE{/if}
+                        </td>
+                        <td>{$d.date}</td>
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    initializeDatatables();
+    nestableInit();
+</script>

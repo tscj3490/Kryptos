@@ -1,0 +1,39 @@
+
+<style type="text/css">
+  {literal}  hr    { page-break-after: always;  display: block;
+            height: 0px;
+            border: 0;
+            border-top: 0px solid #ccc;
+            margin: 1em 0;
+            padding: 0; }
+    
+    .report p.textHeader{ text-align:center; font-size:24px;}
+    .report .center {text-align:center;}
+    .report li {font-size:16px; padding:5px;}
+    .report i { font-size:14px;}
+    .report ol { margin-left:20px;}
+{/literal}
+</style>
+<div class="report">
+{foreach $model as $d}
+<div style="width:100%">
+    <div class="row">
+        <p class="textHeader">{$p1}</p>
+        <p class="textHeader">Raport z działań sprawdzających</p>
+        <p class="textHeader">   dla zbioru </p>
+        <p class="textHeader">  {$d.nazwa}</p>
+        <p class="center"><i>Raport opracował {$p2}</i></p>
+    </div>
+</div>
+<h2>Wykaz podjętych czynności:</h2>
+<ol>
+    {foreach $d.list as $l}
+    <li>{$l}
+    </li>
+    {/foreach}
+</ol>
+<h2>Uwagi</h2>
+<p>Brak</p>
+<hr/>
+{/foreach}
+</div>

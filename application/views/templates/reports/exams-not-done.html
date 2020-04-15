@@ -1,0 +1,19 @@
+<h1>Lista osób, które nie zdały jeszcze egzaminu</h1>
+<table class="printable" cellspacing='1' cellpadding="5">
+    <thead>
+    <tr>
+        <th>L.p.</th>
+        <th>Nazwa użytkownika</th>
+        <th>Nazwa egzaminu</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $model as $d}
+        <tr>
+            <td>{$d@iteration}</td>
+            <td>{$d.imie} {$d.nazwisko} [{$d.login}]</td>
+            <td>{$d.topic}</td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

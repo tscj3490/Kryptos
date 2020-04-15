@@ -1,0 +1,19 @@
+<div class="row page-medium">
+    <div class="col-sm-12">
+        {if $session.result}
+            <h3>Gratulacje!</h3>
+            <hr>
+            Egzamin ukończony pomyślnie.
+        {else}
+            <h3>Niestety nie udało się!</h3>
+            <hr>
+            Egzamin nie został ukończony pomyślnie.<br>
+            Udzieliłeś tylko {$session.correct_count} poprawnych odpowiedzi.<br>
+            Aby zdać egzamin należy udzielić {$session.exam.required_to_pass} poprawnych odpowiedzi.
+            <hr>
+            {if $newSessionId}
+                <a href="/exams/session/id/{$newSessionId}" class="btn btn-info">PONÓW</a>
+            {/if}
+        {/if}
+    </div>
+</div>

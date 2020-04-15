@@ -1,0 +1,477 @@
+<div class="widget animated fadeInDown">
+    <form name="f_data" id="f_data" method="POST" action="{$baseUrl}/save" class="wizardContainer form-horizontal">
+        <div class="wizardElement">
+            <section class="step" data-step-title="Informacje">
+                <div class="form-group row">
+                    <label class="col-sm-2">Adresat transferu - typ:</label>
+                    <div class="col-sm-4">
+                        <input type="hidden" id="source_company_type" name="source_company_type" value="{$data.source_company_type}"/>
+                        <div class="form-inline">
+                            <div class="radio iradio">
+                                <label>
+                                    <input type="radio" data-value="1" name="radio_company_type" data-target="#source_company_type" class="transfer-value" {if $data.source_company_type === '1'}checked{/if}>
+                                    Firma
+                                </label>
+                            </div>
+                            <div class="radio iradio">
+                                <label>
+                                    <input type="radio" data-value="2" name="radio_company_type" data-target="#source_company_type" class="transfer-value" {if $data.source_company_type === '2'}checked{/if}>
+                                    Osoba fizyczna
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="source_company_id" class="col-sm-2">Adresat transferu - podmiot:</label>
+                    <div class="col-sm-4">
+                        <input type="hidden" name="source_company_id" id="source_company_id" value="{$data.source_company_id}"/>
+                        <div class="input-group">
+                            <input type="text" id="source_company_typeahead" class="form-control typeaheadElement" data-source-function="getCompaniesData" data-target-element="#source_company_id" data-relative-element="#source_company_type">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default choose-from-dial" data-dial-url-fn="getCompanyMiniUrl" data-dial-process-fn="processAddSourceCompany" type="button">Dodaj</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row" {if $data.source_company_type === '2'}style="display:none"{/if}>
+                    <label for="source_company_id" class="col-sm-2">Adresat transferu - osoba:</label>
+                    <div class="col-sm-4">
+                        <input type="hidden" name="source_employee_id" id="source_employee_id" value="{$data.source_employee_id}"/>
+                        <div class="input-group">
+                            <input type="text" id="source_employee_typeahead" class="form-control typeaheadElement" data-source-function="getCompanyEmployeesData" data-target-element="#source_employee_id" data-relative-element="#source_company_id"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default choose-from-dial" data-dial-url-fn="getEmployeeSourceMiniUrl" data-dial-process-fn="processAddSourceEmployee" type="button">Dodaj</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="osoba_id" class="col-sm-2">Osoba odpowiedzialna za odebranie:</label>
+                    <div class="col-sm-4">
+                        <input type="hidden" name="osoba_id" id="osoba_id" value="{$data.osoba_id}"/>
+                        <div class="input-group">
+                            <input type="text" id="osoba_typeahead" class="form-control typeaheadElement" data-source-function="getOsoby" data-target-element="#osoba_id"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default choose-from-dial" data-dial-url="/osoby/addmini/?useProcess=true" data-dial-process-fn="processAddOsoba" type="button">Dodaj</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="transfer_legal_basics_id_typeahead" class="col-sm-2">Cel transferu - podstawa prawna:</label>
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                            <input type="hidden" name="transfer_legal_basics_id" id="transfer_legal_basics_id" value="{$data.transfer_legal_basics_id}"/>
+                            <input type="text" id="transfer_legal_basics_id_typeahead" class="form-control typeaheadElement" data-source-function="getLegalBasics" data-target-element="#transfer_legal_basics_id">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default choose-from-dial" data-dial-url-fn="getLegalActsMiniUrl" data-dial-process-fn="processAddLegalAct" type="button">Dodaj</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="transfer_purpose" class="col-sm-2">Powód transferu:</label>
+                    <div class="col-sm-4"><textarea name="transfer_purpose" id="transfer_purpose" class="form-control">{$data.transfer_purpose}</textarea></div>
+                </div>
+                <div class="form-group row">
+                    <label for="transfer_comment" class="col-sm-2">Komentarz:</label>
+                    <div class="col-sm-4"><textarea name="transfer_comment" id="transfer_comment" class="form-control">{$data.transfer_comment}</textarea></div>
+                </div>
+                <div class="form-group row">
+                    <label for="transfer_date" class="col-sm-2">Data transferu:</label>
+                    <div class="col-sm-4"><input type="text" name="transfer_date" id="transfer_date" class="form-control datepicker-input" value="{$data.transfer_date}" data-date-to="#transfer_deadline_date"></div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2">Data transferu - do kiedy:</label>
+                    <div class="col-sm-4">
+                        <input type="hidden" id="transfer_deadline_type" name="transfer_deadline_type" value="{$data.transfer_deadline_type}"/>
+                        <div class="form-inline">
+                            <div class="radio iradio">
+                                <label>
+                                    <input type="radio" data-value="1" name="radio_transfer_deadline_type" data-target="#transfer_deadline_type" class="transfer-value" {if $data.transfer_deadline_type === '1'}checked{/if}>
+                                    Wybierz datę
+                                </label>
+                            </div>
+                            <div class="radio iradio">
+                                <label>
+                                    <input type="radio" data-value="2" name="radio_transfer_deadline_type" data-target="#transfer_deadline_type" class="transfer-value" {if $data.transfer_deadline_type === '2'}checked{/if}>
+                                    Bezterminowo
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row" {if $data.transfer_deadline_type === '2'}style="display:none"{/if}>
+                    <label for="transfer_deadline_date" class="col-sm-2">Data transferu - do kiedy:</label>
+                    <div class="col-sm-4"><input type="text" name="transfer_deadline_date" id="transfer_deadline_date" class="form-control datepicker-input" value="{$data.transfer_deadline_date}" data-date-from="#transfer_date"></div>
+                </div>
+            </section>
+            <section class="step multiple-rows-vertical" data-step-title="Wybór elementów zbioru">
+                <div class="form-group row">
+                    <div class="col-sm-4"><b>Przedmiot</b></div>
+                    <div class="col-sm-4"><b>Zbiór</b></div>
+                </div>
+                {foreach from=$data.zbiory_fielditems item=zf}
+                <div class="form-group row">
+                    <div class="col-sm-4">
+                        <input type="hidden" name="przedmioty[przedmiot][]" id="przedmioty_przedmiot_{$zf@iteration}" value="{$zf.fielditem_id}" class="przedmiotId"/>
+                        <div class="input-group">
+                            <input type="text" id="przedmiot_typeahead_{$zf@iteration}" class="form-control typeaheadElement" data-source-function="getPrzedmioty" data-target-element="#przedmioty_przedmiot_{$zf@iteration}" data-after-select-fn="processWybranyPrzedmiot">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default choose-from-dial" data-dial-url="/fielditems/addmini/?useProcess=true&linkedWithZbiory=true" data-dial-process-fn="processAddPrzedmiot" data-dial-ready-fn="filterPrzedmiotPopup" data-dial-process-element="#przedmiot_typeahead_{$zf@iteration}" type="button">Dodaj</button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="hidden" name="przedmioty[zbior][]" id="przedmioty_zbior_{$zf@iteration}" value="{$zf.zbior_id}"/>
+                        <div class="input-group">
+                            <input type="text" id="zbior_typeahead_{$zf@iteration}" class="form-control typeaheadElement" data-source-function="getZbiory" data-target-element="#przedmioty_zbior_{$zf@iteration}" data-after-select-fn="processWybranyZbior" data-relative-element="#przedmioty_przedmiot_{$zf@iteration}">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default choose-from-dial" data-dial-url-fn="getZbioryMiniUrl" data-dial-process-fn="processAddZbior" data-dial-ready-fn="filterZbiorPopup" data-dial-process-element="#zbior_typeahead_{$zf@iteration}" type="button">Dodaj</button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-1">
+                        <span class="btn btn-danger remove-row" type="button" data-before-remove-fn="processRemoveRow">Usuń</span>
+                    </div>
+                </div>
+                {/foreach}
+                <div class="form-group row">
+                    <div class="col-sm-4">
+                        <input type="hidden" name="przedmioty[przedmiot][]" id="przedmioty_przedmiot_n_1" class="przedmiotId"/>
+                        <div class="input-group">
+                            <input type="text" id="przedmiot_typeahead_n_1" class="form-control typeaheadElement" data-source-function="getPrzedmioty" data-target-element="#przedmioty_przedmiot_n_1" data-after-select-fn="processWybranyPrzedmiot">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default choose-from-dial" data-dial-url="/fielditems/addmini/?useProcess=true&linkedWithZbiory=true" data-dial-process-fn="processAddPrzedmiot" data-dial-ready-fn="filterPrzedmiotPopup" data-dial-process-element="#przedmiot_typeahead_n_1" type="button">Dodaj</button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="hidden" name="przedmioty[zbior][]" id="przedmioty_zbior_n_1"/>
+                        <div class="input-group">
+                            <input type="text" id="zbior_typeahead_n_1" class="form-control typeaheadElement" data-source-function="getZbiory" data-target-element="#przedmioty_zbior_n_1" data-after-select-fn="processWybranyZbior" data-relative-element="#przedmioty_przedmiot_n_1" disabled>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default choose-from-dial" data-dial-url-fn="getZbioryMiniUrl" data-dial-process-fn="processAddZbior" data-dial-ready-fn="filterZbiorPopup" data-dial-process-element="#zbior_typeahead_n_1" type="button">Dodaj</button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-1">
+                        <span class="btn btn-danger remove-row" type="button" data-before-remove-fn="processRemoveRow">Usuń</span>
+                    </div>
+                </div>
+            </section>
+            <section class="step transfer-fields" data-step-title="Wybór osób">
+                <div class="dpiContent">
+                    <div class="dpiIns active" rel="items">
+                        <div class="form-group row">
+                            <label for="itemsList" class="col-sm-2">Wybierz element zbioru:</label>
+                            <div class="col-sm-4"><select class="form-control" name="itemsList" id="itemsList"></select></div>
+                        </div>
+                        <div class="optsitems"></div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    var activeitem = '';
+                    var activepersons = { };
+                    var t_opts = {if $data.jsonoptions <> ''}jQuery.parseJSON('{$data.jsonoptions nofilter}');{else}{ldelim}t_items:new Array(),t_itemsdata:{ldelim}{rdelim}{rdelim};{/if};
+                    $('#itemsList').change(function(){ activeitem = $(this).children('option:selected').html(); setOptsView(); });
+                </script>
+                <script type="text/javascript" src="/_gfx/js/zbiory.js"></script>
+            </section>
+        </div>
+        <div id="globalMessage"></div>
+        <div class="hiddenElement">
+            <input type="hidden" name="id" id="id" value="{$data.id}"/>
+            <input type="hidden" name="options" id="options" value="{$zbior.options}" >
+            <a href="{$baseUrl}"><input type="button" value="Powrót" class="btn"></a>
+            <input type="hidden" name="type" value="2"/>
+            <input type="hidden" name="addAnother" id="addAnother" value="0"/>
+            <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var companiesData = {$companies|json_encode nofilter};
+    function getCompaniesData() {
+        return companiesData;
+    }
+    var companyEmployeesData = {$companyEmployees|json_encode nofilter};
+    function getCompanyEmployeesData() {
+        return companyEmployeesData;
+    }
+    var legalBasics = {$legalBasics|json_encode nofilter};
+    function getLegalBasics() {
+        return legalBasics;
+    }
+    var rooms = {$rooms|json_encode nofilter};
+    function getRooms() {
+        return rooms;
+    }
+    var osoby = {$osoby|json_encode nofilter};
+    function getOsoby() {
+        return osoby;
+    }
+    var zbiory = {$zbiory|json_encode nofilter};
+    function getZbiory() {
+        return zbiory;
+    }
+    var przedmioty = {$przedmioty|json_encode nofilter};
+    function getPrzedmioty(getAll) {
+        if (getAll) {
+            return przedmioty;
+        }
+        var used = [];
+        $('input[name="przedmioty[przedmiot][]"]').each(function() {
+            if (this.value) {
+                used.push(this.value);
+            }
+        });
+
+        var toUse = [];
+        $(przedmioty).each(function() {
+            if ($.inArray(this.id, used) === -1) {
+                toUse.push(this);
+            }
+        });
+
+        return toUse;
+    }
+
+    function processAddOsoba(id) {
+        $('#osoba_id').val(id).change();
+        $('#ajaxDial').modal('hide');
+    }
+    function processAddSourceCompany(object) {
+        $('#source_company_id').val(object.id);
+        $('#source_company_typeahead').val(object.name);
+        $('#source_employee_id').val('');
+        $('#source_employee_typeahead').val('');
+        $('#ajaxDial').modal('hide');
+        companiesData.push({
+            id: object.id,
+            name: object.name,
+            relation: object.type
+        });
+    }
+    function processAddSourceEmployee(object) {
+        var name = object.last_name + ' ' + object.first_name + ' - ' + $('#source_company_typeahead').val();
+        $('#source_employee_id').val(object.id);
+        $('#source_employee_typeahead').val(name);
+        $('#ajaxDial').modal('hide');
+        companyEmployeesData.push({
+            id: object.id,
+            name: name,
+            relation: object.company_id
+        });
+    }
+    function getEmployeeSourceMiniUrl() {
+        var companyId = $('#source_company_id').val();
+        if (!companyId) {
+            return false;
+        }
+        return '/company-employees/' + companyId + '/mini-choose/';
+    }
+    function getZbioryMiniUrl() {
+        if (this.closest('.input-group').find('input').is(':disabled')) {
+            return false;
+        }
+        return '/zbiory/addmini/?useProcess=true&przedmiotId=' + this.closest('.row').find('.przedmiotId').val();
+    }
+    function filterZbiorPopup() {
+        var dialog = $('#ajaxDial');
+        $('input[name="przedmioty[zbior][]"]').each(function() {
+            dialog.find('.selopt2bl[id=id'+this.value+']').hide();
+        });
+    }
+    function filterPrzedmiotPopup() {
+        var dialog = $('#ajaxDial');
+        $('input[name="przedmioty[przedmiot][]"]').each(function() {
+            dialog.find('.selopt2bl[id=id'+this.value+']').hide();
+        });
+    }
+
+    function processAddTargetCompany(object) {
+        $('#source_company_id').val(object.id);
+        $('#source_company_typeahead').val(object.name);
+        $('#source_employee_id').val('');
+        $('#source_employee_typeahead').val('');
+    }
+    function processAddTargetEmployee(object) {
+        $('#source_employee_id').val(object.id);
+        $('#source_employee_typeahead').val(object.last_name + ' ' + object.first_name + ' - ' + $('#target_company_typeahead').val());
+    }
+    function getEmployeeTargetMiniUrl() {
+        var companyId = $('#target_company_id').val();
+        if (!companyId) {
+            return false;
+        }
+        return '/company-employees/' + companyId + '/mini-add/';
+    }
+    function getLegalActsMiniUrl() {
+        return '/legalacts/mini-choose';
+    }
+    function processAddLegalAct(object) {
+        $('#transfer_legal_basics').val(object.name).change();
+        $('#ajaxDial').modal('hide');
+    }
+    function getCompanyMiniUrl() {
+        return '/companies/mini-choose/type/' + $('#source_company_type').val();
+    }
+    function processAddZbior(id) {
+        var input = $(dial.lastDialTarget.attr('data-dial-process-element')),
+            sourceFn = window[input.attr('data-source-function')],
+            items = sourceFn(true);
+
+        var name = '';
+        $(items).each(function() {
+            if (this.id === id) {
+                name = this.name;
+                return false;
+            }
+        });
+
+        input.val(name);
+        input.typeahead('getTypeahead').lookup(name);
+        setTimeout(function() {
+            input.typeahead('getTypeahead').select();
+            input.typeahead('getTypeahead').hide();
+        }, 200);
+        $('#ajaxDial').modal('hide');
+    }
+    function processWybranyZbior() {
+
+    }
+
+    function processRemoveRow() {
+        deleteItem(this.closest('.row').find('input.przedmiotId').val());
+    }
+
+    function processAddPrzedmiot(id) {
+        var input = $(dial.lastDialTarget.attr('data-dial-process-element')),
+            sourceFn = window[input.attr('data-source-function')],
+            items = sourceFn();
+
+        var name = '';
+        $(items).each(function() {
+            if (this.id === id) {
+                name = this.name;
+                return false;
+            }
+        });
+
+        if (!name) {
+            return;
+        }
+
+        input.val(name);
+        input.typeahead('getTypeahead').lookup(name);
+        setTimeout(function() {
+            input.typeahead('getTypeahead').select();
+            input.typeahead('getTypeahead').hide();
+        }, 200);
+        $('#ajaxDial').modal('hide');
+    }
+
+    function processWybranyPrzedmiot(result) {
+        var tg = result.typeaheadElement,
+            zbioryInput = tg.closest('.row').children().eq(-2).find('input[type=text]').eq(0);
+
+        if (tg.closest('.row').nextAll().size() === 0) {
+            var cloned = tg.closest('.row').clone();
+
+            cloned
+                .find('input')
+                    .each(function () {
+                        var tg = $(this),
+                            replaceReg = /[0-9]+$/,
+                            id = tg.attr('id'),
+                            newI = parseInt(id.match(replaceReg)[0]) + 1,
+                            newId = id.replace(replaceReg, newI);
+
+                        tg
+                            .attr('id', newId)
+                            .val('');
+
+                        if (tg.attr('type') === 'text') {
+                            tg.attr('data-target-element', tg.attr('data-target-element').replace(replaceReg, newI));
+                            if (tg.attr('data-relative-element')) {
+                                tg.attr('data-relative-element', tg.attr('data-relative-element').replace(replaceReg, newI))
+                            }
+                        }
+                    })
+                    .end()
+                .find('button')
+                    .each(function() {
+                        var tg = $(this),
+                            replaceReg = /[0-9]+$/,
+                            id = tg.attr('data-dial-process-element'),
+                            newI = parseInt(id.match(replaceReg)[0]) + 1,
+                            newId = id.replace(replaceReg, newI);
+
+                        tg.attr('data-dial-process-element', tg.attr('data-dial-process-element').replace(replaceReg, newI))
+                    })
+                    .end()
+                .find('.dropdown-menu')
+                    .remove()
+                    .end()
+                .find('.processed-typeaheadElement')
+                    .removeClass('processed-typeaheadElement')
+                    .end()
+                .find('.processed-choose-from-dial')
+                    .removeClass('processed-choose-from-dial')
+                    .end()
+                .insertAfter(tg.closest('.row'));
+
+            typeaheadInit();
+            dial.initializer();
+            universalRemoveRowInit();
+        }
+        zbioryInput
+                .removeAttr('disabled');
+        //obsługa formularza przedmiotów z polami i osobami
+        additem('id' + result.targetElement.val());
+        if (result.previousValue) {
+            var items = window[tg.attr('data-source-function')]();
+            $(items).each(function() {
+                if (this.id === result.previousValue) {
+                    deleteItem(result.previousValue);
+                    return false;
+                }
+            });
+        }
+    }
+
+    $('#source_company_type').on('change', function() {
+        var tg = $(this),
+            employeeRow = $('#source_employee_id').closest('.row');
+
+        $('#source_company_id').val('').blur();
+        $('#source_company_typeahead').val('').blur();
+        $('#source_employee_id').val('').blur();
+        $('#source_employee_typeahead').val('').blur();
+
+        if (tg.val() === '1') {
+            employeeRow.show();
+        } else {
+            employeeRow.hide();
+        }
+    });
+
+    $('#transfer_deadline_type').on('change', function() {
+        var tg = $(this),
+            dateRow = $('#transfer_deadline_date').closest('.row');
+
+        $('#transfer_deadline_date').val('').blur();
+
+        if (tg.val() === '1') {
+            dateRow.show();
+        } else {
+            dateRow.hide();
+        }
+    });
+
+    backendUtilities.addVatidationEngine("f_data");
+</script>

@@ -1,0 +1,35 @@
+
+<div class="table-operations-header">
+    {if $auth->isGranted('node/sites/update')}
+    <a class="btn btn-success" id="sback" href="/systembackup/backup" data-title="Dodaj nową stronę" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;SystemBackup Now</a>
+    {/if}
+</div>
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="string">Created By</th>
+        <th data-filter-type="string">File Name</th>
+        <th data-filter-type="select">Created Date</th>
+        <th width="75px;">Actions</th>
+    </tr>
+    </thead>
+    <tbody class="ui-widget-content">
+    {foreach $paginator as $d}
+        <tr>
+            <td>{$d.createdby|ucfirst}</td>
+            <td>{$d.filename}</td>
+            <td>{$d.date}</td>            
+            <td>                
+                {if $auth->isGranted('node/systembackup/del', ['id' => $d.id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="/systembackup/del/id/{$d.id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+                {/if}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>
+<script type="text/javascript">
+$("#sback").click(function(){
+	$("#sback").val('Please wait ...').attr('disabled','disabled');
+})
+</script>

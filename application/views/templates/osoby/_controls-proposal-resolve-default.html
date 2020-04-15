@@ -1,0 +1,40 @@
+<a href="/osoby" class="btn btn-default">Powrót</a>
+<input type="hidden" id="proposalId" value="{$proposalItem.id}">
+
+{if $ticket && $ticket.status.system_name === 'proposal_employee_add_abi_accept'}
+    {element tag='a' route='osoby/proposal-action' routeParams=['method' => 'reject', 'proposal_id' => $proposalItem.id] attributes=[
+        'dialog' => [
+            'new-dialog' => true
+        ],
+        'class' => 'btn btn-red-1',
+        'innerHtml' => 'Odrzuć'
+    ]}
+{/if}
+{element tag='a' route='osoby/proposal-action' routeParams=['method' => 'forward', 'proposal_id' => $proposalItem.id] attributes=[
+    'route-attribute' => 'data-confirmation-process-route',
+    'class' => 'btn btn-success md-trigger trigger-confirmation',
+    'data' => [
+        'modal' => 'confirmation-modal',
+        'confirmation-process' => 'confirmationProcessForward'
+    ],
+    'innerHtml' => 'Zaakceptuj'
+]}
+
+<script type="text/javascript" id="proposal_scripts">
+    var proposalFormDataProcess = function(data) {
+        data = $.extend(data, $('#proposal_scripts').closest('form').serializeObject());
+    };
+
+    var confirmationProcessForward = function(modal, passwordConfirmData) {
+        var data = $.extend(data, $('#proposal_scripts').closest('form').serializeObject(), passwordConfirmData);
+
+        $.ajax({
+            method: 'post',
+            url: '/osoby/proposal-action/method/forward/proposal_id/' + proposalId.value,
+            data: data,
+            success: defaultAjaxResponseHandler
+        });
+    };
+</script>
+
+{include file="tasks-my/_element-signature-form.html" hideSignatureButtons=1 singatureModalAttributesString=' data-dont-complete-task="1"'}

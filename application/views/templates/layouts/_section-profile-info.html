@@ -1,0 +1,36 @@
+<!--- Profile -->
+<div class="profile-info">
+    <div class="col-xs-4">
+        <a href="" class="rounded-image profile-image" title="Twój profil"><img src="/assets/img/users/user-100.jpg"></a>
+    </div>
+    <div class="col-xs-8" style="padding-left:5px;padding-right:0;">
+        <div class="profile-text">Witaj <b>{$user_session->user->login}</b></div>
+        <div class="profile-buttons">
+            <ul class="nav navbar-nav top-navbar navbar-slim">
+                <li><a href="/static/napisz" title="Napisz wiadomość"><i class="fa fa-envelope-o pulse"></i></a></li>
+
+                {if $auth->isGranted('node/documents')}
+                <li><a href="/documents" title="Instrukcje"><i class="fa icon-book-open-1 pulse"></i></a></li>
+                {/if}
+
+                <li class="dropdown iconify hide-phone">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="/assets/images/famfamfam_flag_icons/png/{$languages[$currentLanguage].icon}"/>
+                    </a>
+                    <ul class="dropdown-menu dropdown-message">
+                        {foreach $languages as $language}
+                            <li class="dropdown-header notif-header">
+                                <a href="/home/change-language/id/{$language.symbol}">
+                                    <img src="/assets/images/famfamfam_flag_icons/png/{$language.icon}"/>
+                                    {$language.name}
+                                </a>
+                            </li>
+                        {/foreach}
+                    </ul>
+                </li>
+
+                <li><a href="javascript:;" class="md-trigger" data-modal="logout-modal" title="Wyloguj"><i class="fa fa-power-off text-red-1"></i></a></li>
+            </ul>
+        </div>
+    </div>
+</div>

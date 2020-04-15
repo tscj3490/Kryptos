@@ -1,0 +1,72 @@
+<h1>{$dialogTitle}</h1>
+
+<div class="row">
+    <div class="col-sm-12">
+        <form name="f_profile" id="f_profile" action="/registry/ajax-save-document-template" class="ajax-form form-horizontal" role="form" data-process-fn="formProcessDialModal">
+            <input type="hidden" name="document_template[id]" value="{$data.id}"/>
+            <input type="hidden" name="document_template[registry_id]" value="{$data.registry_id}"/>
+
+            {element tag="bs.varchar" attributes=[
+                'name' => 'document_template[title]',
+                'label' => 'Tytuł',
+                'value' => $data.title
+            ]}
+
+            {element tag="bs.typeahead" attributes=[
+                'model' => 'Osoby',
+                'name' => 'document_template[default_author_id]',
+                'label' => 'Osoba wystawiająca',
+                'simple' => true,
+                'value' => $data.default_author_id
+            ]}
+
+            {element tag="bs.checkbox-line" attributes=[
+                'type' => 'checkbox',
+                'labelClass' => 'col-sm-8 col-sm-offset-4',
+                'name' => 'document_template[flag_auto_create]',
+                'label' => 'Twórz automatycznie',
+                'value' => $data.flag_auto_create
+            ]}
+
+            {element tag="bs.select" attributes=[
+                'id' => 'numbering_scheme_type_id',
+                'name' => 'document_template[numbering_scheme_type_id]',
+                'label' => 'Rodzaj numeracji',
+                'options' => Application_Service_RegistryConst::NUMBERING_SCHEME_TYPES,
+                'value' => $data.numbering_scheme_type_id
+            ]}
+
+            {element tag="bs.texthtml" attributes=[
+                'model' => 'RegistryTemplates',
+                'name' => 'document_template[template_string]',
+                'id' => 'registry_html_editor',
+                'ckeditor_class' => 'ckeditor-default',
+                'label' => 'Szablon',
+                'simple' => true,
+                'value' => $data.template.data
+            ]}
+
+            <div class="alert alert-info">
+                Możesz korzystać z następujących tagów specjalnych:<br>
+                <br>
+                {foreach $registry.entities as $entity}
+                    {ldelim}{$entity.system_name}{rdelim} - {$entity.title}<br>
+                {/foreach}
+            </div>
+
+            {*include file="_reuse/form/registry.templates.typeahead.element.html" name="template_id" label="Szablon:" simple=true*}
+
+            {*<div class="form-group">
+                <label class="col-sm-4" for="is_multiple">Czy wiele wartości</label>
+                <div class="col-sm-8">
+                    <input type="hidden" name="parameter[is_multiple]" value="0">
+                    <input type="checkbox" name="parameter[is_multiple]" id="is_multiple" class="form-control" value="1"{if $data.is_multiple} checked{/if}/>
+                </div>
+            </div>*}
+        </form>
+    </div>
+</div>
+
+<div class="footer-actions">
+    <a class="btn btn-success pull-right dialog-form-submit">Zapisz</a>
+</div>

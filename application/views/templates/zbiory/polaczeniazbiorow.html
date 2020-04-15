@@ -1,0 +1,21 @@
+<form action="/zbiory/intersect" method="post">
+<div style="margin: 0 auto; width:920px;">
+	<div style="float:left;width:450px; height:400px;">
+		<select multiple style="height:400px;width:450px;" name="z1[]">
+		{foreach $zbiory as $z}
+		<option value="{$z.id}">{$z.id} {$z.nazwa}</option>
+		{/foreach}
+		</select>
+	</div>
+	<div style="float:left;width:450px; height:400px; margin-left:20px;">
+	<select multiple style="height:400px;width:450px;"  name="z2[]">
+	{foreach $zbiory as $z}
+	<option value="{$z.id}">{$z.id} {$z.nazwa}</option>
+	{/foreach}
+	</select>
+	</div>
+	<div style="float:left; margin:20px;">
+	<input class="btn btn-info" type="submit" value="Wygeneruj" >
+	</div>
+</div>
+</form>

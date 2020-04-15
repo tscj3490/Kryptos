@@ -1,0 +1,46 @@
+{$message}
+<div class="row">
+    <div class="col-sm-12">
+        <table class="table table-striped table-bordered table-small">
+            <tbody>
+            <tr>
+                <td>Ilość pól</td>
+                <td>{$all_fields}</td>
+            </tr>
+            <tr>
+                <td>Ilość duplikatów</td>
+                <td>{$duplicated_fields}</td>
+            </tr>
+            <tr>
+                <td>Brakujące powiązanie z giodo - nazwiska i imiona</td>
+                <td>{$missedGiodo1}</td>
+            </tr>
+            <tr>
+                <td>Brakujące powiązanie z giodo - numer telefonu</td>
+                <td>{$missedGiodo2}</td>
+            </tr>
+            <tr>
+                <td>Brakujące powiązanie z giodo - PESEL</td>
+                <td>{$missedGiodo3}</td>
+            </tr>
+            <tr>
+                <td>Brakujące powiązanie z giodo - zawód</td>
+                <td>{$missedGiodo4}</td>
+            </tr>
+            <tr>
+                <td>Brakujące powiązanie z giodo - NIP</td>
+                <td>{$missedGiodo5}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <form method="post">
+            <input type="submit" name="accept" value="Wykonaj przeniesienie pól" class="btn btn-default"/>
+        </form>
+    </div>
+</div>
+

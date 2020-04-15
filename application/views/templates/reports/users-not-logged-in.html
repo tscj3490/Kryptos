@@ -1,0 +1,19 @@
+<h1>Użytkownicy, którzy nie logowali się od 30 dni</h1>
+<table class="printable" cellspacing='1' cellpadding="5">
+    <thead>
+    <tr>
+        <th>L.p.</th>
+        <th>Nazwa użytkownika</th>
+        <th>Ostatnie logowanie</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $model as $d}
+        <tr>
+            <td>{$d@iteration}</td>
+            <td>{$d->osoba->imie} {$d.osoba.nazwisko} [{$d.login}]</td>
+            <td>{$d.login_date}</td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

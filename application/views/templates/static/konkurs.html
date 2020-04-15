@@ -1,0 +1,120 @@
+<script language="javascript" src="/_gfx/js/ajaxfileupload.js"></script>
+<script language="javascript">
+{literal}
+$(function (){
+		
+		$("#buttonUpload").click(function (){
+			$("#dolacz_plik form").hide();
+			$("#loading").show();
+			$.ajaxFileUpload
+			(
+				{
+					url:'/static/konkursupload',
+					secureuri:false,
+					fileElementId:'fileToUpload',
+					dataType: 'json',
+					data:{name:'logan', id:'id'},
+					success: function (data, status)
+					{
+						if(typeof(data.error) != 'undefined')
+						{
+							if(data.error != '')
+							{
+								alert(data.error);
+							}else
+							{
+								$("#send_form_button").show();
+								$("#file_upload_konkurs").hide();
+								$("#hidden_file").val(data.msg).show();
+								$("#file_location").val(data.newfile);
+							}
+						}
+						$("#loading").hide();
+					}
+				}
+			)
+			
+			return false;
+		});
+		
+		$("#send_form").submit(function(){
+			var doSend = true;
+			
+			if($("#name_sur").val().length < 6) {alert("Musisz wprowadzić poprawne imię i nazwisko"); doSend = false;}
+			if($("#adress_sur").val().length < 6) {alert("Musisz wprowadzić poprawne imię i nazwisko"); doSend = false;}
+			if($("#email").val().length < 6) {alert("Musisz wprowadzić poprawny email"); doSend = false;}
+			if($("#birthday").val().length < 6) {alert("Musisz wprowadzić poprawną datę urodzenia"); doSend = false;}
+			if($("#akcept_reg").is(":checked") == false) { alert("Musisz zaakceptować regulamin"); doSend = false;}
+			return doSend;
+		});
+});
+{/literal}
+</script>
+<h2>Konkurs zostań "Ambasadorem datashur"</h2>
+<section class="konkurs-page">
+<div style="float:left; width:310px;">
+    <form method="post" id="send_form" action="/static/dosendkonkurs">
+        <input  type="text" placeholder="imię i nazwisko" id="name_sur" name="data[name]" value="">
+        <input  type="text" placeholder="adres zamieszkania" name="data[adress]" id="adress_sur" value="">
+        <input  type="email" placeholder="adres e-mail"name="data[mail]" id="email" value="">
+        <input  type="text" placeholder="data urodzenia w formacie rrrr-mm-dd" name="data[birth]" id="birthday" value="">
+        <input  type="text" placeholder="numer telefonu" name="data[phone]" value="">
+        <div style="float:left; clear:both; margin-left:5px; color:#222222;"><span>Akceptuję <a href="/regulamin.pdf">regulamin</a></span><input  id="akcept_reg"  type="checkbox" value="1" style="height:auto;float:none; margin-left:117px; width:20px;"> </div>
+        <input  type="text" disabled id="hidden_file" value="">
+        <Input  type="hidden" id="file_location" name="data[filelocation]">
+        <input  type="submit" id="send_form_button" value="wyślij zgłoszenie">
+    </form>
+    <div id="file_upload_konkurs">
+    <h3>Dołącz plik</h3>
+            <div id="dolacz_plik">
+                <img id="loading" src="/img/loading_big.gif" style="height:20px;display:none;">
+                <form name="form" action="" id="file_submit" method="POST" enctype="multipart/form-data">
+                    <input  id="fileToUpload" type="file" size="45" name="fileToUpload" class="input" style="border:none;height:26px;padding:0;"><br><br>
+                    <button  class="button" id="buttonUpload">Wgraj plik</button>
+                </form>
+            </div>    	
+    </div>
+</div>
+<div style="float:left; width:630px;">
+<p style="text-indent:0;">
+<b>Agencja Bezpieczeństwa Komunikacji Kryptos</b> ogłasza konkurs na  Ambasadora datashur<br><br>
+Aby wziąć udział w konkursie należy odpowiedzieć na pytanie <b>„Do czego użyjesz swojego datashura?”</b>. Czekamy na prace poważne i zabawne. W formie eseju, wiersza, grafiki, zdjęcia. To ty zdecyduj w jaki sposób chcesz wyrazić swój pomysł. 
+Zwycięska praca zostanie wyłoniona w wyniku głosowania przez fanów strony facebook.<br> <br> 
+Warunkiem uczestnictwa jest:</p>
+<ul>
+    <li>przesłanie wypełnionego formularza wraz z pracą,</li>
+    <li>bycie fanem naszej strony,</li>
+    <li>akceptacja <a href="/regulamin.pdf">regulaminu</a>.</li>
+</ul>
+<p>
+Na Twoją pracę czekamy od 16-09-2013 do 16-10-2013.<br><br>
+<b>Każdy Uczestnik Konkursu otrzyma rabat 5% na zakupy w <a href="http://www.i-storage.pl">naszym sklepie</a></b>
+</p>{*
+<p style="text-indent:0;">
+<b>Zdobądź swojego datAshur-a</b><br><br>
+
+Już dziś rusza Pierwsza edycja Konkursu „Ambasador datAshu-ar”.<br><br>
+
+Zostań fanem naszej strony i odpowiedz na pytanie „Do czego użyjesz swojego datAshur-a”<br>
+
+Bądź kreatywny. Napisz, narysuj, zrób zdjęcie.<br><br>
+
+Autor pracy,  która zdobędzie najwięcej „lajków”  otrzyma datAshur’a oraz tytuł Ambasadora marki. Zwiększ swoje szanse i o konkursie poinformuj znajomych, niech zagłosują na Twój pomysł.<br><br>
+
+To takie proste wystarczy:<br>
+
+<ul>
+<li>wypełnić formularz</li>
+<li>odpowiedzieć  na pytanie konkursowe</li>
+<li>wysłać pracę</li>
+</ul>
+<br>
+
+Doceniamy wysiłek każdego Uczestnika, dlatego wszyscy autorzy prac konkursowych otrzymają kupon rabatowy na zakupy w <a href="http://www.i-storage.pl">naszym sklepie</a><br><br>
+
+Regulamin konkursu dostępny <a href="http://www.kryptos.co/regulamin.pdf">tutaj</a>
+
+</p>*}
+
+</div>
+</section>

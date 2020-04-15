@@ -1,0 +1,38 @@
+{include file='modals/modal.tpl' title='Sprzęt komputerowy - co to jest?' content='Ewidencja sprzętu to rejestr umożliwiający prowadzenie jak sama nazwa mówi, ewidencji sprzętu komputerowego oraz ewidencję nośników pamięci. Dzięki prowadzeniu takiego rejestru mamy kontrolę nad korzystaniem z poszczególnych urządzeń przez pracowników. W szybki i łatwy sposób możemy sprawdzić gdzie znajduje się np. konkretny pendrive, a co najważniejsze, kto konkretnie jest za niego odpowiedzialny. Oczywiście oprócz ewidencji aplikacja umożliwia dodanie szablonu dokumentu powierzenia materialnego dla konkretnej osoby, a następnie wygenerowanie dokumentacji osobowej z nadanym numerem. Moduł jest nieustannie rozwijany. Istnieje możliwość integracji z innymi aplikacjami dedykowanymi do tego celu, by móc załadować odpowiednie dane. Konsultanci i wdrożeniowcy Kryptos24 służą pomocą.'}
+<div class="table-operations-header">
+    {if $auth->isGranted('node/computer/update')}
+    <a class="btn btn-success" href="/computer/update" data-title="Dodaj nowy sprzęt komputerowy" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+    {/if}
+</div>
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="string">Nazwa</th>
+        <th data-filter-type="select">Lokalizacja</th>
+        <th data-filter-type="select">Typ</th>
+        <th data-filter-type="string">Osoba</th>
+        <th>operacje</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $computers as $computer}
+    <tr>
+        <td>{$computer.identity}</td>
+        <td>
+            {$pomieszczenia[$computer.location]['nazwa_budynku']}
+            {$pomieszczenia[$computer.location]['nazwa']}
+        </td>
+        <td>{$typy[$computer.typ]}</td>
+        <td>{$computer.nazwisko} {$computer.imie}</td>
+        <td class="operations">
+            {if $auth->isGranted('node/computer/update', ['id' => $computer.computer_id])}
+            <a class="glyphicon glyphicon-pencil"  href="/computer/update/id/{$computer.computer_id}" data-toggle="tooltip" title="Edytuj"></a>
+            {/if}
+            {if $auth->isGranted('node/computer/del', ['id' => $computer.computer_id])}
+                <a class="glyphicon glyphicon-trash modal-confirm" data-href="/computer/del/id/{$computer.computer_id}" data-confirmation-class="singleDelete" data-toggle="tooltip" title="USUŃ"></a>
+            {/if}
+        </td>
+    </tr>
+    {/foreach}
+    </tbody>
+</table>

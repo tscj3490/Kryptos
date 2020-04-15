@@ -1,0 +1,24 @@
+<aside class="sidebar left">
+	        		<nav>
+	        			<ol id="navigation_products">
+		        			<li {if $pid==14 || $dataLockerSubPath==1}class="activated active"{/if}>
+		        				<a href="{$url}datalocker,14.html"><span>DataLocker</span></a>
+	        				</li>
+		        			<li  {if $pid==15}class="activated"{/if}>
+		        				<a href="{$url}poczta,15.html"><span>{$tr->_('email_post')}</span></a>
+	        				</li>
+		        			<li>
+		        				<a href="#prod-3"><span>{$tr->_('messenger')}</span></a>
+	        				</li>
+		        			<li>
+		        				<a href="#prod-4"><span>{$tr->_('file_encryption')}</span></a>
+	        				</li>
+		        			<li>
+		        				<a href="#prod-5"><span>{$tr->_('ftp_encryption')}</span></a>
+	        				</li>
+		        			<li >
+		        				<a href="#prod-6"><span>{$tr->_('pernament remove files')}</span></a>
+	        				</li>
+		        		</ol>
+	        		</nav>
+</aside>

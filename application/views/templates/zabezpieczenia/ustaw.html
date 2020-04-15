@@ -1,0 +1,28 @@
+{$message}
+<form id="f_profile" name="f_profile" action="/zabezpieczenia/ustawsave" method="POST" class="form-horizontal" role="form">
+<div class="body-action">
+	<a class="btn btn-info" href="/zabezpieczenia">Powrót</a>
+</div>
+<table cellpadding="0" cellspacing="0" border="0"
+	class="table table-striped table-bordered">
+	<thead>
+		<tr>
+			<th>nazwa</th>
+			<th>typ</th>
+			<th>aktywny</th>
+		</tr>
+	</thead>
+	<tbody class="ui-widget-content">
+		{foreach $paginator as $d}
+		<tr>
+			<td>{$d.nazwa}</td>
+			<td>{$model->getTypeName($d.typ)}</td>
+			<td><label class="col-sm-12"><input type="checkbox" name="status[{$d.id}]" value="{$d.id}" class="form-control" {if $d.status}checked{/if} ></label></td>
+		</tr>
+		{/foreach}
+	</tbody>
+</table>
+<div class="">
+      <input type="submit" value="Zapisz"  class="btn btn-info"  >
+</div>
+</form>

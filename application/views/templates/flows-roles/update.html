@@ -1,0 +1,75 @@
+<div class="row">
+    <div class="col-lg-6">
+        <form name="f_data" id="f_data" method="POST" action="{$baseUrl}/save" enctype="multipart/form-data">
+            <fieldset>
+                {if $data.id}
+                <input type="hidden" name="id" value="{$data.id}"/>
+                {/if}
+
+                <div class="form-group row">
+                    <label for="name" class="col-sm-4">Nazwa roli:</label>
+                    <div class="col-sm-8">
+                        <input type="text" name="name" id="name" class="form-control validate[required]" value="{$data.name}">
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="panel-group accordion-toggle" id="accordiondemo">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a class="toggle-collapse" data-target="#accordionPeople">
+                                                Osoby &nbsp;
+                                                <button class="btn btn-xs btn-info choose-from-dial" data-dial-url="/osoby/addmini/?useProcess=1" data-dial-ready-fn="filterOsobyPopup" data-dial-process-fn="configAddOsoba" type="button">Dodaj</button>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="accordionPeople" class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <div id="responsible_persons">
+                                                {foreach $responsiblePersons as $a}
+                                                <div class="seloptmin"><span>{$a.osoba.display_name}</span><i title="Usuń" class="glyphicon glyphicon-trash remove-element" data-closest-target=".seloptmin"></i><input type="hidden" name="responsive_persons[]" value="{$a.osoba_id}"></div>
+                                                {/foreach}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <a href="{$baseUrl}"><input type="button" value="Powrót" class="btn"></a>
+                        <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+                    </div>
+            </fieldset>
+            <div class="hiddenElement">
+                <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+    
+        function filterOsobyPopup() {
+        $('#responsible_persons').find('input').each(function () {
+            $('#optsSearch').find('#id' + this.value).addClass('active');
+        });
+    }
+
+    function configAddOsoba(id, object, status) {
+        if (status) {
+            var newTag = $('<div class="seloptmin">');
+            newTag.append($('<span></span>').text(object.displayName));
+            newTag.append($('<i title="Usuń" class="glyphicon glyphicon-trash remove-element" data-closest-target=".seloptmin">'));
+            newTag.append($('<input type="hidden" name="responsive_persons[]" value="' + object.id + '">'));
+            $('#responsible_persons').append(newTag);
+
+            systemAssignHandlers();
+        } else {
+            $('#responsible_persons').find('input[value="' + object.id + '"]').closest('.seloptmin').remove();
+        }
+    }
+</script>

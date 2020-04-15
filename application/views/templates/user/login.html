@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ABI 1.0</title>
+    <meta name="description" content="Logowanie do aplikacji ABI.">
+    <link href='http://fonts.googleapis.com/css?family=Tinos:400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="loginform">
+<div id="logging">
+    <h1>Logowanie do ABI 1.0</h1>
+    <form method="post" action="/user/login">
+        <input type="text" name="login" placeholder="identyfikator">
+        <div style="clear:both"></div>
+        {if $password}
+        {for $i = 1; $i < 12; $i++}
+        <input type="password" name="password[{$i}]"  style="width:10px; float:left;margin-right:10px;clear: none">
+        {/for}
+        {/if}
+        <input type="submit" name="submit" value="Dalej">
+    </form>
+    <div class="progress"><div class="progressbar"></div></div>
+    <div class="ui-widget error-msg">
+        <div class="ui-state-error ui-corner-all" style="padding: 0px 0.7em;">
+            <p>
+                <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span>
+                <span style="font-size:12px;">Złe dane logowania</span>
+            </p>
+        </div>
+    </div>
+</div>
+<div id="passwordchange">
+    <h1>Przypomnienie hasła</h1>
+    <p style="margin-right:184px;">Po podaniu loginu na adres e-mail użytkownika zostaną wysyłane instrukcje jak zmienić hasło.</p>
+    <form>
+        <input type="text" name="login" placeholder="login" pattern="[a-zA-Z]+">
+        <input type="submit" name="submit" value="wyślij">
+    </form>
+</div>
+</body>
+</html>    

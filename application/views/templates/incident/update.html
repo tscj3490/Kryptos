@@ -1,0 +1,75 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Modyfikacja</h3>
+    </div>
+    <div class="panel-body">
+    <form name="f_profile" id="f_profile" action="/incident/save" method="post">
+        <div class="form-group row">
+            <label class="col-sm-2">Osoba powiadamiajaca:</label>
+            <div class="col-sm-4"><input class="form-control validate[required]" type="text" id="osoba_powiadamiajaca" name="osoba_powiadamiajaca" value="{$data.osoba_powiadamiajaca}" /></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2">Osoba przyjmujaca:</label>
+            <div class="col-sm-4"><select class="form-control validate[required]" name="osoba_przyjmujaca" id="osoba_przyjmujaca">
+                {foreach $osoby as $osoba}
+                <option value="{$osoba.osoba_id}"
+                {if !$data.osoba && $osoba.rola_name == 'ADO'}selected{/if}
+                {if $osoba.osoba_id == $data.osoba_przyjmujaca}selected{/if}>{$osoba.nazwisko} {$osoba.imie} ({$osoba.rola_name})
+                </option>
+                {/foreach}
+            </select></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2">Data:</label>
+            <div class="col-sm-4"><input class="form-control validate[required] datepicker-input" type="date" id="data" name="data" value="{$data.data}" placeholder="YYYY-mm-dd" /></div>
+            <label class="col-sm-2">Godzina:</label>
+            <div class="col-sm-4"><input class="form-control validate[required]" type="text" id="godzina" name="godzina" placeholder="GG:mm" value="{if $data.data}{$data.godzina}{else}{date('H:i')}{/if}" /></div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2">Lokalizacja zdarzenia:</label>
+            <div class="col-sm-4"><textarea class="form-control validate[required]" id="lokalizacja" name="lokalizacja" cols="80" rows="5">
+                {$data.lokalizacja}
+            </textarea></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2">Rodzaj naruszenia:</label>
+            <div class="col-sm-4"><textarea class="form-control validate[required]" id="rodzaj_naruszenia" name="rodzaj_naruszenia" cols="80" rows="5">
+                {$data.rodzaj_naruszenia}
+            </textarea></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2">Podjete dzialania:</label>
+            <div class="col-sm-4"><textarea class="form-control validate[required]" id="podjete_dzialania" name="podjete_dzialania" cols="80" rows="5">
+                {$data.podjete_dzialania}
+            </textarea></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2">Przyczyny wystapienia:</label>
+            <div class="col-sm-4"><textarea class="form-control validate[required]" id="przyczyny_wystapienia" name="przyczyny_wystapienia" cols="80" rows="5">
+                {$data.przyczyny_wystapienia}
+            </textarea></div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2">Stan:</label>
+            <div class="col-sm-4"><select class="form-control validate[required]" name="stan" id="stan">
+                {foreach $stany as $key => $stan}
+                <option value="{$key}"
+
+                {if $data.stan == $key}selected{/if}>{$stan}
+                </option>
+                {/foreach}
+            </select></div>
+        </div>
+        <div class="">
+            <input class="btn btn-info" type="submit" value="Zapisz" />
+        </div>
+        <input type="hidden" name="id" id="id" value="{$data.id}" />
+    </form>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+	backendUtilities.addVatidationEngine("f_profile");
+</script>

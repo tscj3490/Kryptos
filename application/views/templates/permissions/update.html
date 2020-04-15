@@ -1,0 +1,73 @@
+<div class="row">
+    <div class="col-lg-6">
+        <form name="f_data" id="f_data" method="POST" action="{$baseUrl}/save" enctype="multipart/form-data">
+            <fieldset>
+                {if $data.id}
+                <input type="hidden" name="record[id]" value="{$data.id}"/>
+                {/if}
+
+                {element tag="bs.varchar" attributes=[
+                    'name' => 'record[name]',
+                    'label' => 'Nazwa',
+                    'value' => $data.name
+                ]}
+
+                {element tag="bs.select" attributes=[
+                    'id' => 'record_type',
+                    'name' => 'record[type_id]',
+                    'label' => 'Rodzaj',
+                    'options' => Application_Model_Permissions::TYPES_DISPLAY,
+                    'value' => $data.type_id,
+                    'relative' => true
+                ]}
+
+                {element tag="bs.typeahead" attributes=[
+                    'name' => 'record[object_id]',
+                    'label' => 'Aplikacja',
+                    'model' => 'Applications',
+                    'value' => $data.object_id,
+                    'relative' => [
+                        'base_id' => 'record_type',
+                        'base_value' => 2
+                    ]
+                ]}
+
+                {element tag="bs.typeahead" attributes=[
+                    'name' => 'record[object_id]',
+                    'label' => 'Moduł',
+                    'model' => 'ApplicationsModules',
+                    'value' => $data.object_id,
+                    'relative' => [
+                        'base_id' => 'record_type',
+                        'base_value' => 3
+                    ]
+                ]}
+
+                {element tag="bs.typeahead" attributes=[
+                    'name' => 'record[object_id]',
+                    'label' => 'Rejestr',
+                    'model' => 'Registry',
+                    'value' => $data.object_id,
+                    'relative' => [
+                        'base_id' => 'record_type',
+                        'base_value' => 4
+                    ]
+                ]}
+
+                <div>
+                    <a href="{$baseUrl}" class="btn btn-default">Powrót</a>
+                    <input type="button" value="Zapisz" class="btn btn-info" onclick="$('#formSubmit').click();">
+                </div>
+
+            </fieldset>
+
+            <div class="hiddenElement">
+                <input type="submit" id="formSubmit" value="Zapisz" class="btn btn-info">
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    backendUtilities.addVatidationEngine("f_data");
+</script>

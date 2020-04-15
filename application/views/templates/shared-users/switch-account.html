@@ -1,0 +1,31 @@
+<h1>Przełącz konto</h1>
+
+<div class="row">
+    <div class="col-sm-12">
+        <form name="f_profile" id="f_profile" action="/shared-users/switch-account-go" class="ajax-form form-horizontal" role="form" data-process-fn="defaultAjaxResponseHandler">
+            <input type="hidden" name="account_id" id="account_id"/>
+            <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-widget">
+                <thead>
+                <tr>
+                    <th>Aplikacja</th>
+                    <th>Login</th>
+                    <th>Komentarz</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $user_session->sharedConnections as $account}
+                    <tr>
+                        <td>{$account.app_id}</td>
+                        <td>{$account.user_login}</td>
+                        <td>{$account.comment}</td>
+                        <td>
+                            <button type="submit" data-value="{$account.id}" class="btn btn-default transfer-value" data-target="#account_id">Przełącz</button>
+                        </td>
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>

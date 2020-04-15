@@ -1,0 +1,115 @@
+{include file='modals/modal.tpl' title='CsvImport- co to jest?' content='Moduł ten umożliwia szybki dostęp o wybranych raportów dostępnych w systemie domyślnie lub wykonanych specjalnie dla danego Klienta, m. in.: Opis struktury zbiorów; Ewidencja zmiany haseł; Wykaz budynków, pomieszczeń i obszarów przetwarzania; Wykaz kluczy, Wykaz osób zapoznanych z polityką bezpieczeństwa; Rozbudowany raport o zbiorach wraz z podstawami prawnymi; Zbiory wraz z pomieszczeniami; Zbiory niemodyfikowane przez ostatnie 30 dni; Rejestr osób upoważnionych do przetwarzania danych; Rejestr udostępnień/powierzeń danych osobowych; Ewidencja nośników służących przetwarzaniu danych osobowych; Stosowane zabezpieczenia; Ilość wysłanych wiadomości; Użytkownicy, którzy nie logowali się w ogóle lub ponad 30 dni; Rejestr incydentów; Zadania z kalendarza lub raport o osobach, które nie zrealizowały testów.'}
+
+
+                   
+<div id="form_maping">
+    <fieldset>
+       
+    
+        <form style="display:none" method="post" id="fileimport" role="form" enctype="multipart/form-data" action="csvimport/export" class="form-horizontal">
+            
+                <input type="submit" value="Export" class="btn btn-info" />
+            
+        </form>
+
+         <form role="form" enctype="multipart/form-data" action="csvimport/process" class="form-horizontal" method="post" id="fileinfo" name="fileinfo" onsubmit="return submitForm();">
+            <div class="form-group row">
+                <div class="col-sm-12">
+                <div id="status"></div>
+               
+                    <label for="fields"><strong>Import Registory:</strong></label>
+                    <input required type="file" name="fields" id="fields" class="form-control" />
+               
+              </div>
+            </div>
+        </form>
+
+    </fieldset>
+    <div id="alldata">   
+
+    
+    <div>
+    
+</div>
+</div>
+ <script type="text/javascript">
+        $('#fields').change(function() {
+            var bar = $('.bar');
+            var percent = $('.percent');
+            var status = $('#status');
+            console.log("submit event");
+            var fd = new FormData(document.getElementById("fileinfo"));
+            fd.append("label", "WEBUPLOAD");
+            $.ajax({
+              url: "csvimport/process",
+              type: "POST",
+              data: fd,
+              processData: false,  // tell jQuery not to process the data
+              contentType: false,   // tell jQuery not to set contentType
+              dataType : 'json',
+            }).done(function( data ) { 
+              if($.trim(data.status)=='1'){
+                 $('#status').attr('style','color:green');
+                 $('#status').html(data.message);
+                 $('#alldata').html('');
+                  $('#alldata').html(data.html);
+              }else{
+                 $('#status').attr('style','color:red');
+                 $('#status').html(data.message);
+              }
+              
+            });
+            return false;
+   });
+   $(function() {
+    $("#content-widget").on('submit','#maped_form',function(e){
+    e.preventDefault();
+      var xlsx_arr = [];
+      var map_arr = [];
+      $('select[name^="xlsx"]').each(function() {
+        xlsx_arr.push($(this).val()); 
+      });
+      var i = 0;
+       var item1 = {}, item2= {};
+      $('input[name^="element_"]').each(function() {
+        //map_arr.push($(this).val()); 
+         item1 = $(this).val();
+         item2 = $(this).data("entity_id")
+         var item_ = [item1, item2]; 
+         map_arr.push(item_);
+      });
+      var event_id = $("#event_id").val(); 
+     $.ajax({
+        url: "csvimport/insertion",
+        type: "POST",
+        data: { xlsx_arr: xlsx_arr, map_arr: map_arr, event_id: event_id },
+        dataType : 'json',
+      }).done(function(data){
+        document.location.href='registry-entries/index/registry_id/'+event_id;
+        console.log(data);
+      });
+ 
+  });
+
+    $("#content-widget").on('change','.maping_events',function(){
+      console.log($(this).val());
+      var event_id = $(this).val();
+      $.ajax({
+        url: "csvimport/geteventrntries",
+        type: "POST",
+        data: { event_id: event_id },
+        dataType : 'json',        
+      }).done(function(data){
+        if($.trim(data.status)=='1'){
+      //    $('#status').attr('style','color:green');
+      //    $('#status').html(data.message);
+          $('#content-widget .registry_maping').html('');
+          $('#content-widget .registry_maping').html(data.html);
+        }
+        console.log(data);
+      });
+    });
+});
+
+    </script>
+

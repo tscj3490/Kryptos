@@ -1,0 +1,55 @@
+<script>
+{literal}
+$(function (){
+	 
+	$("#mail_form").submit(function (){
+		 $.ajax({
+		  type: "POST",
+		  url: "/index/sendmail",
+		  dataType: 'json',
+		  data: { content: $("#cf_content").val() , name: $("#cf_cname").val(), email : $("#cf_email").val(), subject : $("#cf_subject").val()}
+		}).done(function( msg ) {
+			if(msg.error == '0')
+			{
+		  		$("#mail_form_div").html(msg.html);
+			}
+			else
+			{
+				alert(msg.error);
+			}
+		}).fail(function(xhRequest, ErrorText, thrownError){ alert("error" + ErrorText + xhRequest.status + xhRequest.responseText  ); });
+		return false;	
+	});	
+});
+</script>
+{/literal}
+<aside class="sidebar left">
+	        		<h2>{$tr->_('Interview application')}</h2>
+                    <div id="mail_form_div">
+	        		<p>
+	        			<em>{$tr->_('interview_ready_for')}</em>
+	        		</p>
+	        		<form action="#contact" method="post" id="mail_form">
+	        			<div class="field">
+	        				<input type="text" required id="cf_cname" name="name" placeholder="{$tr->_('name of editorial office')}">
+	        			</div>
+	        			<div class="field">
+	        				<input type="email" required id="cf_email" name="mail" placeholder="Email">
+	        			</div>
+	        			<div class="field">
+	        				<select name="subject" id="cf_subject" class="replace-me" title="">
+	        					<option value="{$tr->_('making an interview')}">{$tr->_('making an interview')}</option>
+	        					<option value="{$tr->_('prepare an opinion')}">{$tr->_('prepare an opinion')}</option>
+	        					<option value="{$tr->_('other matter')|ucfirst}">{$tr->_('other matter')|ucfirst}</option>
+	        				</select>
+	        			</div>
+	        			<div class="field">
+	        				<textarea required name="message" id="cf_content" placeholder="{$tr->_('message')}"></textarea>
+	        			</div>
+	        			
+	        			<div class="submit">
+	        				<input type="submit" value="{$tr->_('send_request')}">
+	        			</div>
+	        		</form>
+                    </div>
+</aside>

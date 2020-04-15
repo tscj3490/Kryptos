@@ -1,0 +1,41 @@
+<form method="POST" action="/pomieszczenia/zapiszpomieszczenie">
+	<table>
+		<tr><td>nazwa</td><td><input type="text" value="{$d.nazwa}" name="d[nazwa]"></td></tr>
+		<tr><td>numer</td><td><input type="text" value="{$d.nr}" name="d[nr]"></td></tr>
+		<tr><td>nazwa</td><td><input type="text" value="{$d.wydzial}" name="d[wydzial]"></td></tr>
+		<tr>
+			<td>fizyczne zabezpieczenia</td>
+			<td>
+				<select name="fizyczne_zabezpieczenia" multiple>
+					<option>zamek</option>
+					<option>kraty w oknach</option>
+					<option>alarm</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>informatyczne zabezpieczenia</td>
+			<td>
+				<select name="informatyczne_zabezpieczenia">
+					<option>aes</option>
+					<option>szyf</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>budynek</td>
+			<td>
+				<select name="d[budynki_id]">
+					{foreach $budynki as $b}
+						<option value="{$b.id}" {if $b.id==$d.budynki_id}selected{/if}>{$b.nazwa}</option>
+					{/foreach}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>zapisz</td>
+			<td><input type="submit" value="zapisz"></td>
+		</tr>
+	</table>
+	<input type="hidden" value="{$id}" name="id">
+</form>

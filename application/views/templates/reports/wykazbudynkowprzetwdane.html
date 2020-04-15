@@ -1,0 +1,28 @@
+<h1>Wykaz budynków, pomieszczeń lub części pomieszczeń, tworzących obszar, w którym przetwarzane są dane osobowe</h1>
+<table class="printable" cellspacing='1' cellpadding="5">
+    <thead>
+    <tr>
+        <th rowspan="2">Lp.</th>
+        <th rowspan="2">Budynek</th>
+        <th colspan="2">Pomieszczenia, w ktorych przetwarzane są dane</th>
+    </tr>
+    <tr>
+        <th>Wydział/piętro</th>
+        <th>Pokój (nr + opis)</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $data as $d}
+        <tr>
+            <td rowspan="{count($d.pomieszczenia)}">{$d@iteration}</td>
+            <td rowspan="{count($d.pomieszczenia)}">{join data=[$d.nazwa, $d.opis]}<br>{$d.adres}</td>
+                {foreach $d.pomieszczenia as $pomieszczenie}
+                    {if !$pomieszczenie@first}<tr>{/if}
+                        <td>{join data=[$pomieszczenie.wydzial, $pomieszczenie.pietro] glue=' / '}</td>
+                        <td>{$pomieszczenie.nr} {$pomieszczenie.nazwa}</td>
+                    {if !$pomieszczenie@last}</tr>{/if}
+                {/foreach}
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

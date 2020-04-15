@@ -1,0 +1,167 @@
+{$message}
+<form name="f_data" id="f_data" method="POST" action="/transfers/save" id="dataform-add">
+    <fieldset>
+        <div class="form-group row">
+            <label for="active" class="col-sm-2">Aktywne:</label>
+            <div class="col-sm-4"><select name="active" id="active"  class="form-control validate[required]">
+               <option {if $data['active'] == '0'}selected="selected"{/if} value="0">nie</option>
+               <option {if $data['active'] == '1'}selected="selected"{/if} value="1">tak</option>
+            </select></div>
+        </div>
+        <div class="form-group row">
+            <label for="type" class="col-sm-2">Rodzaj:</label>
+            <div class="col-sm-4"><select name="type" id="type"  class="form-control validate[required]">
+               <option {if $data['type'] == '1'}selected="selected"{/if} value="1">powierzenie</option>
+               <option {if $data['type'] == '2'}selected="selected"{/if} value="2">udostępnienie</option>
+               <option {if $data['type'] == '3'}selected="selected"{/if} value="3">pozyskanie</option>
+            </select></div>
+        </div>
+        <div class="form-group row">
+            <label for="name" class="col-sm-2">Partner:</label>
+            <div class="col-sm-4"><select name="contact_id" id="contact_id"  class="form-control validate[required]">
+               <option value="0">brak</option>
+               {foreach $t_contacts as $partner}
+                  <option value="{$partner->id}" {if $partner->id == $data['contact_id']}selected="selected"{/if}>{$partner->name}</option>
+               {/foreach}
+            </select></div>
+        </div>
+        <div class="form-group row">
+            <label for="contract" class="col-sm-2">Sygnatura:</label>
+            <div class="col-sm-4"><input type="text" name="contract" id="contract"  class="form-control validate[required]" value="{$data['contract']}"></div>
+        </div>
+        <div class="form-group row">
+            <label for="date_from" class="col-sm-2">Data od:</label>
+            <div class="col-sm-4"><input type="text" name="date_from" id="date_from"  class="form-control validate[required]" value="{$data['date_from']}" data-date-format="yyyy-mm-dd"></div>
+        </div>
+        <div class="form-group row">
+            <label for="date_to" class="col-sm-2">Data do:</label>
+            <div class="col-sm-4"><input type="text" name="date_to" id="date_to"  class="form-control validate[required]" value="{$data['date_to']}" data-date-format="yyyy-mm-dd"></div>
+        </div>
+        <div class="form-group row">
+            <label for="" class="col-sm-2">Zbiory:</label>
+            <div class="col-sm-10">
+               <input type="button" class="btn btn-info join" value="Wybierz" onclick="showDial('/zbiory/addmini/','','');" />
+               <br />
+               <br />
+               <div id="zbioryhtml"></div>
+            </div>
+        </div>
+        <br />
+        <div class="">
+            <a href="/transfers/"><input type="button" value="Powrót"  class="btn"  ></a>
+            <input type="submit" value="Zapisz"  class="btn btn-info" onclick="return validateZbiory();"  >
+            <input type="hidden" name="id" id="id" value="{$data.id}" />
+            <input type="hidden" name="options" id="options" value="" />
+        </div>
+    </fieldset>
+</form>
+<script type="text/javascript">
+   var t_opts = {if $jsonoptions <> ''}jQuery.parseJSON('{$jsonoptions nofilter}');{else}{ldelim}t_zbiory:new Array(),t_zbiorydata:{ }{rdelim};{/if};
+	backendUtilities.addVatidationEngine("f_data");
+   $('#date_from').datepicker();
+   $('#date_to').datepicker();
+   
+   function runZbiorySel() {
+      setZbiorySel() ;
+      $('.selopt2bl').click(function() {
+         var html = $(this).html();
+         var a = t_opts['t_zbiory'].indexOf(html);
+         if ( a == -1 ) { addZbior($(this).attr('id'),$(this).html()); }
+         else { deleteZbior($(this).attr('id'),$(this).html()); }
+         runOptsSearch();
+     });
+     $('#checkall').click(function() {
+         $('.selopt2bl').each(function() {
+            if ( !$(this).hasClass('active') && $(this).css('display') != 'none' ) { addZbior($(this).attr('id'),$(this).html(),1); }
+         });
+         setZbiorySel();
+         setView();
+     });
+     $('#uncheckall').click(function() {
+         $('.selopt2bl').each(function() {
+            if ( $(this).hasClass('active') && $(this).css('display') != 'none' ) { deleteZbior($(this).attr('id'),$(this).html(),1); }
+         });
+         setZbiorySel();
+         setView();
+     });
+   }
+   function setZbiorySel() {
+      $('.selopt2bl').each(function() {
+         var html = $(this).html();
+         var a = t_opts['t_zbiory'].indexOf(html);
+         if ( a == -1 ) { $(this).removeClass('active'); }
+         else { $(this).addClass('active'); }
+      });
+   }
+   function addZbior(id,html,noview) {
+      t_opts['t_zbiory'].push(html);
+      t_opts['t_zbiory'].sort();
+      t_opts['t_zbiorydata'][html] = id;
+      if ( !noview ) {
+         setZbiorySel();
+         setView();
+      }
+   }
+   function deleteZbior(id,html,noview) {
+      t_opts['t_zbiory'].splice( $.inArray(html,t_opts['t_zbiory']) ,1 );
+      delete t_opts['t_zbiorydata'][html];
+      
+      if ( !noview ) {
+         setZbiorySel();
+         setView();
+      }
+   }
+   
+   
+// WIDOK
+
+function setView() {
+   
+   // PERSONS TABS
+   
+   $('#zbioryhtml').html('');
+   $.each(t_opts['t_zbiory'], function( k,v ) {
+      $('#zbioryhtml').append('<div class="seloptmin"><span>'+v+'</span><i title="Usuń" class="glyphicon glyphicon-trash" onclick="deleteZbior(\''+t_opts['t_zbiorydata'][v]+'\',\''+v+'\');"></i></div>');
+   });
+   
+   $('#options').val(JSON.stringify(t_opts));
+}
+
+var okit = 0;
+function validateZbiory() {
+   okit = 0;
+   var zbiory = '';
+   
+   $.each(t_opts['t_zbiory'], function( k,v ) {
+      zbiory = zbiory + t_opts['t_zbiorydata'][v] + ',';
+   });
+   
+   $.ajax({
+      dataType : 'html',
+      async : false,
+      url : '/transfers/validatezbiory/',
+      data : 'id={$data.id}&type='+$('#type').val()+'&date_from='+$('#date_from').val()+'&date_to='+$('#date_to').val()+'&zbiory='+zbiory+'',
+      method : 'POST',
+      success : function(mess,textStatus,xhr) { 
+        if ( mess == '1' ) { okit = 1; }        
+      },
+   });
+   
+   if ( okit == 1 || $('#type').val() != 1 || $('#active').val() == 0 ) {
+      if ( $('#type').val() != 1 ) {
+         return true;
+      }
+   } else {
+      addFixedAlert('danger','Co najmniej jeden z wybranych zbiorów jest już powierzony w wybranym przedziale czasowym.');
+      return false;
+   }
+}
+
+
+// START
+
+$( document ).ready(function() {
+   setView();
+});
+
+</script>

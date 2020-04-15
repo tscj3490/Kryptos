@@ -1,0 +1,57 @@
+<div class="table-operations-header">
+    {if $auth->isGranted('node/tickets/update-type')}
+    <a class="btn btn-success" href="/tickets/update-type" data-title="Dodaj nowy typ zgłoszenia" data-toggle="tooltip"><i class="fa fa-plus"></i> &nbsp;Dodaj</a>
+    {/if}
+</div>
+
+<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+    <thead>
+    <tr>
+        <th data-filter-type="string">Nazwa</th>
+        <th data-filter-type="string">Rodzaj</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $types as $type}
+        <tr>
+            <td>{$type.name}</td>
+            <td>{smart_string_select value=$type.type config=Application_Service_TicketsConst::TICKET_TYPES}</td>
+            <td class="operations">
+
+                {element tag='a' route='tickets/config-groups-assignees' routeParams=['id' => $type.id] attributes=[
+                    'class' => 'fa fa-users',
+                    'title' => 'Automatyczne przypisanie pracowników',
+                    'data' => [
+                        'toggle' => 'tooltip'
+                    ]
+                ]}
+
+                {element tag='a' route='tickets/config-statuses' routeParams=['id' => $type.id] attributes=[
+                    'class' => 'fa fa-share-alt',
+                    'title' => 'Konfiguracja statusów',
+                    'data' => [
+                        'toggle' => 'tooltip'
+                    ]
+                ]}
+
+                {element tag='a' route='tickets/config-roles' routeParams=['id' => $type.id] attributes=[
+                    'class' => 'fa fa-wrench',
+                    'title' => 'Konfiguracja ról',
+                    'data' => [
+                        'toggle' => 'tooltip'
+                    ]
+                ]}
+
+                {element tag='a' route='tickets/update-type' routeParams=['id' => $type.id] attributes=[
+                    'class' => 'glyphicon glyphicon-pencil',
+                    'title' => 'Edycja',
+                    'data' => [
+                        'toggle' => 'tooltip'
+                    ]
+                ]}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

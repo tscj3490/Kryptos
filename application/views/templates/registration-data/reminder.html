@@ -1,0 +1,11 @@
+<form name="f_data" id="f_data" method="POST" action="{$baseUrl}/send-reminder" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="{$id}" />
+    <p>Adres email:</p>
+    <input name="email" type="text" class="form-control"  value="{$email}" />
+    <p>Treść przypomnienia:</p>
+    <textarea name="content" class="form-control"  row="30" cols="70">Jakiś czas temu zostało założone konto w naszym systemie. Zapraszamy do odwiedzenia Kryptos24.pl i zapoznania się z systemem</textarea>
+    <div>
+        <a href="{$baseUrl}"><input type="button" value="Powrót" class="btn"></a>
+        <input type="submit" value="Wyślij" class="btn btn-info">
+    </div>
+</form>

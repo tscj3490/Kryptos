@@ -1,0 +1,203 @@
+<style>
+    .multiselect {
+        border: solid 1px #c0c0c0;
+        overflow: auto;
+    }
+
+    .multiselect label {
+        display: block;
+    }
+
+    .multiselect-on {
+        color: #ffffff;
+        background-color: #000099;
+    }
+
+    .tab-content {
+        min-height: 500px;;
+    }
+</style>
+{if $message != null}
+<div class="alert alert-danger" role="alert">{$message}</div>
+{/if}
+<div class="col-md-12">
+    <script>
+        var row = {$data['row']};
+    </script>
+    {assign var="row" value=$data['row']|@json_decode nocache}
+    <form class="form-horizontal" method="post" id="form">
+        <input type="hidden" name="id" value="{$row->id}">
+        <input type="hidden" name="id_ewdzd" value="{$row->id_ewdzd}">
+        <div role="tabpanel">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab"
+                                                          data-toggle="tab">Dane Osobowe</a></li>
+                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab"
+                                           data-toggle="tab">Pola zbiorów</a></li>
+                <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Opcje
+                    zbiorów</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="home">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="name">Imię:</label>
+                                <input type="text" id="name" name="name" class="form-control  validate[required]"
+                                       value="{$row->name}">
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="surname">Nazwisko:</label>
+                                <input type="text" id="surname" name="surname" class="form-control  validate[required]"
+                                       value="{$row->surname}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" name="email"
+                                       class="form-control  validate[required]" value="{$row->email}">
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="phone">Telefon:</label>
+                                <input type="text" id="phone" name="phone" class="form-control"
+                                       value="{$row->phone}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="company_name">Nazwa firmy:</label>
+                                <input type="text" id="company_name" name="company_name"
+                                       class="form-control  validate[required]" value="{$row->company_name}">
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="city">Miasto:</label>
+                                <input type="text" id="city" name="city" class="form-control  validate[required]"
+                                       value="{$row->city}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="street">Ulica:</label>
+                                <input type="text" id="street" name="street" class="form-control  validate[required]"
+                                       value="{$row->street}">
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="post_code">Kod pocztowy:</label>
+                                <input type="text" id="post_code" name="post_code"
+                                       class="form-control  validate[required]" value="{$row->post_code}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="nip">Nip:</label>
+                                <input type="text" id="nip" name="nip" class="form-control  validate[required]"
+                                       value="{$row->nip}">
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="regon">Regon:</label>
+                                <input type="text" id="regon" name="regon" class="form-control  validate[required]"
+                                       value="{$row->regon}">
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div role="tabpanel" class="tab-pane" id="profile">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="source">Rejestr zbiorów:</label>
+                                <select multiple class="form-control validate[required]" id="source" name="source[]"
+                                        style="min-height: 400px;">
+                                    {foreach $data['source'] as $item}
+                                    <option value="{$item['id']}">{$item['nazwa']}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <div class="form-group">
+                                <label for="rdos">Pola:</label>
+
+                                <div class="multiselect form-control" style="min-height: 400px;" id="rdos">
+                                    {if $data['fieldsRow']|@count != 0}
+                                    {foreach $data['source'] as $item}
+                                    <label><input type="checkbox" checked name="fields[]" value="{$item.value}"/>{$item.nazwa}</label>
+                                    {/foreach}
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5 col-md-offset-7">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-info" id="rdo-button"><span
+                                            class="glyphicon glyphicon-plus"> Dodaj</span></button>
+                                </div>
+                                <input type="text" class="form-control" id="rdo">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="messages">
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="opcja">Opcje:</label>
+                            <select class="form-control validate[required]" id="opcja" name="opcja">
+                                {foreach $data['fields'] as $item}
+                                <option value="{$item}">{$item}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="cel_przetwarzania">Cel przetwarzania:</label>
+                            <br/>
+                    <textarea id="cel_przetwarzania" name="cel_przetwarzania" cols="80" rows="5"
+                              class="form-control  validate[required]" type="text"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div style="margin-bottom: 10px;">
+                            <button class="btn btn-info" type="submit">Zapisz</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="/_gfx/js/controllers/zbiory/ui-zbioryForm.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        UIZbioryForm.init();
+        backendUtilities.addVatidationEngine("form");
+    });
+</script>

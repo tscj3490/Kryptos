@@ -1,0 +1,119 @@
+<ul class="bxslider szkolenieSesja">
+    {foreach from=$session.course.pages item=page}
+    <li class="image mh-800">
+        {if $page.type == 1}
+            {if $page.file_type|stripos:'video' !== false}
+                <video width="100%" height="500" controls>
+                    <source src="/files/view/t/{$page.file_token}{if $session.course.type == 1}/api/hq_courses{/if}" type="{$page.file_type}">
+                </video>
+            {else}
+                <img src="/files/view/t/{$page.file_token}{if $session.course.type == 1}/api/hq_courses{/if}">
+            {/if}
+        {elseif $page.type == 2}
+            <div id="yt-video-{$page.id}" class="youtube-video-wrapper" data-yt-id="{$page.file_external_uri}"></div>
+        {/if}
+    </li>
+    {/foreach}
+    <li class="podsumowanie">
+        <div class="row">
+            <div class="col-sm-12" style="padding:200px 0">
+                Dziękujemy za odbycie szkolenia.
+                <div class="ajaxExtraContent">
+
+                </div>
+            </div>
+        </div>
+    </li>
+</ul>
+
+<script>
+ var slider =  $('.bxslider').bxSlider({
+        infiniteLoop: false,
+        adaptiveHeight: true,
+        pager: false,
+        onSlideBefore: function($slideElement, oldIndex, newIndex) {
+            if ($slideElement.nextAll().size() === 0) {
+                $.post('/courses/session-complete/id/{$session.id}', function(result) {
+                    if (result.examInfo) {
+                        $slideElement.find('.ajaxExtraContent').html(result.examInfo);
+                    }
+                });
+            }
+
+            if (typeof currentYtPlayer !== 'undefined') {
+                currentYtPlayer.pauseVideo();
+            }
+            checkForYtVideoSlide($slideElement);
+        }
+    });
+
+// set keyboard listener
+$(document).keydown(function(e){
+    if (e.keyCode == 39) // Right arrow 
+    {
+        slider.goToNextSlide();
+        return false;
+    }
+    else if (e.keyCode == 37) // left arrow
+    {
+         slider.goToPrevSlide();
+        return false;
+   }
+});
+
+    $(function() {
+        checkForYtVideoSlide($('.szkolenieSesja').children().eq(0));
+    });
+
+    var ytPlayers = { },
+        currentYtPlayer;
+
+    function startYtPlayer(wrapperId, videoId)
+    {
+        if (typeof ytPlayers[wrapperId] !== 'undefined') {
+            ytPlayers[wrapperId].playVideo();
+        } else {
+            ytPlayers[wrapperId] = new YT.Player(wrapperId, {
+                height: '800px',
+                width: '100%',
+                videoId: videoId,
+                events: {
+                    'onReady': onPlayerReady/*,
+                     'onStateChange': onPlayerStateChange*/
+                }
+            });
+        }
+
+        currentYtPlayer = ytPlayers[wrapperId];
+    }
+
+    function checkForYtVideoSlide(tg)
+    {
+        if (tg.find('.youtube-video-wrapper').size()) {
+            var wrapperId = tg.find('.youtube-video-wrapper').attr('id'),
+                videoId = tg.find('.youtube-video-wrapper').attr('data-yt-id');
+
+            startYtPlayer(wrapperId, videoId);
+        }
+    }
+
+    function onPlayerReady(event) {
+        event.target.playVideo();
+    }
+    function stopVideo() {
+        player.stopVideo();
+    }
+
+    if ($('.youtube-video-wrapper').size()) {
+        var tag = document.createElement('script');
+
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var ytPlayer;
+        function onYouTubeIframeAPIReady() {
+        }
+    }
+</script>
+

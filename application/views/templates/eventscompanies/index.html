@@ -1,0 +1,63 @@
+{$message}
+<div class="body-action">
+    <a class="btn btn-default" href="/events">Powrót</a>
+    <a class="btn btn-info" href="/eventscompanies/update">Dodaj nową firmę</a>
+    <a class="btn btn-info" href="/eventscompanies/report?{$l_list}">Pobierz raport</a>
+    <a class="btn btn-info" href="/eventscompanies/reportview?{$l_list}">Wyświetl raport</a>
+</div>
+<form method="post" action="/eventscompanies/delChecked/">
+    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered example">
+        <thead class="ui-widget-header">
+        <tr>
+            <th></th>
+            <th>nr</th>
+            <th>nazwa</th>
+            <th>ulica</th>
+            <th>nr domu</th>
+            <th>nr lokalu</th>
+            <th>kod pocztowy</th>
+            <th>miasto</th>
+            <th>telefon</th>
+            <th>e-mail</th>
+            <th>nr</th>
+            <th>data utworzenia</th>
+            <th>data edycji</th>
+            <th>opcje</th>
+        </tr>
+        </thead>
+        <tbody class="ui-widget-content">
+        {foreach $paginator as $d}
+            <tr>
+                <td style="width:22px">
+                    <input type="checkbox" name="id{$d.id}" id="id{$d.id}" value="1"/>
+                </td>
+                <td>{$d@iteration}</td>
+                <td>{$d.name}</td>
+                <td>{$d.street}</td>
+                <td>{$d.house}</td>
+                <td>{$d.locale}</td>
+                <td>{$d.postalcode}</td>
+                <td>{$d.city}</td>
+                <td>{$d.phone}</td>
+                <td>{$d.email}</td>
+                <td>{$d.number}</td>
+                <td>{$d.created_at}</td>
+                <td>{if $d.updated_at}{$d.updated_at}{else}brak{/if}</td>
+                <td class="operations">
+                    {if $auth->isGranted('node/eventscompanies/update', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-pencil" href="/eventscompanies/update/id/{$d.id}"></a>
+                    {/if}
+                    {if $auth->isGranted('node/eventscompanies/update')}
+                    <a class="glyphicon glyphicon-star" href="/eventscompanies/update/copy/{$d.id}"></a>
+                    {/if}
+                    {if $auth->isGranted('node/eventscompanies/del', ['id' => $d.id])}
+                    <a class="glyphicon glyphicon-trash" onclick="if(confirm('Usunąć?')) window.location.href='/eventscompanies/del/id/{$d.id}'" href="javascript:;"></a>
+                    {/if}
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+
+    </table>
+    <input type="submit" value="Usuń zaznaczone" class="btn btn-default"/>
+</form>
